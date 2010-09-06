@@ -41,4 +41,24 @@ func NewAlg(t,n string) IAlgorithm {
 	c := &Component{comp_name:n, comp_type:t}
 	return &Algorithm{*c}
 }
+
+// service
+type Service struct {
+	Component
+}
+
+func (svc *Service) Initialize() StatusCode {
+	println(svc.CompName(), "initialize...")
+	return StatusCode(0)
+}
+
+func (svc *Service) Finalize() StatusCode {
+	println(svc.CompName(), "finalize...")
+	return StatusCode(0)
+}
+
+func NewSvc(t,n string) IService {
+	c := &Component{comp_name:n, comp_type:t}
+	return &Service{*c}
+}
 /* EOF */
