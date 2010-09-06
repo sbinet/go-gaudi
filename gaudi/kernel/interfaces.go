@@ -43,10 +43,12 @@ type IEvtSelector interface {
 }
 
 type IAppMgr interface {
+	IComponent
 	Configure() StatusCode
 	Initialize() StatusCode
 	Start() StatusCode
-	ExecuteRun() StatusCode
+	/// Run the complete job (from Initialize to Terminate)
+	Run() StatusCode
 	Stop() StatusCode
 	Finalize() StatusCode
 	Terminate() StatusCode
