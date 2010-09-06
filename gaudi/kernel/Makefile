@@ -7,7 +7,9 @@ include ${GOROOT}/src/Make.inc
 TARG=gaudi/kernel
 GOFILES=\
 	interfaces.go\
-	impl.go
+	impl.go\
+	impl/appmgr.go\
+	impl/evtproc.go
 
 include ${GOROOT}/src/Make.pkg
 
