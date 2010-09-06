@@ -26,4 +26,4 @@ clean: clean.dirs
 
 install: install.dirs
 
--include ${GOROOT}/src/Make.deps
+#-include ${GOROOT}/src/Make.deps
