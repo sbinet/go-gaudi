@@ -17,9 +17,32 @@ func NewComponent(t,n string) IComponent {
 	return &Component{comp_name: n, comp_type: t}
 }
 
+type properties struct {
+	props map[string]interface{}
+}
+func (p *properties) SetProperty(n string, v interface{}) StatusCode {
+	p.props[n] = v
+	return StatusCode(0)
+}
+func (p *properties) GetProperty(n string) interface{} {
+	v,ok := p.props[n]
+	if ok {
+		return v
+	}
+	return nil
+}
+func (p *properties) GetProperties() []Property {
+	props := make([]Property, len(p.props))
+	i := 0
+	for k,v := range p.props {
+		props[i] = Property{Name:k, Value:v}
+	}
+	return props
+}
 // algorithm
 type Algorithm struct {
 	Component
+	properties
 }
 
 func (alg *Algorithm) Initialize() StatusCode {
@@ -38,33 +61,39 @@ func (alg *Algorithm) Finalize() StatusCode {
 }
 
 func NewAlg(t,n string) IAlgorithm {
-	c := &Component{comp_name:n, comp_type:t}
-	return &Algorithm{*c}
+	alg := &Algorithm{}
+	alg.Component.comp_name = n
+	alg.Component.comp_type = t
+	return alg
 }
 
 // service
 type Service struct {
 	Component
+	properties
 }
 
-func (svc *Service) Initialize() StatusCode {
+func (svc *Service) InitializeSvc() StatusCode {
 	println(svc.CompName(), "initialize...")
 	return StatusCode(0)
 }
 
-func (svc *Service) Finalize() StatusCode {
+func (svc *Service) FinalizeSvc() StatusCode {
 	println(svc.CompName(), "finalize...")
 	return StatusCode(0)
 }
 
 func NewSvc(t,n string) IService {
-	c := &Component{comp_name:n, comp_type:t}
-	return &Service{*c}
+	svc := &Service{}
+	svc.Component.comp_name = n
+	svc.Component.comp_type = t
+	return svc
 }
 
 // algtool
 type AlgTool struct {
 	Component
+	properties
 	parent IComponent
 }
 
@@ -72,12 +101,12 @@ func (tool *AlgTool) CompName() string {
 	return tool.parent.CompName() + "." + tool.Component.CompName()
 }
 
-func (tool *AlgTool) Initialize() StatusCode {
+func (tool *AlgTool) InitializeTool() StatusCode {
 	println(tool.CompName(), "initialize...")
 	return StatusCode(0)
 }
 
-func (tool *AlgTool) Finalize() StatusCode {
+func (tool *AlgTool) FinalizeTool() StatusCode {
 	println(tool.CompName(), "finalize...")
 	return StatusCode(0)
 }

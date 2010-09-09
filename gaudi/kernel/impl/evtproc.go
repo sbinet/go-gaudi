@@ -4,50 +4,30 @@ import "time"
 
 type evtProc struct {
 	name string
+	algs []IAlgorithm
+}
+
+func (e *evtProc) CompType() string {
+	return "gaudi.kernel.evtProc"
+}
+
+func (e *evtProc) CompName() string {
+	return e.name
 }
 
 func (e *evtProc) ExecuteEvent(ctx IEvtCtx) StatusCode {
 	if ctx != nil {
 		println(e.name, " executing event...", ctx.(int))
+		for i,alg := range e.algs {
+			sc := alg.Execute()
+			if sc != 0 {
+				println(e.name, "pb executing alg #",i,"(",alg.CompName(),")")
+				return StatusCode(1)
+			}
+		}
 		return StatusCode(0)
 	}
 	return StatusCode(-1)
-}
-
-func (e *evtProc) test_0() {
-	handle := func(queue chan int) StatusCode {
-		sc := StatusCode(0)
-		for i := range queue {
-			println("   --> handling [",i,"]...")
-			sc = e.ExecuteEvent(i)
-		}
-		return sc
-	}
-
-	max_in_flight := 4
-	serve := func(queue chan int, quit chan bool) StatusCode {
-		for i := 0; i < max_in_flight; i++ {
-			go handle(queue)
-		}
-		<-quit // wait to be told to exit
-		return StatusCode(0)
-	}
-
-	quit := make(chan bool)
-
-	println("-- filling the event queue...")
-	queue := make(chan int)
-	go func() {
-		for i := 0; i < 20; i++ {
-			queue <- i
-		}
-	}()
-	println("-- starting to serve 20 events...")
-	go serve(queue, quit)
-	println("-- requests sent...")
-	time.Sleep(2000000000)
-	quit <- true
-	println("-- done.")
 }
 
 func (e *evtProc) ExecuteRun(evtmax int) StatusCode {
@@ -125,5 +105,45 @@ func (e *evtProc) StopRun() StatusCode {
 }
 
 func NewEvtProcessor(name string) IEvtProcessor {
-	return &evtProc{name}
+	return &evtProc{name, []IAlgorithm{}}
 }
+
+// ---
+
+func (e *evtProc) test_0() {
+	handle := func(queue chan int) StatusCode {
+		sc := StatusCode(0)
+		for i := range queue {
+			println("   --> handling [",i,"]...")
+			sc = e.ExecuteEvent(i)
+		}
+		return sc
+	}
+
+	max_in_flight := 4
+	serve := func(queue chan int, quit chan bool) StatusCode {
+		for i := 0; i < max_in_flight; i++ {
+			go handle(queue)
+		}
+		<-quit // wait to be told to exit
+		return StatusCode(0)
+	}
+
+	quit := make(chan bool)
+
+	println("-- filling the event queue...")
+	queue := make(chan int)
+	go func() {
+		for i := 0; i < 20; i++ {
+			queue <- i
+		}
+	}()
+	println("-- starting to serve 20 events...")
+	go serve(queue, quit)
+	println("-- requests sent...")
+	time.Sleep(2000000000)
+	quit <- true
+	println("-- done.")
+}
+
+/* EOF */

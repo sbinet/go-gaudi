@@ -9,6 +9,9 @@ all: install
 DIRS=\
 	gaudi/kernel\
 	gaudi/app\
+	gaudi/tests/pkg1\
+	gaudi/tests/pkg2\
+
 
 clean.dirs: $(addsuffix .clean, $(DIRS))
 install.dirs: $(addsuffix .install, $(DIRS))

@@ -9,7 +9,7 @@ type appMgr struct {
 }
 
 func (app *appMgr) CompType() string {
-	return "gaudi.appMgr"
+	return "gaudi.kernel.appMgr"
 }
 
 func (app *appMgr) CompName() string {
