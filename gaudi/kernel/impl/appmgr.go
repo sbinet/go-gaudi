@@ -84,16 +84,6 @@ func (app *appMgr) Configure() StatusCode {
 	app.evtproc = NewEvtProcessor("evt-proc")
 	//app.evtsel  = 
 
-	app.svcmgr = svcMgr{}
-	app.svcmgr.services = make(map[string]IService)
-
-	app.algmgr = algMgr{}
-	app.algmgr.algs = make(map[string]IAlgorithm)
-
-
-	app.mgrs["svcmgr"] = &app.svcmgr
-	app.mgrs["algmgr"] = &app.algmgr
-
 	return StatusCode(-1)
 }
 
@@ -132,7 +122,18 @@ func NewAppMgr() IAppMgr {
 	appmgr := &appMgr{}
 	appmgr.name = "app-mgr"
 	appmgr.jobo = "foo.py"
+
+	appmgr.svcmgr = svcMgr{}
+	appmgr.svcmgr.services = make(map[string]IService)
+
+	appmgr.algmgr = algMgr{}
+	appmgr.algmgr.algs = make(map[string]IAlgorithm)
+
+
 	appmgr.mgrs = make(map[string]IComponentMgr)
+	appmgr.mgrs["svcmgr"] = &appmgr.svcmgr
+	appmgr.mgrs["algmgr"] = &appmgr.algmgr
+
 	return appmgr
 }
 
