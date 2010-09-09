@@ -65,6 +65,7 @@ func NewAlg(t,n string) IAlgorithm {
 	alg := &Algorithm{}
 	alg.Component.comp_name = n
 	alg.Component.comp_type = t
+	alg.properties.props = make(map[string]interface{})
 	return alg
 }
 
@@ -88,6 +89,7 @@ func NewSvc(t,n string) IService {
 	svc := &Service{}
 	svc.Component.comp_name = n
 	svc.Component.comp_type = t
+	svc.properties.props = make(map[string]interface{})
 	return svc
 }
 
@@ -116,6 +118,7 @@ func NewTool(t,n string, parent IComponent) IAlgTool {
 	tool := &AlgTool{}
 	tool.Component.comp_name = n
 	tool.Component.comp_type = t
+	tool.properties.props = make(map[string]interface{})
 	tool.parent = parent
 	return tool
 }
