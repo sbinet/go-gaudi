@@ -36,6 +36,7 @@ func (p *properties) GetProperties() []Property {
 	i := 0
 	for k,v := range p.props {
 		props[i] = Property{Name:k, Value:v}
+		i++
 	}
 	return props
 }

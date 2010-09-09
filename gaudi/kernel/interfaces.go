@@ -8,8 +8,8 @@ type IComponent interface {
 }
 
 type IComponentMgr interface {
-	GetComp(n string) *IComponent
-	GetComps() []*IComponent
+	GetComp(n string) IComponent
+	GetComps() []IComponent
 	HasComp(n string) bool
 }
 
@@ -79,17 +79,24 @@ type IAppMgr interface {
 }
 
 type IAlgMgr interface {
-	IComponent
+	//IComponent
 	AddAlgorithm(alg IAlgorithm) StatusCode
 	RemoveAlgorithm(alg IAlgorithm) StatusCode
 	HasAlgorithm(algname string) bool
 }
 
 type ISvcMgr interface {
-	IComponent
+	//IComponent
 	AddService(svc string) StatusCode
 	RemoveService(svc string) StatusCode
 	HasService(svc string) StatusCode
+}
+
+type ISvcLocator interface {
+	//IComponent
+	GetService(svc string) IService
+	GetServices() []IService
+	ExistsService(svc string) bool
 }
 
 type IDataStore interface {

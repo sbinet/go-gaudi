@@ -6,6 +6,70 @@ type appMgr struct {
 	
 	evtproc IEvtProcessor
 	evtsel  IEvtSelector
+
+	mgrs    map[string]IComponentMgr
+	svcmgr  svcMgr
+	algmgr  algMgr
+}
+
+type svcMgr struct {
+	services map[string]IService
+}
+
+func (mgr *svcMgr) GetComp(n string) IComponent {
+	c,ok := mgr.services[n]
+	if ok {
+		return c.(IComponent)
+	}
+	return nil
+}
+
+func (mgr *svcMgr) GetComps() []IComponent {
+	comps := make([]IComponent, len(mgr.services))
+	i := 0
+	for _,v := range mgr.services {
+		comps[i] = v.(IComponent)
+		i++
+	}
+	return comps
+}
+
+func (mgr *svcMgr) HasComp(n string) bool {
+	_,ok := mgr.services[n]
+	if !ok {
+		mgr.services[n] = nil, false
+	}
+	return ok
+}
+
+type algMgr struct {
+	algs map[string]IAlgorithm
+}
+
+func (mgr *algMgr) GetComp(n string) IComponent {
+	c,ok := mgr.algs[n]
+	if ok {
+		return c.(IComponent)
+	}
+	return nil
+}
+
+func (mgr *algMgr) GetComps() []IComponent {
+	comps := make([]IComponent, len(mgr.algs))
+	i := 0
+	for _,v := range mgr.algs {
+		comps[i] = v.(IComponent)
+		i++
+	}
+	return comps
+}
+
+func (mgr *algMgr) HasComp(n string) bool {
+	_,ok := mgr.algs[n]
+	if !ok {
+		mgr.algs[n] = nil, false
+	}
+	return ok
 }
 
 func (app *appMgr) CompType() string {
@@ -19,6 +83,16 @@ func (app *appMgr) CompName() string {
 func (app *appMgr) Configure() StatusCode {
 	app.evtproc = NewEvtProcessor("evt-proc")
 	//app.evtsel  = 
+
+	app.svcmgr = svcMgr{}
+	app.svcmgr.services = make(map[string]IService)
+
+	app.algmgr = algMgr{}
+	app.algmgr.algs = make(map[string]IAlgorithm)
+
+
+	app.mgrs["svcmgr"] = &app.svcmgr
+	app.mgrs["algmgr"] = &app.algmgr
 
 	return StatusCode(-1)
 }
@@ -55,6 +129,10 @@ func (app *appMgr) Terminate() StatusCode {
 }
 
 func NewAppMgr() IAppMgr {
-	return &appMgr{name:"app-mgr", jobo:"foo.py"}
+	appmgr := &appMgr{}
+	appmgr.name = "app-mgr"
+	appmgr.jobo = "foo.py"
+	appmgr.mgrs = make(map[string]IComponentMgr)
+	return appmgr
 }
 
