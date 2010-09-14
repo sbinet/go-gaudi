@@ -122,4 +122,18 @@ func NewTool(t,n string, parent IComponent) IAlgTool {
 	tool.parent = parent
 	return tool
 }
+
+// checking implementations match interfaces
+var _ = IAlgorithm(&Algorithm{})
+var _ = IComponent(&Algorithm{})
+var _ = IProperty(&Algorithm{})
+
+var _ = IAlgTool(&AlgTool{})
+var _ = IComponent(&AlgTool{})
+var _ = IProperty(&AlgTool{})
+
+var _ = IService(&Service{})
+var _ = IComponent(&Service{})
+var _ = IProperty(&Service{})
+
 /* EOF */

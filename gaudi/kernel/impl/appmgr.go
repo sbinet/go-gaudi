@@ -42,6 +42,26 @@ func (mgr *svcMgr) HasComp(n string) bool {
 	return ok
 }
 
+func (mgr *svcMgr) AddService(svc string) StatusCode {
+	panic("AddService(svc string) not implemented")
+	return StatusCode(1)
+}
+
+func (mgr *svcMgr) RemoveService(svc string) StatusCode {
+	if mgr.HasService(svc) == StatusCode(0) {
+		mgr.services[svc] = nil, false
+		return StatusCode(0)
+	}
+	return StatusCode(1)
+}
+
+func (mgr *svcMgr) HasService(svc string) StatusCode {
+	if mgr.HasComp(svc) {
+		return StatusCode(0)
+	}
+	return StatusCode(1)
+}
+
 type algMgr struct {
 	algs map[string]IAlgorithm
 }
@@ -70,6 +90,24 @@ func (mgr *algMgr) HasComp(n string) bool {
 		mgr.algs[n] = nil, false
 	}
 	return ok
+}
+
+func (mgr *algMgr) AddAlgorithm(alg IAlgorithm) StatusCode {
+	mgr.algs[alg.CompName()] = alg
+	return StatusCode(0)
+}
+
+func (mgr *algMgr) RemoveAlgorithm(alg IAlgorithm) StatusCode {
+	n := alg.CompName()
+	if !mgr.HasComp(n) {
+		return StatusCode(1)
+	}
+	mgr.algs[n] = nil, false
+	return StatusCode(0)
+}
+
+func (mgr *algMgr) HasAlgorithm(algname string) bool {
+	return mgr.HasComp(algname)
 }
 
 func (app *appMgr) CompType() string {
@@ -137,3 +175,13 @@ func NewAppMgr() IAppMgr {
 	return appmgr
 }
 
+// check implementations match interfaces
+var _ = IAlgMgr(&algMgr{})
+var _ = IComponentMgr(&algMgr{})
+
+var _ = IComponentMgr(&svcMgr{})
+var _ = ISvcMgr(&svcMgr{})
+
+var _ = IAppMgr(&appMgr{})
+
+/* EOF */
