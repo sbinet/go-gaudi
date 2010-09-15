@@ -1,5 +1,5 @@
-// test package 'pkg1'
-package pkg1
+// test package 'pkg2'
+package pkg2
 
 import "gaudi/kernel"
 

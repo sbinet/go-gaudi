@@ -146,4 +146,8 @@ func (e *evtProc) test_0() {
 	println("-- done.")
 }
 
+// check implementations match interfaces
+var _ = IComponent(&evtProc{})
+var _ = IEvtProcessor(&evtProc{})
+
 /* EOF */

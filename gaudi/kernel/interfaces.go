@@ -1,6 +1,12 @@
 package kernel
 
+import "fmt"
+
 type StatusCode int
+
+func (sc StatusCode) String() string {
+	return fmt.Sprintf("%i", int(sc))
+}
 
 type IComponent interface {
 	CompName() string
@@ -102,6 +108,6 @@ type ISvcLocator interface {
 type IDataStore interface {
 	IComponent
 	Get(key string) (chan *interface{}, bool)
-	Put(key string, value *interface{})
+	Put(key string, value *interface{}) bool
 	Has(key string) bool
 }

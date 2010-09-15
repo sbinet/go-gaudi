@@ -122,7 +122,7 @@ func (app *appMgr) Configure() StatusCode {
 	app.evtproc = NewEvtProcessor("evt-proc")
 	//app.evtsel  = 
 
-	return StatusCode(-1)
+	return StatusCode(0)
 }
 
 func (app *appMgr) Initialize() StatusCode {
@@ -156,6 +156,18 @@ func (app *appMgr) Terminate() StatusCode {
 	return StatusCode(0)
 }
 
+func (mgr *appMgr) AddAlgorithm(alg IAlgorithm) StatusCode {
+	return mgr.algmgr.AddAlgorithm(alg)
+}
+
+func (mgr *appMgr) RemoveAlgorithm(alg IAlgorithm) StatusCode {
+	return mgr.algmgr.RemoveAlgorithm(alg)
+}
+
+func (mgr *appMgr) HasAlgorithm(algname string) bool {
+	return mgr.algmgr.HasAlgorithm(algname)
+}
+
 func NewAppMgr() IAppMgr {
 	appmgr := &appMgr{}
 	appmgr.name = "app-mgr"
@@ -182,6 +194,9 @@ var _ = IComponentMgr(&algMgr{})
 var _ = IComponentMgr(&svcMgr{})
 var _ = ISvcMgr(&svcMgr{})
 
+var _ = IComponent(&appMgr{})
+var _ = IAlgMgr(&appMgr{})
+//var _ = ISvcMgr(&appMgr{})
 var _ = IAppMgr(&appMgr{})
 
 /* EOF */

@@ -3,12 +3,14 @@ package kernel
 type storeDict map[string]interface{}
 
 type DataStore struct {
-	name  string
+	Component
 	store storeDict
 }
 
 func NewDataStore(name string) *DataStore {
-	store := &DataStore{name:name}
+	store := &DataStore{}
+	store.Component.comp_name = name
+	store.Component.comp_type = "kernel.DataStore"
 	store.store = make(storeDict)
 	return store
 }
@@ -35,3 +37,8 @@ func (d *DataStore) Get(key string) (chan *interface{}, bool) {
 	return out, ok
 }
 
+// check implementations match interfaces
+var _ = IComponent(&DataStore{})
+var _ = IDataStore(&DataStore{})
+
+/* EOF */
