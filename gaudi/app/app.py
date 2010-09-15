@@ -126,9 +126,13 @@ class AppMgr(object):
             go_pkg += ['import %s "%s"' % (idx,pkg,)]
 
         go_pkg += ["",
-                   "var Algs []kernel.IComponent",
-                   "var Svcs []kernel.IComponent",
-                   "var Tools []kernel.IComponent",
+                   "type CompCfg struct {",
+                   " Instance kernel.IComponent",
+                   " Name string",
+                   "}",
+                   "var Algs []CompCfg",
+                   "var Svcs []CompCfg",
+                   "var Tools []CompCfg",
                    ""
                    ]
         go_pkg += ["func init() {"]
@@ -136,13 +140,15 @@ class AppMgr(object):
         for comps,name in [(self.algs,"Algs"),
                            (self.svcs,"Svcs"),
                            (self.toolsvc,"Tools")]:
-            go_pkg += ["%s = []kernel.IComponent{" % (name,)]
+            go_pkg += ["%s = []CompCfg{" % (name,)]
             for i,comp in enumerate(comps):
                 pkg_ident = gaudi_pkgs[comp.pkg_name]
                 comma = "," if i+1 != len(comps) else "}"
-                go_pkg += [ "new(%s.%s)%s" % (pkg_ident,
-                                              comp.comp_type,
-                                              comma)]
+                go_pkg += [ 'CompCfg{Instance:new(%s.%s), Name:"%s"}%s' %
+                            (pkg_ident,
+                             comp.comp_type,
+                             comp.name,
+                             comma)]
                 pass
         go_pkg += ["}"]
 
@@ -189,14 +195,32 @@ func main() {
    app := kernel.NewAppMgr()
    fmt.Printf(" -> created [%s/%s]\\n", app.CompType(), app.CompName())
    fmt.Printf("::: configure...\\n")
+   app_prop,_ := app.(kernel.IProperty)
    {
      mgr,_ := app.(kernel.IAlgMgr)
-     for _,alg := range gaudi_jobopt.Algs {
-       ialg,ok := alg.(kernel.IAlgorithm)
+     algs := make([]string, len(gaudi_jobopt.Algs))
+     for i,alg := range gaudi_jobopt.Algs {
+       ialg,ok := alg.Instance.(kernel.IAlgorithm)
        if ok {
           mgr.AddAlgorithm(ialg)
+          algs[i] = ialg.CompName()
        }
      }
+     app_prop.SetProperty("Algs", algs)
+   }
+   {
+     mgr,_ := app.(kernel.ISvcMgr)
+     svcs := make([]string, len(gaudi_jobopt.Svcs))
+     for i,svc := range gaudi_jobopt.Svcs {
+       isvc,ok := svc.Instance.(kernel.IService)
+       if ok && isvc.CompName() != "" {
+          if !mgr.AddService(isvc.CompName()).IsSuccess() {
+             fmt.Printf("** pb adding svc [%s]\\n", isvc.CompName())
+          }
+          svcs[i] = isvc.CompName()
+       }
+     }
+     app_prop.SetProperty("Svcs", svcs)
    }
    sc := app.Configure()
    fmt.Printf("::: configure... [%d]\\n", int(sc))

@@ -8,6 +8,18 @@ func (sc StatusCode) String() string {
 	return fmt.Sprintf("%i", int(sc))
 }
 
+func (sc StatusCode) IsSuccess() bool {
+	return sc == StatusCode(0)
+}
+
+func (sc StatusCode) IsFailure() bool {
+	return !sc.IsSuccess()
+}
+
+func (sc StatusCode) IsRecoverable() bool {
+	return sc == StatusCode(2)
+}
+
 type IComponent interface {
 	CompName() string
 	CompType() string

@@ -3,6 +3,7 @@ package kernel
 import "time"
 
 type evtProc struct {
+	properties
 	name string
 	algs []IAlgorithm
 }
@@ -105,7 +106,11 @@ func (e *evtProc) StopRun() StatusCode {
 }
 
 func NewEvtProcessor(name string) IEvtProcessor {
-	return &evtProc{name, []IAlgorithm{}}
+	p := &evtProc{}
+	p.properties.props = make(map[string]interface{})
+	p.name = name
+	p.algs = []IAlgorithm{}
+	return p
 }
 
 // ---
@@ -149,5 +154,6 @@ func (e *evtProc) test_0() {
 // check implementations match interfaces
 var _ = IComponent(&evtProc{})
 var _ = IEvtProcessor(&evtProc{})
+var _ = IProperty(&evtProc{})
 
 /* EOF */

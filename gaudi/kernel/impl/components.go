@@ -1,5 +1,9 @@
 package kernel
 
+type comps_db map[string]IComponent
+
+var components comps_db
+
 type Component struct {
 	comp_name string
 	comp_type string
@@ -14,7 +18,9 @@ func (c *Component) CompType() string {
 }
 
 func NewComponent(t,n string) IComponent {
-	return &Component{comp_name: n, comp_type: t}
+	c := &Component{comp_name: n, comp_type: t}
+	components[n] = c
+	return c
 }
 
 type properties struct {
@@ -66,6 +72,8 @@ func NewAlg(t,n string) IAlgorithm {
 	alg.Component.comp_name = n
 	alg.Component.comp_type = t
 	alg.properties.props = make(map[string]interface{})
+
+	components[n] = alg
 	return alg
 }
 
@@ -90,6 +98,8 @@ func NewSvc(t,n string) IService {
 	svc.Component.comp_name = n
 	svc.Component.comp_type = t
 	svc.properties.props = make(map[string]interface{})
+
+	components[n] = svc
 	return svc
 }
 
@@ -120,7 +130,13 @@ func NewTool(t,n string, parent IComponent) IAlgTool {
 	tool.Component.comp_type = t
 	tool.properties.props = make(map[string]interface{})
 	tool.parent = parent
+
+	components[n] = tool
 	return tool
+}
+
+func init() {
+	components = make(comps_db)
 }
 
 // checking implementations match interfaces
