@@ -11,6 +11,7 @@ import sys
 import os
 import subprocess
 import tempfile
+import shutil
 
 ### functions ----------------------------------------------------------------
 def _make_configurable(pkg_name, name, **kwds):
@@ -70,8 +71,8 @@ class AppMgr(object):
         self.svcs = cfglist()
         self.toolsvc = cfglist()
 
-        #self._workdir = tempfile.mkdtemp(prefix='ng-gaudi-go-')
-        self._workdir = "/tmp/ng-gaudi/gaudi-jobopt"
+        self._workdir = tempfile.mkdtemp(prefix='ng-gaudi-go-')
+        #self._workdir = "/tmp/ng-gaudi/gaudi-jobopt"
         return
 
     def configure(self, jobopts):
@@ -88,23 +89,30 @@ class AppMgr(object):
             print "::: including [%s]... [ok]" % (jobo,)
             
     def run(self):
-        print "::: algs:", self.algs
-        print "::: svcs:", self.svcs
-        print "::: tool:", self.toolsvc
+        print "::: algs:", len(self.algs)
+        print "::: svcs:", len(self.svcs)
+        print "::: tool:", len(self.toolsvc)
 
         fname="gaudi_jobopt.go"
         self._gen_golang_pkg(fname)
         self._compile_golang_pkg(fname)
 
+        exitcode = 0
+        
         orig_dir = os.getcwd()
         try:
             os.chdir(self._workdir)
             print os.listdir('.')
             cmd = ["./gaudi-main",]
             subprocess.check_call(cmd)
+        except Exception:
+            import traceback
+            traceback.print_exc()
+            exitcode = 1
         finally:
             os.chdir(orig_dir)
-        return 0
+            #shutil.rmtree(self._workdir)
+        return exitcode
 
     def _gen_golang_pkg(self, fname=None):
         if fname is None:
@@ -137,23 +145,24 @@ class AppMgr(object):
                    ]
         go_pkg += ["func init() {"]
 
-        for comps,name in [(self.algs,"Algs"),
-                           (self.svcs,"Svcs"),
-                           (self.toolsvc,"Tools")]:
+        for comps,name in [(self.algs, "Algs"),
+                           (self.svcs, "Svcs"),
+                           (self.toolsvc, "Tools")]:
             go_pkg += ["%s = []CompCfg{" % (name,)]
             for i,comp in enumerate(comps):
                 pkg_ident = gaudi_pkgs[comp.pkg_name]
                 comma = "," if i+1 != len(comps) else "}"
-                go_pkg += [ 'CompCfg{Instance:new(%s.%s), Name:"%s"}%s' %
+                go_pkg += [ 'CompCfg{Instance:%s.New(\"%s\",\"%s\"), Name:"%s"}%s' %
                             (pkg_ident,
                              comp.comp_type,
+                             comp.name,
                              comp.name,
                              comma)]
                 pass
         go_pkg += ["}"]
 
         go_pkg += ["", "/* EOF */", ""]
-        _save_formatted_go_src(fname=fname, src=go_pkg, show=True)
+        _save_formatted_go_src(fname=fname, src=go_pkg, show=False)
 
         return
 
@@ -200,10 +209,12 @@ func main() {
      mgr,_ := app.(kernel.IAlgMgr)
      algs := make([]string, len(gaudi_jobopt.Algs))
      for i,alg := range gaudi_jobopt.Algs {
-       ialg,ok := alg.Instance.(kernel.IAlgorithm)
+     ialg,ok := alg.Instance.(kernel.IAlgorithm)
        if ok {
+          ai := alg.Instance
           mgr.AddAlgorithm(ialg)
           algs[i] = ialg.CompName()
+          fmt.Printf("%s: algorithm [%T/%T/%s] registered\\n", app.CompName(), ai, ialg, ialg.CompName())
        }
      }
      app_prop.SetProperty("Algs", algs)
@@ -214,10 +225,12 @@ func main() {
      for i,svc := range gaudi_jobopt.Svcs {
        isvc,ok := svc.Instance.(kernel.IService)
        if ok && isvc.CompName() != "" {
+          fmt.Printf("app-mgr adding service [%s]...\\n", isvc.CompName())
           if !mgr.AddService(isvc.CompName()).IsSuccess() {
              fmt.Printf("** pb adding svc [%s]\\n", isvc.CompName())
           }
           svcs[i] = isvc.CompName()
+          fmt.Printf("app-mgr adding service [%s]... [done]\\n", isvc.CompName())
        }
      }
      app_prop.SetProperty("Svcs", svcs)
@@ -234,7 +247,7 @@ func main() {
 '''
             go_main_fname = os.path.join(self._workdir, "gaudi_main.go")
             _save_formatted_go_src(fname=go_main_fname, src=go_main,
-                                   show=True)
+                                   show=False)
             cmd = [compiler, "-o", "gaudi_main.o", go_main_fname]
             print "::: compiling 'gaudi_main'..."
             subprocess.check_call(cmd)
@@ -250,6 +263,9 @@ func main() {
 app = AppMgr()
 
 if __name__ == "__main__":
+    print ":"*80
+    print "::: welcome to ng-go-gaudi"
+    print ":"*80
     jobopts = []
     if len(sys.argv)>1:
         for arg in sys.argv[1:]:

@@ -2,6 +2,13 @@ package kernel
 
 import "fmt"
 
+type comps_db map[string]IComponent
+
+/// the main entry point to the gaudi framework: the service locator
+var g_isvcloc ISvcLocator = nil
+/// the central repository of all gaudi components
+var g_compsdb comps_db
+
 type StatusCode int
 
 func (sc StatusCode) String() string {
@@ -20,6 +27,41 @@ func (sc StatusCode) IsRecoverable() bool {
 	return sc == StatusCode(2)
 }
 
+func GetSvcLocator() ISvcLocator {
+	return g_isvcloc
+}
+
+func ComponentMgr() IComponentMgr {
+	isvcloc := GetSvcLocator()
+	imgr, ok := isvcloc.(IComponentMgr)
+	if ok {
+		return imgr
+	}
+	return nil
+}
+
+func RegisterComp(c IComponent) bool {
+	if c == nil {
+		return false
+	}
+	n := c.CompName()
+	oldcomp, already_there := g_compsdb[n]
+	if already_there {
+		if oldcomp == c {
+			// double registration of the same component...
+			// silly but harmless.
+			return true
+		}
+		// already existing component with that same name !
+		err := fmt.Sprintf("a component with name [%s] was already registered ! (old-type: %T, new-type: %T)",
+			n, oldcomp, c);
+		panic(err)
+	}
+	//fmt.Printf("--> registering [%T/%s]...\n", c, n)
+	g_compsdb[n] = c
+	//fmt.Printf("--> registering [%T/%s]... [done]\n", c, n)
+	return true
+}
 type IComponent interface {
 	CompName() string
 	CompType() string
@@ -53,7 +95,7 @@ type IService interface {
 type IAlgorithm interface {
 	IComponent
 	Initialize() StatusCode
-	Execute() StatusCode
+	Execute(evtctx IEvtCtx) StatusCode
 	Finalize() StatusCode
 }
 

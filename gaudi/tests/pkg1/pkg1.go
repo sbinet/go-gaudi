@@ -5,75 +5,108 @@ import "gaudi/kernel"
 
 // --- alg1 ---
 
-type Alg1 struct {
+type alg1 struct {
 	kernel.Algorithm
 }
 
-func (a *Alg1) Initialize() kernel.StatusCode {
-	println(a.CompName(), "== initialize ==")
+func (a *alg1) Initialize() kernel.StatusCode {
+	a.MsgInfo("== initialize ==\n")
 	return kernel.StatusCode(0)
 }
 
-func (a *Alg1) Execute() kernel.StatusCode {
-	println(a.CompName(), "== execute ==")
+func (a *alg1) Execute(ctx kernel.IEvtCtx) kernel.StatusCode {
+	a.MsgInfo("== execute == [ctx:%v]\n", ctx)
 	return kernel.StatusCode(0)
 }
 
-func (a *Alg1) Finalize() kernel.StatusCode {
-	println(a.CompName(), "== finalize ==")
+func (a *alg1) Finalize() kernel.StatusCode {
+	a.MsgInfo("== finalize ==\n")
 	return kernel.StatusCode(0)
 }
 
 // --- alg2 ---
 
-type Alg2 struct {
+type alg2 struct {
 	kernel.Algorithm
 }
 
-func (a *Alg2) Initialize() kernel.StatusCode {
-	println(a.CompName(), "~~ initialize ~~")
+func (a *alg2) Initialize() kernel.StatusCode {
+	a.MsgInfo("~~ initialize ~~\n")
 	return kernel.StatusCode(0)
 }
 
-func (a *Alg2) Execute() kernel.StatusCode {
-	println(a.CompName(), "~~ execute ~~")
+func (a *alg2) Execute(ctx kernel.IEvtCtx) kernel.StatusCode {
+	a.MsgInfo("~~ execute ~~ [ctx:%v]\n", ctx)
 	return kernel.StatusCode(0)
 }
 
-func (a *Alg2) Finalize() kernel.StatusCode {
-	println(a.CompName(), "~~ finalize ~~")
+func (a *alg2) Finalize() kernel.StatusCode {
+	a.MsgInfo("~~ finalize ~~\n")
 	return kernel.StatusCode(0)
 }
 
 // --- svc1 ---
-type Svc1 struct {
+type svc1 struct {
 	kernel.Service
 }
 
-func (s *Svc1) Initialize() kernel.StatusCode {
-	println(s.CompName(), "~~ initialize ~~")
+func (s *svc1) InitializeSvc() kernel.StatusCode {
+	s.MsgInfo("~~ initialize ~~\n")
 	return kernel.StatusCode(0)
 }
 
-func (s *Svc1) Finalize() kernel.StatusCode {
-	println(s.CompName(), "~~ finalize ~~")
+func (s *svc1) FinalizeSvc() kernel.StatusCode {
+	s.MsgInfo("~~ finalize ~~\n")
 	return kernel.StatusCode(0)
 }
 
 // --- tool1 ---
-type Tool1 struct {
+type tool1 struct {
 	kernel.AlgTool
 }
 
-func (t *Tool1) Initialize() kernel.StatusCode {
-	println(t.CompName(), "~~ initialize ~~")
+func (t *tool1) InitializeTool() kernel.StatusCode {
+	t.MsgInfo("~~ initialize ~~\n")
 	return kernel.StatusCode(0)
 }
 
-func (t *Tool1) Finalize() kernel.StatusCode {
-	println(t.CompName(), "~~ finalize ~~")
+func (t *tool1) FinalizeTool() kernel.StatusCode {
+	t.MsgInfo("~~ finalize ~~\n")
 	return kernel.StatusCode(0)
 }
 
+// check matching interfaces
+var _ = kernel.IComponent(&alg1{})
+var _ = kernel.IAlgorithm(&alg1{})
+//var _ = kernel.Algorithm(&alg1{})
 
+// --- factory function ---
+func New(t,n string) kernel.IComponent {
+	switch t {
+	case "alg1":
+		c := &alg1{}
+		_ = kernel.NewAlg(&c.Algorithm,t,n)
+		kernel.RegisterComp(c)
+		return c
+	case "alg2":
+		c := &alg2{}
+		_ = kernel.NewAlg(&c.Algorithm,t,n)
+		kernel.RegisterComp(c)
+		return c
+	case "svc1":
+		c := &svc1{}
+		_ = kernel.NewSvc(&c.Service,t,n)
+		kernel.RegisterComp(c)
+		return c
+	case "tool1":
+		c := &tool1{}
+		_ = kernel.NewTool(&c.AlgTool,t,n, nil)
+		kernel.RegisterComp(c)
+		return c
+	default:
+		err := "no such type ["+t+"]"
+		panic(err)
+	}
+	return nil
+}
 /* EOF */

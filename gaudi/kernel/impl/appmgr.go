@@ -1,5 +1,7 @@
 package kernel
 
+//import "fmt"
+
 ///////////////////////////////////////////////////////////////////////////////
 // svc-mgr
 
@@ -34,8 +36,9 @@ func (mgr *svcMgr) HasComp(n string) bool {
 }
 
 func (mgr *svcMgr) AddService(svc string) StatusCode {
-	isvc,ok := components[svc].(IService)
+	isvc,ok := g_compsdb[svc].(IService)
 	if !ok {
+		//fmt.Printf("** AddService(%s) FAILED !\n", svc)
 		return StatusCode(1)
 	}
 	mgr.services[svc] = isvc
@@ -52,14 +55,18 @@ func (mgr *svcMgr) RemoveService(svc string) StatusCode {
 
 func (mgr *svcMgr) HasService(svc string) StatusCode {
 	if mgr.HasComp(svc) {
+		//fmt.Printf(":: HasService(%s) - true\n", svc)
 		return StatusCode(0)
 	}
 	return StatusCode(1)
 }
 
 func (mgr *svcMgr) GetService(svc string) IService {
-	if mgr.HasService(svc) != StatusCode(0) {
-		return mgr.services[svc]
+	if mgr.HasService(svc).IsSuccess() {
+		//fmt.Printf("-- GetService(%s)...\n", svc)
+		isvc := mgr.services[svc]
+		//fmt.Printf("-- GetService(%s)... [done]\n", svc)
+		return isvc
 	}
 	return nil
 }
@@ -135,6 +142,7 @@ func (mgr *algMgr) HasAlgorithm(algname string) bool {
 
 type appMgr struct {
 	properties
+	msgstream
 	svcMgr
 	algMgr
 
@@ -159,13 +167,13 @@ func (mgr *appMgr) GetComp(n string) IComponent {
 	if !mgr.HasComp(n) {
 		return nil
 	}
-	return components[n]
+	return g_compsdb[n]
 }
 
 func (mgr *appMgr) GetComps() []IComponent {
-	comps := make([]IComponent, len(components))
+	comps := make([]IComponent, len(g_compsdb))
 	i := 0
-	for _,v := range components {
+	for _,v := range g_compsdb {
 		comps[i] = v
 		i++
 	}
@@ -173,9 +181,9 @@ func (mgr *appMgr) GetComps() []IComponent {
 }
 
 func (mgr *appMgr) HasComp(n string) bool {
-	_,ok := components[n]
+	_,ok := g_compsdb[n]
 	if !ok {
-		components[n] = nil, false
+		g_compsdb[n] = nil, false
 	}
 	return ok
 }
@@ -184,49 +192,46 @@ func (app *appMgr) Configure() StatusCode {
 	app.evtproc = NewEvtProcessor("evt-proc")
 	//app.evtsel  = 
 
-	iprop, ok := app.evtproc.(IProperty)
-	if ok {
-		for _,v := range app.GetProperties() {
-			println(app.CompName(), 
-				"sending prop[",v.Name,"]=[",v.Value,
-				"] to evt-processor...")
-			sc := iprop.SetProperty(v.Name, v.Value)
-			println(app.CompName(), 
-				"sending prop[",v.Name,"]=[",v.Value,
-				"] to evt-processor... [",sc,"]")
-		}
-	}
 	return StatusCode(0)
 }
 
 func (app *appMgr) Initialize() StatusCode {
 	allgood := true
-	println(app.name, "initialize...")
+	app.MsgInfo("initialize...\n")
 
+	app.MsgVerbose("components-map: %v\n", g_compsdb)
 	svcs_prop, ok := app.GetProperty("Svcs").([]string)
 	if ok {
+		app.MsgInfo("svcs...\n")
 		for _,svc_name := range svcs_prop {
 			isvc := app.GetService(svc_name)
 			sc := isvc.InitializeSvc()
 			if sc != StatusCode(0) {
-				println("** pb initializing [",isvc.CompName(),"] !")
+				app.MsgError("pb initializing [%s] !\n",isvc.CompName())
 				allgood = false
 			}
 		}
+		_ = app.evtproc.(IService).InitializeSvc()
+		app.MsgInfo("svcs... [done]\n")
 	}
 
 	algs_prop, ok := app.GetProperty("Algs").([]string)
 	if ok {
+		app.MsgInfo("algs...\n")
 		for _,alg_name := range algs_prop {
 			ialg,isalg := app.GetComp(alg_name).(IAlgorithm)
 			if isalg {
 				sc := ialg.Initialize()
 				if sc != StatusCode(0) {
-					println("** pb initializing [",ialg.CompName(),"] !")
+					app.MsgError("pb initializing [%s] !\n",ialg.CompName())
 					allgood = false
+				} else {
+					app.MsgDebug("correctly initialized [%T/%s]\n",
+						ialg, ialg.CompName())
 				}
 			}
 		}
+		app.MsgInfo("algs... [done]\n")
 	}
 	if allgood {
 		return StatusCode(0)
@@ -235,12 +240,12 @@ func (app *appMgr) Initialize() StatusCode {
 }
 
 func (app *appMgr) Start() StatusCode {
-	println(app.name, "start...")
+	app.MsgInfo("start...\n")
 	return StatusCode(0)
 }
 
 func (app *appMgr) Run() StatusCode {
-	println(app.name, "run...")
+	app.MsgInfo("run...\n")
 	// init
 	sc := app.Initialize()
 	if !sc.IsSuccess() {
@@ -275,17 +280,55 @@ func (app *appMgr) Run() StatusCode {
 }
 
 func (app *appMgr) Stop() StatusCode {
-	println(app.name, "stop...")
+	app.MsgInfo("stop...\n")
 	return StatusCode(0)
 }
 
 func (app *appMgr) Finalize() StatusCode {
-	println(app.name, "finalize...")
-	return StatusCode(0)
+	app.MsgInfo("finalize...\n")
+	allgood := true
+
+	svcs_prop, ok := app.GetProperty("Svcs").([]string)
+	if ok {
+		app.MsgInfo("svcs...\n")
+		for _,svc_name := range svcs_prop {
+			isvc := app.GetService(svc_name)
+			sc := isvc.FinalizeSvc()
+			if sc != StatusCode(0) {
+				app.MsgError("pb finalizing [%s] !\n",isvc.CompName())
+				allgood = false
+			}
+		}
+		_ = app.evtproc.(IService).FinalizeSvc()
+		app.MsgInfo("svcs... [done]\n")
+	}
+
+	algs_prop, ok := app.GetProperty("Algs").([]string)
+	if ok {
+		app.MsgInfo("algs...\n")
+		for _,alg_name := range algs_prop {
+			ialg,isalg := app.GetComp(alg_name).(IAlgorithm)
+			if isalg {
+				sc := ialg.Finalize()
+				if sc != StatusCode(0) {
+					app.MsgError("pb finalizing [%s] !\n",ialg.CompName())
+					allgood = false
+				} else {
+					app.MsgDebug("correctly finalized [%T/%s]\n",
+						ialg, ialg.CompName())
+				}
+			}
+		}
+		app.MsgInfo("algs... [done]\n")
+	}
+	if allgood {
+		return StatusCode(0)
+	}
+	return StatusCode(1)
 }
 
 func (app *appMgr) Terminate() StatusCode {
-	println(app.name, "terminate...")
+	app.MsgInfo("terminate...\n")
 	return StatusCode(0)
 }
 
@@ -294,6 +337,7 @@ func NewAppMgr() IAppMgr {
 	appmgr.properties.props = make(map[string]interface{})
 	appmgr.name = "app-mgr"
 	appmgr.jobo = "foo.py"
+	appmgr.msgstream = msgstream{name:appmgr.name, level:LVL_INFO}
 
 	appmgr.svcMgr.services = make(map[string]IService)
 	appmgr.algMgr.algs = make(map[string]IAlgorithm)
@@ -303,7 +347,11 @@ func NewAppMgr() IAppMgr {
 	appmgr.mgrs["svcmgr"] = &appmgr.svcMgr
 	appmgr.mgrs["algmgr"] = &appmgr.algMgr
 	
-	components[appmgr.name] = appmgr
+	g_compsdb[appmgr.name] = appmgr
+
+	// completing bootstrap
+	g_isvcloc = appmgr
+
 	return appmgr
 }
 
@@ -322,5 +370,6 @@ var _ = ISvcMgr(&appMgr{})
 var _ = ISvcLocator(&appMgr{})
 var _ = IAppMgr(&appMgr{})
 var _ = IProperty(&appMgr{})
+
 
 /* EOF */

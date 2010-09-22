@@ -1,8 +1,7 @@
 package kernel
 
-type comps_db map[string]IComponent
-
-var components comps_db
+import "fmt"
+import "os"
 
 type Component struct {
 	comp_name string
@@ -19,7 +18,7 @@ func (c *Component) CompType() string {
 
 func NewComponent(t,n string) IComponent {
 	c := &Component{comp_name: n, comp_type: t}
-	components[n] = c
+	g_compsdb[n] = c
 	return c
 }
 
@@ -46,60 +45,136 @@ func (p *properties) GetProperties() []Property {
 	}
 	return props
 }
+
+type OutputLevel int
+const (
+	LVL_VERBOSE OutputLevel = iota
+	LVL_DEBUG
+	LVL_INFO
+	LVL_WARNING
+	LVL_ERROR
+	LVL_FATAL
+	LVL_ALWAYS
+	)
+
+func (lvl OutputLevel) String() string {
+	switch lvl {
+	case LVL_VERBOSE: return "VERBOSE"
+	case LVL_DEBUG:   return "DEBUG"
+	case LVL_INFO:    return "INFO"
+	case LVL_WARNING: return "WARNING"
+	case LVL_ERROR:   return "ERROR"
+	case LVL_FATAL:   return "FATAL"
+	case LVL_ALWAYS:  return "ALWAYS"
+	default:          return "???"
+	}
+	return "???"
+}
+
+// msgstream
+type msgstream struct {
+	name  string
+	level OutputLevel
+}
+
+
+func (m *msgstream) SetOutputLevel(lvl OutputLevel) {
+	m.level = lvl
+}
+func (m *msgstream) OutputLevel() OutputLevel {
+	return m.level
+}
+func (m *msgstream) Msg(lvl OutputLevel, format string, a ...interface{}) (int, os.Error) {
+	if m.level <= lvl {
+		s := fmt.Sprintf(format, a)
+		return fmt.Printf("%-10s %6s %s", m.name, lvl, s)
+	}
+	return 0, nil
+}
+func (m *msgstream) MsgVerbose(format string, a ...interface{}) (int, os.Error) {
+	return m.Msg(LVL_VERBOSE, format, a)
+}
+func (m *msgstream) MsgDebug(format string, a ...interface{}) (int, os.Error) {
+	return m.Msg(LVL_DEBUG, format, a)
+}
+func (m *msgstream) MsgInfo(format string, a ...interface{}) (int, os.Error) {
+	return m.Msg(LVL_INFO, format, a)
+}
+func (m *msgstream) MsgWarning(format string, a ...interface{}) (int, os.Error) {
+	return m.Msg(LVL_WARNING, format, a)
+}
+func (m *msgstream) MsgError(format string, a ...interface{}) (int, os.Error) {
+	return m.Msg(LVL_ERROR, format, a)
+}
+func (m *msgstream) MsgFatal(format string, a ...interface{}) (int, os.Error) {
+	return m.Msg(LVL_FATAL, format, a)
+}
+func (m *msgstream) MsgAlways(format string, a ...interface{}) (int, os.Error) {
+	return m.Msg(LVL_ALWAYS, format, a)
+}
+
 // algorithm
 type Algorithm struct {
 	Component
 	properties
+	msgstream
 }
 
 func (alg *Algorithm) Initialize() StatusCode {
-	println(alg.CompName(), "initialize...")
+	alg.MsgInfo("initialize...\n")
 	return StatusCode(0)
 }
 
-func (alg *Algorithm) Execute() StatusCode {
-	println(alg.CompName(), "execute...")
+func (alg *Algorithm) Execute(ctx IEvtCtx) StatusCode {
+	alg.MsgInfo("execute... [%v]\n", ctx)
 	return StatusCode(0)
 }
 
 func (alg *Algorithm) Finalize() StatusCode {
-	println(alg.CompName(), "finalize...")
+	alg.MsgInfo("finalize...\n")
 	return StatusCode(0)
 }
 
-func NewAlg(t,n string) IAlgorithm {
-	alg := &Algorithm{}
-	alg.Component.comp_name = n
-	alg.Component.comp_type = t
-	alg.properties.props = make(map[string]interface{})
+func NewAlg(comp IComponent, t,n string) IAlgorithm {
+	c := comp.(*Algorithm)
+	c.Component.comp_name = n
+	c.Component.comp_type = t
+	c.properties.props = make(map[string]interface{})
+	c.msgstream.name = n
+	c.msgstream.level = LVL_INFO
 
-	components[n] = alg
-	return alg
+	//g_compsdb[n] = c
+
+	return c
 }
 
 // service
 type Service struct {
 	Component
 	properties
+	msgstream
 }
 
 func (svc *Service) InitializeSvc() StatusCode {
-	println(svc.CompName(), "initialize...")
+	svc.MsgInfo("initialize...\n")
 	return StatusCode(0)
 }
 
 func (svc *Service) FinalizeSvc() StatusCode {
-	println(svc.CompName(), "finalize...")
+	svc.MsgInfo("finalize...\n")
 	return StatusCode(0)
 }
 
-func NewSvc(t,n string) IService {
-	svc := &Service{}
+func NewSvc(comp IComponent, t,n string) IService {
+	svc := comp.(*Service)
 	svc.Component.comp_name = n
 	svc.Component.comp_type = t
 	svc.properties.props = make(map[string]interface{})
 
-	components[n] = svc
+	svc.msgstream.name = n
+	svc.msgstream.level = LVL_INFO
+
+	//g_compsdb[n] = svc
 	return svc
 }
 
@@ -107,36 +182,43 @@ func NewSvc(t,n string) IService {
 type AlgTool struct {
 	Component
 	properties
+	msgstream
 	parent IComponent
 }
 
 func (tool *AlgTool) CompName() string {
-	return tool.parent.CompName() + "." + tool.Component.CompName()
+	// FIXME: implement toolsvc !
+	if tool.parent != nil {
+		return tool.parent.CompName() + "." + tool.Component.CompName()
+	}
+	return "ToolSvc." + tool.Component.CompName()
 }
 
 func (tool *AlgTool) InitializeTool() StatusCode {
-	println(tool.CompName(), "initialize...")
+	tool.MsgInfo("initialize...\n")
 	return StatusCode(0)
 }
 
 func (tool *AlgTool) FinalizeTool() StatusCode {
-	println(tool.CompName(), "finalize...")
+	tool.MsgInfo("finalize...\n")
 	return StatusCode(0)
 }
 
-func NewTool(t,n string, parent IComponent) IAlgTool {
-	tool := &AlgTool{}
+func NewTool(comp IComponent, t,n string, parent IComponent) IAlgTool {
+	tool := comp.(*AlgTool)
 	tool.Component.comp_name = n
 	tool.Component.comp_type = t
 	tool.properties.props = make(map[string]interface{})
+	tool.msgstream = msgstream{name: tool.CompName(), level: LVL_INFO}
 	tool.parent = parent
 
-	components[n] = tool
+	//g_compsdb[n] = tool
 	return tool
 }
 
 func init() {
-	components = make(comps_db)
+	g_compsdb = make(comps_db)
+	//fmt.Printf("--> components: %v\n", g_compsdb)
 }
 
 // checking implementations match interfaces
