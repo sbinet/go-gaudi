@@ -3,16 +3,16 @@ package kernel
 type storeDict map[string]interface{}
 
 type DataStore struct {
-	Component
+	Service
 	store storeDict
 }
 
 func NewDataStore(name string) *DataStore {
-	store := &DataStore{}
-	store.Component.comp_name = name
-	store.Component.comp_type = "kernel.DataStore"
-	store.store = make(storeDict)
-	return store
+	self := &DataStore{}
+	_ = NewSvc(&self.Service, "kernel.DataStore", name)
+	RegisterComp(self)
+	self.store = make(storeDict)
+	return self
 }
 
 func (d *DataStore) Put(key string, value *interface{}) bool {
@@ -39,6 +39,8 @@ func (d *DataStore) Get(key string) (chan *interface{}, bool) {
 
 // check implementations match interfaces
 var _ = IComponent(&DataStore{})
+var _ = IProperty(&DataStore{})
+var _ = IService(&DataStore{})
 var _ = IDataStore(&DataStore{})
 
 /* EOF */

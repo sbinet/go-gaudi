@@ -9,6 +9,7 @@ type evtProc struct {
 }
 
 func (e *evtProc) InitializeSvc() StatusCode {
+
 	sc := e.Service.InitializeSvc()
 	if !sc.IsSuccess() {
 		return sc
@@ -45,7 +46,7 @@ func (e *evtProc) InitializeSvc() StatusCode {
 func (e *evtProc) ExecuteEvent(ictx IEvtCtx) StatusCode {
 	if ictx != nil {
 		ctx := ictx.(int)
-		e.MsgInfo("executing event [%v]...\n", ctx)
+		e.MsgInfo("executing event [%v]... (#algs: %v)\n", ctx, len(e.algs))
 		for i,alg := range e.algs {
 			e.MsgInfo("-- ctx:%03v --> [%s]...\n", ctx, alg.CompName())
 			sc := alg.Execute(ictx)
@@ -135,13 +136,14 @@ func (e *evtProc) StopRun() StatusCode {
 }
 
 func NewEvtProcessor(name string) IEvtProcessor {
-	p := &evtProc{}
+	self := &evtProc{}
 	
 	//p.properties.props = make(map[string]interface{})
 	//p.name = name
-	p.algs = []IAlgorithm{}
-	_ = NewSvc(&p.Service, "evtProc", name)
-	return p
+	self.algs = []IAlgorithm{}
+	_ = NewSvc(&self.Service, "kernel.evtProc", name)
+	RegisterComp(self)
+	return self
 }
 
 // ---

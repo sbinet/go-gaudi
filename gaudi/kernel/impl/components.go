@@ -86,31 +86,31 @@ func (m *msgstream) OutputLevel() OutputLevel {
 }
 func (m *msgstream) Msg(lvl OutputLevel, format string, a ...interface{}) (int, os.Error) {
 	if m.level <= lvl {
-		s := fmt.Sprintf(format, a)
+		s := fmt.Sprintf(format, a...)
 		return fmt.Printf("%-10s %6s %s", m.name, lvl, s)
 	}
 	return 0, nil
 }
 func (m *msgstream) MsgVerbose(format string, a ...interface{}) (int, os.Error) {
-	return m.Msg(LVL_VERBOSE, format, a)
+	return m.Msg(LVL_VERBOSE, format, a...)
 }
 func (m *msgstream) MsgDebug(format string, a ...interface{}) (int, os.Error) {
-	return m.Msg(LVL_DEBUG, format, a)
+	return m.Msg(LVL_DEBUG, format, a...)
 }
 func (m *msgstream) MsgInfo(format string, a ...interface{}) (int, os.Error) {
-	return m.Msg(LVL_INFO, format, a)
+	return m.Msg(LVL_INFO, format, a...)
 }
 func (m *msgstream) MsgWarning(format string, a ...interface{}) (int, os.Error) {
-	return m.Msg(LVL_WARNING, format, a)
+	return m.Msg(LVL_WARNING, format, a...)
 }
 func (m *msgstream) MsgError(format string, a ...interface{}) (int, os.Error) {
-	return m.Msg(LVL_ERROR, format, a)
+	return m.Msg(LVL_ERROR, format, a...)
 }
 func (m *msgstream) MsgFatal(format string, a ...interface{}) (int, os.Error) {
-	return m.Msg(LVL_FATAL, format, a)
+	return m.Msg(LVL_FATAL, format, a...)
 }
 func (m *msgstream) MsgAlways(format string, a ...interface{}) (int, os.Error) {
-	return m.Msg(LVL_ALWAYS, format, a)
+	return m.Msg(LVL_ALWAYS, format, a...)
 }
 
 // algorithm
@@ -120,18 +120,33 @@ type Algorithm struct {
 	msgstream
 }
 
-func (alg *Algorithm) Initialize() StatusCode {
-	alg.MsgInfo("initialize...\n")
+//func (self *Algorithm) SysInitialize() StatusCode {
+//	return self.Initialize()
+//}
+
+//func (self *Algorithm) SysExecute(ctx IEvtCtx) StatusCode {
+//	self.MsgInfo("sys-execute... [%v]\n", ctx)
+//	println("==>",self.CompName(),"sys-execute [",ctx,"]")
+//	return self.Execute(ctx)
+//}
+
+//func (self *Algorithm) SysFinalize() StatusCode {
+//	return self.Finalize()
+//}
+
+func (self *Algorithm) Initialize() StatusCode {
+	self.MsgInfo("initialize...\n")
 	return StatusCode(0)
 }
 
-func (alg *Algorithm) Execute(ctx IEvtCtx) StatusCode {
-	alg.MsgInfo("execute... [%v]\n", ctx)
+func (self *Algorithm) Execute(ctx IEvtCtx) StatusCode {
+	self.MsgInfo("execute... [%v]\n", ctx)
+	println("==>",self.CompName(),"execute [",ctx,"]")
 	return StatusCode(0)
 }
 
-func (alg *Algorithm) Finalize() StatusCode {
-	alg.MsgInfo("finalize...\n")
+func (self *Algorithm) Finalize() StatusCode {
+	self.MsgInfo("finalize...\n")
 	return StatusCode(0)
 }
 
@@ -155,27 +170,35 @@ type Service struct {
 	msgstream
 }
 
-func (svc *Service) InitializeSvc() StatusCode {
-	svc.MsgInfo("initialize...\n")
+//func (self *Service) SysInitializeSvc() StatusCode {
+//	return self.InitializeSvc()
+//}
+
+//func (self *Service) SysFinalizeSvc() StatusCode {
+//	return self.FinalizeSvc()
+//}
+
+func (self *Service) InitializeSvc() StatusCode {
+	self.MsgInfo("initialize...\n")
 	return StatusCode(0)
 }
 
-func (svc *Service) FinalizeSvc() StatusCode {
-	svc.MsgInfo("finalize...\n")
+func (self *Service) FinalizeSvc() StatusCode {
+	self.MsgInfo("finalize...\n")
 	return StatusCode(0)
 }
 
 func NewSvc(comp IComponent, t,n string) IService {
-	svc := comp.(*Service)
-	svc.Component.comp_name = n
-	svc.Component.comp_type = t
-	svc.properties.props = make(map[string]interface{})
+	self := comp.(*Service)
+	self.Component.comp_name = n
+	self.Component.comp_type = t
+	self.properties.props = make(map[string]interface{})
 
-	svc.msgstream.name = n
-	svc.msgstream.level = LVL_INFO
+	self.msgstream.name = n
+	self.msgstream.level = LVL_INFO
 
-	//g_compsdb[n] = svc
-	return svc
+	//g_compsdb[n] = self
+	return self
 }
 
 // algtool
@@ -186,34 +209,42 @@ type AlgTool struct {
 	parent IComponent
 }
 
-func (tool *AlgTool) CompName() string {
+func (self *AlgTool) CompName() string {
 	// FIXME: implement toolsvc !
-	if tool.parent != nil {
-		return tool.parent.CompName() + "." + tool.Component.CompName()
+	if self.parent != nil {
+		return self.parent.CompName() + "." + self.Component.CompName()
 	}
-	return "ToolSvc." + tool.Component.CompName()
+	return "ToolSvc." + self.Component.CompName()
 }
 
-func (tool *AlgTool) InitializeTool() StatusCode {
-	tool.MsgInfo("initialize...\n")
+//func (self *AlgTool) SysInitializeTool() StatusCode {
+//	return self.InitializeTool()
+//}
+
+//func (self *AlgTool) SysFinalizeTool() StatusCode {
+//	return self.FinalizeTool()
+//}
+
+func (self *AlgTool) InitializeTool() StatusCode {
+	self.MsgInfo("initialize...\n")
 	return StatusCode(0)
 }
 
-func (tool *AlgTool) FinalizeTool() StatusCode {
-	tool.MsgInfo("finalize...\n")
+func (self *AlgTool) FinalizeTool() StatusCode {
+	self.MsgInfo("finalize...\n")
 	return StatusCode(0)
 }
 
 func NewTool(comp IComponent, t,n string, parent IComponent) IAlgTool {
-	tool := comp.(*AlgTool)
-	tool.Component.comp_name = n
-	tool.Component.comp_type = t
-	tool.properties.props = make(map[string]interface{})
-	tool.msgstream = msgstream{name: tool.CompName(), level: LVL_INFO}
-	tool.parent = parent
+	self := comp.(*AlgTool)
+	self.Component.comp_name = n
+	self.Component.comp_type = t
+	self.properties.props = make(map[string]interface{})
+	self.msgstream = msgstream{name: self.CompName(), level: LVL_INFO}
+	self.parent = parent
 
-	//g_compsdb[n] = tool
-	return tool
+	//g_compsdb[n] = self
+	return self
 }
 
 func init() {

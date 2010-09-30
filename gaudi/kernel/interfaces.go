@@ -88,12 +88,18 @@ type IProperty interface {
 
 type IService interface {
 	IComponent
+	//SysInitializeSvc() StatusCode
+	//SysFinalizeSvc() StatusCode
+
 	InitializeSvc() StatusCode
 	FinalizeSvc() StatusCode
 }
 
 type IAlgorithm interface {
 	IComponent
+	//SysInitialize() StatusCode
+	//SysExecute(evtctx IEvtCtx) StatusCode
+	//SysFinalize() StatusCode
 	Initialize() StatusCode
 	Execute(evtctx IEvtCtx) StatusCode
 	Finalize() StatusCode
@@ -101,6 +107,9 @@ type IAlgorithm interface {
 
 type IAlgTool interface {
 	IComponent
+	//SysInitializeTool() StatusCode
+	//SysFinalizeTool() StatusCode
+
 	InitializeTool() StatusCode
 	FinalizeTool() StatusCode
 }
@@ -165,3 +174,17 @@ type IDataStore interface {
 	Put(key string, value *interface{}) bool
 	Has(key string) bool
 }
+
+type IIDataStore interface {
+	IComponent
+	Get(key string) interface{}
+	Put(key string, value interface{})
+	Has(key string) bool
+	//Keys() []string // ??
+}
+
+type IDataStoreMgr interface {
+	Store(ctx IEvtCtx) chan IIDataStore
+}
+
+/* EOF */
