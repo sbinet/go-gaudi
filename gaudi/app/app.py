@@ -111,7 +111,8 @@ class AppMgr(object):
             exitcode = 1
         finally:
             os.chdir(orig_dir)
-            #shutil.rmtree(self._workdir)
+            if exitcode == 0:
+                shutil.rmtree(self._workdir)
         return exitcode
 
     def _gen_golang_pkg(self, fname=None):
