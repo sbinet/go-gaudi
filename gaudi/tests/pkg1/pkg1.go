@@ -9,18 +9,18 @@ type alg1 struct {
 	kernel.Algorithm
 }
 
-func (a *alg1) Initialize() kernel.StatusCode {
-	a.MsgInfo("== initialize ==\n")
+func (self *alg1) Initialize() kernel.StatusCode {
+	self.MsgInfo("== initialize ==\n")
 	return kernel.StatusCode(0)
 }
 
-func (a *alg1) Execute(ctx kernel.IEvtCtx) kernel.StatusCode {
-	a.MsgInfo("== execute == [ctx:%v]\n", ctx)
+func (self *alg1) Execute(ctx kernel.IEvtCtx) kernel.StatusCode {
+	self.MsgInfo("== execute == [ctx:%v]\n", ctx)
 	return kernel.StatusCode(0)
 }
 
-func (a *alg1) Finalize() kernel.StatusCode {
-	a.MsgInfo("== finalize ==\n")
+func (self *alg1) Finalize() kernel.StatusCode {
+	self.MsgInfo("== finalize ==\n")
 	return kernel.StatusCode(0)
 }
 
@@ -30,18 +30,18 @@ type alg2 struct {
 	kernel.Algorithm
 }
 
-func (a *alg2) Initialize() kernel.StatusCode {
-	a.MsgInfo("~~ initialize ~~\n")
+func (self *alg2) Initialize() kernel.StatusCode {
+	self.MsgInfo("~~ initialize ~~\n")
 	return kernel.StatusCode(0)
 }
 
-func (a *alg2) Execute(ctx kernel.IEvtCtx) kernel.StatusCode {
-	a.MsgInfo("~~ execute ~~ [ctx:%v]\n", ctx)
+func (self *alg2) Execute(ctx kernel.IEvtCtx) kernel.StatusCode {
+	self.MsgInfo("~~ execute ~~ [ctx:%v]\n", ctx)
 	return kernel.StatusCode(0)
 }
 
-func (a *alg2) Finalize() kernel.StatusCode {
-	a.MsgInfo("~~ finalize ~~\n")
+func (self *alg2) Finalize() kernel.StatusCode {
+	self.MsgInfo("~~ finalize ~~\n")
 	return kernel.StatusCode(0)
 }
 
@@ -50,13 +50,13 @@ type svc1 struct {
 	kernel.Service
 }
 
-func (s *svc1) InitializeSvc() kernel.StatusCode {
-	s.MsgInfo("~~ initialize ~~\n")
+func (self *svc1) InitializeSvc() kernel.StatusCode {
+	self.MsgInfo("~~ initialize ~~\n")
 	return kernel.StatusCode(0)
 }
 
-func (s *svc1) FinalizeSvc() kernel.StatusCode {
-	s.MsgInfo("~~ finalize ~~\n")
+func (self *svc1) FinalizeSvc() kernel.StatusCode {
+	self.MsgInfo("~~ finalize ~~\n")
 	return kernel.StatusCode(0)
 }
 
@@ -65,13 +65,13 @@ type tool1 struct {
 	kernel.AlgTool
 }
 
-func (t *tool1) InitializeTool() kernel.StatusCode {
-	t.MsgInfo("~~ initialize ~~\n")
+func (self *tool1) InitializeTool() kernel.StatusCode {
+	self.MsgInfo("~~ initialize ~~\n")
 	return kernel.StatusCode(0)
 }
 
-func (t *tool1) FinalizeTool() kernel.StatusCode {
-	t.MsgInfo("~~ finalize ~~\n")
+func (self *tool1) FinalizeTool() kernel.StatusCode {
+	self.MsgInfo("~~ finalize ~~\n")
 	return kernel.StatusCode(0)
 }
 
@@ -84,25 +84,25 @@ var _ = kernel.IAlgorithm(&alg1{})
 func New(t,n string) kernel.IComponent {
 	switch t {
 	case "alg1":
-		c := &alg1{}
-		_ = kernel.NewAlg(&c.Algorithm,t,n)
-		kernel.RegisterComp(c)
-		return c
+		self := &alg1{}
+		_ = kernel.NewAlg(&self.Algorithm,t,n)
+		kernel.RegisterComp(self)
+		return self
 	case "alg2":
-		c := &alg2{}
-		_ = kernel.NewAlg(&c.Algorithm,t,n)
-		kernel.RegisterComp(c)
-		return c
+		self := &alg2{}
+		_ = kernel.NewAlg(&self.Algorithm,t,n)
+		kernel.RegisterComp(self)
+		return self
 	case "svc1":
-		c := &svc1{}
-		_ = kernel.NewSvc(&c.Service,t,n)
-		kernel.RegisterComp(c)
-		return c
+		self := &svc1{}
+		_ = kernel.NewSvc(&self.Service,t,n)
+		kernel.RegisterComp(self)
+		return self
 	case "tool1":
-		c := &tool1{}
-		_ = kernel.NewTool(&c.AlgTool,t,n, nil)
-		kernel.RegisterComp(c)
-		return c
+		self := &tool1{}
+		_ = kernel.NewTool(&self.AlgTool,t,n, nil)
+		kernel.RegisterComp(self)
+		return self
 	default:
 		err := "no such type ["+t+"]"
 		panic(err)
