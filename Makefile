@@ -8,6 +8,7 @@ all: install
 
 DIRS=\
 	gaudi/kernel\
+	gaudi/datastore\
 	gaudi/app\
 	gaudi/tests/pkg1\
 	gaudi/tests/pkg2\

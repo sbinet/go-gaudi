@@ -9,18 +9,18 @@ type alg1 struct {
 	kernel.Algorithm
 }
 
-func (a *alg1) Initialize() kernel.StatusCode {
-	a.MsgInfo("== initialize ==\n")
+func (self *alg1) Initialize() kernel.StatusCode {
+	self.MsgInfo("== initialize ==\n")
 	return kernel.StatusCode(0)
 }
 
-func (a *alg1) Execute(ctx kernel.IEvtCtx) kernel.StatusCode {
-	a.MsgInfo("== execute == [%v]\n", ctx)
+func (self *alg1) Execute(ctx kernel.IEvtCtx) kernel.StatusCode {
+	self.MsgInfo("== execute == [%v]\n", ctx)
 	return kernel.StatusCode(0)
 }
 
-func (a *alg1) Finalize() kernel.StatusCode {
-	a.MsgInfo("== finalize ==\n")
+func (self *alg1) Finalize() kernel.StatusCode {
+	self.MsgInfo("== finalize ==\n")
 	return kernel.StatusCode(0)
 }
 
@@ -29,13 +29,38 @@ type svc2 struct {
 	kernel.Service
 }
 
-func (s *svc2) InitializeSvc() kernel.StatusCode {
-	s.MsgInfo("~~ initialize ~~\n")
+func (self *svc2) InitializeSvc() kernel.StatusCode {
+	self.MsgInfo("~~ initialize ~~\n")
 	return kernel.StatusCode(0)
 }
 
-func (s *svc2) FinalizeSvc() kernel.StatusCode {
-	s.MsgInfo("~~ finalize ~~\n")
+func (self *svc2) FinalizeSvc() kernel.StatusCode {
+	self.MsgInfo("~~ finalize ~~\n")
+	return kernel.StatusCode(0)
+}
+
+// --- alg adder ---
+type alg_adder struct {
+	kernel.Algorithm
+	evtstore kernel.IDataStore
+}
+
+func (self *alg_adder) Initialize() kernel.StatusCode {
+	self.MsgInfo("== initialize ==\n")
+	self.MsgInfo("retrieving evt-store...\n")
+	svcloc := kernel.GetSvcLocator()
+	self.evtstore = svcloc.GetService("evt-store").(kernel.IDataStore)
+	self.MsgInfo("retrieving evt-store... [ok]\n")
+	return kernel.StatusCode(0)
+}
+
+func (self *alg_adder) Execute(ctx kernel.IEvtCtx) kernel.StatusCode {
+	self.MsgInfo("== execute == [%v]\n", ctx)
+	return kernel.StatusCode(0)
+}
+
+func (self *alg_adder) Finalize() kernel.StatusCode {
+	self.MsgInfo("== finalize ==\n")
 	return kernel.StatusCode(0)
 }
 
@@ -43,16 +68,20 @@ func (s *svc2) FinalizeSvc() kernel.StatusCode {
 func New(t,n string) kernel.IComponent {
 	switch t {
 	case "alg1":
-		c := &alg1{}
-		_ = kernel.NewAlg(&c.Algorithm,t,n)
-		kernel.RegisterComp(c)
-		return c
+		self := &alg1{}
+		_ = kernel.NewAlg(&self.Algorithm,t,n)
+		kernel.RegisterComp(self)
+		return self
 	case "svc2":
-		c := &svc2{}
-		_ = kernel.NewSvc(&c.Service,t,n)
-		kernel.RegisterComp(c)
-		kernel.RegisterComp(c)
-		return c
+		self := &svc2{}
+		_ = kernel.NewSvc(&self.Service,t,n)
+		kernel.RegisterComp(self)
+		return self
+	case "alg_adder":
+		self := &alg_adder{}
+		_ = kernel.NewAlg(&self.Algorithm,t,n)
+		kernel.RegisterComp(self)
+		return self
 	default:
 		err := "no such type ["+t+"]"
 		panic(err)

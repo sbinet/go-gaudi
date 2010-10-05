@@ -168,14 +168,16 @@ type ISvcLocator interface {
 	ExistsService(svc string) bool
 }
 
+/*
 type IDataStore interface {
 	IComponent
 	Get(key string) (chan *interface{}, bool)
 	Put(key string, value *interface{}) bool
 	Has(key string) bool
 }
+*/
 
-type IIDataStore interface {
+type IDataStore interface {
 	IComponent
 	Get(key string) interface{}
 	Put(key string, value interface{})
@@ -184,7 +186,7 @@ type IIDataStore interface {
 }
 
 type IDataStoreMgr interface {
-	Store(ctx IEvtCtx) chan IIDataStore
+	Store(ctx IEvtCtx) chan IDataStore
 }
 
 /* EOF */
