@@ -22,10 +22,14 @@ func NewComponent(t,n string) IComponent {
 	return self
 }
 
+// --- properties ---
 type properties struct {
 	props map[string]interface{}
 }
 
+func (self *properties) DeclareProperty(n string, v interface{}) {
+	self.SetProperty(n, v)
+}
 func (self *properties) SetProperty(n string, v interface{}) StatusCode {
 	self.props[n] = v
 	return StatusCode(0)
@@ -47,6 +51,7 @@ func (self *properties) GetProperties() []Property {
 	return props
 }
 
+// --- output level ---
 type OutputLevel int
 const (
 	LVL_VERBOSE OutputLevel = iota
@@ -119,6 +124,17 @@ type Algorithm struct {
 	Component
 	properties
 	msgstream
+	evtstore IDataStoreMgr
+	detstore IDataStoreMgr
+	//stores map[string]IDataStoreMgr
+}
+
+// convenience function
+func (self *Algorithm) EvtStore(ctx IEvtCtx) IDataStore {
+	return self.evtstore.Store(ctx)
+}
+func (self *Algorithm) DetStore(ctx IEvtCtx) IDataStore {
+	return self.detstore.Store(ctx)
 }
 
 //func (self *Algorithm) SysInitialize() StatusCode {
@@ -137,6 +153,14 @@ type Algorithm struct {
 
 func (self *Algorithm) Initialize() StatusCode {
 	self.MsgInfo("initialize...\n")
+	svcloc := GetSvcLocator()
+	if svcloc == nil {
+		self.MsgError("could not retrieve svclocator\n")
+		return StatusCode(1)
+	}
+
+	self.evtstore = svcloc.GetService("evt-store").(IDataStoreMgr)
+	self.detstore = svcloc.GetService("det-store").(IDataStoreMgr)
 	return StatusCode(0)
 }
 
@@ -151,6 +175,17 @@ func (self *Algorithm) Finalize() StatusCode {
 	return StatusCode(0)
 }
 
+/*
+func (self *Algorithm) Store(ctx IEvtCtx, n string) IDataStore {
+	store, ok := self.stores[n]
+	if !ok {
+		self.stores[n] = nil, false
+		return nil
+	}
+	return store.Store(ctx)
+}
+*/
+
 func NewAlg(comp IComponent, t,n string) IAlgorithm {
 	self := comp.(*Algorithm)
 	self.Component.comp_name = n
@@ -159,6 +194,8 @@ func NewAlg(comp IComponent, t,n string) IAlgorithm {
 	self.msgstream.name = n
 	self.msgstream.level = LVL_INFO
 
+	self.evtstore = nil
+	self.detstore = nil
 	//g_compsdb[n] = self
 
 	return self

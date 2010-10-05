@@ -3,17 +3,47 @@ package datastore
 
 import "gaudi/kernel"
 
-type datastore map[string]interface{}
+// --- datastore helper ---
+
+type datastore struct {
+	store map[string]interface{}
+}
+
+func (self *datastore) Put(key string, value interface{}) {
+	self.store[key] = value
+}
+
+func (self *datastore) Get(key string) interface{} {
+	value, ok := self.store[key]
+	if ok {
+		return value
+	}
+	return nil
+}
+
+func (self *datastore) Has(key string) bool {
+	_, ok := self.store[key]
+	if !ok {
+		self.store[key] = nil, false
+	}
+	return ok
+}
+
+func (self *datastore) ClearStore() kernel.StatusCode {
+	self.store = make(map[string]interface{})
+	return kernel.StatusCode(0)
+}
 
 // --- datastore service ---
 
 type datastoresvc struct {
 	kernel.Service
-	store datastore
+	stores []datastore
 }
 
 func (self *datastoresvc) InitializeSvc() kernel.StatusCode {
-	self.MsgInfo("~~ initialize [datastore svc] ~~\n")
+	self.MsgInfo("~~ initialize [datastore svc] nstores: %v ~~\n", 
+		len(self.stores))
 	return kernel.StatusCode(0)
 }
 
@@ -22,6 +52,21 @@ func (self *datastoresvc) FinalizeSvc() kernel.StatusCode {
 	return kernel.StatusCode(0)
 }
 
+func (self *datastoresvc) Store(ctx kernel.IEvtCtx) kernel.IDataStore {
+	idx := ctx.(int) % len(self.stores)
+	if idx < len(self.stores) {
+		return &self.stores[idx]
+	}
+	return nil
+}
+
+func (self *datastoresvc) SetNbrStreams(n int) kernel.StatusCode {
+	//self.nstores = n
+	self.stores = make([]datastore, n)
+	return kernel.StatusCode(0)
+}
+
+/*
 func (self *datastoresvc) Put(key string, value interface{}) {
 	self.store[key] = value
 }
@@ -41,6 +86,14 @@ func (self *datastoresvc) Has(key string) bool {
 	}
 	return ok
 }
+*/
+
+/*
+func (self *datastoresvc) ClearStore() kernel.StatusCode {
+	self.store = make(datastore)
+	return kernel.StatusCode(0)
+}
+*/
 
 /*
 
@@ -50,18 +103,23 @@ type IDataStoreMgr interface {
 */
 
 // check matching interfaces
+var _ = kernel.IDataStore(&datastore{})
+var _ = kernel.IDataStoreClearer(&datastore{})
 var _ = kernel.IComponent(&datastoresvc{})
 var _ = kernel.IService(&datastoresvc{})
 var _ = kernel.IProperty(&datastoresvc{})
-var _ = kernel.IDataStore(&datastoresvc{})
+//var _ = kernel.IDataStore(&datastoresvc{})
+//var _ = kernel.IDataStoreClearer(&datastoresvc{})
 
 // --- factory function ---
 func New(t,n string) kernel.IComponent {
 	switch t {
 	case "datastoresvc":
 		self := &datastoresvc{}
+		//self.stores = make([]datastore, 1)
 		_ = kernel.NewSvc(&self.Service, t, n)
 		kernel.RegisterComp(self)
+		self.SetNbrStreams(1)
 		return self
 	default:
 		err := "no such type ["+t+"]"

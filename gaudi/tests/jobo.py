@@ -8,7 +8,23 @@ app.svcs += Svc("gaudi/tests/pkg2:svc2", "svc2")
 app.svcs += Svc("gaudi/datastore:datastoresvc", "evt-store")
 app.svcs += Svc("gaudi/datastore:datastoresvc", "det-store")
 
-app.algs += Alg("gaudi/tests/pkg2:alg_adder", "adder_1", OutputLevel=1)
+app.algs += Alg("gaudi/tests/pkg2:alg_adder", "adder_1",
+                OutputLevel=1,
+                Val=0.)
+app.algs += Alg("gaudi/tests/pkg2:alg_dumper", "d1")
+
+app.algs += Alg("gaudi/tests/pkg2:alg_adder", "adder_2",
+                OutputLevel=1,
+                Val=3.)
+app.algs += Alg("gaudi/tests/pkg2:alg_dumper", "d2")
+
+app.algs += Alg("gaudi/tests/pkg2:alg_adder", "adder_3",
+                OutputLevel=1)
+app.algs += Alg("gaudi/tests/pkg2:alg_dumper", "d3")
+
+app.algs += Alg("gaudi/tests/pkg2:alg_dumper", "dumper",
+                NbrJets = "njets",
+                OutputLevel=1)
 
 app.toolsvc += Tool("gaudi/tests/pkg1:tool1", name="tool1")
 

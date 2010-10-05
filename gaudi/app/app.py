@@ -160,6 +160,24 @@ class AppMgr(object):
                              comp.name,
                              comma)]
                 pass
+            for i,comp in enumerate(comps):
+                if len(comp.props) <= 0:
+                    continue
+                go_pkg += [
+                    "{",
+                    "c,ok := %s[%i].Instance.(kernel.IProperty)" % (name, i),
+                    "if ok {"
+                    ]
+                for k, val in comp.props.iteritems():
+                    if isinstance(val, basestring):
+                        go_pkg += [
+                            "c.SetProperty(\"%s\", \"%s\")" % (k, val)
+                            ]
+                    else:
+                        go_pkg += [
+                            "c.SetProperty(\"%s\", %r)" % (k, val)
+                            ]
+                go_pkg += ["}","}"]
         go_pkg += ["}"]
 
         go_pkg += ["", "/* EOF */", ""]
@@ -216,6 +234,12 @@ func main() {
           mgr.AddAlgorithm(ialg)
           algs[i] = ialg.CompName()
           fmt.Printf("%s: algorithm [%T/%T/%s] registered\\n", app.CompName(), ai, ialg, ialg.CompName())
+          iprop, ok := alg.Instance.(kernel.IProperty)
+          if ok {
+           if iprop != nil {
+             fmt.Printf("%s: alg [%s] implements kernel.IProperty\\n", app.CompName(), ialg.CompName())
+           }
+          }
        }
      }
      app_prop.SetProperty("Algs", algs)

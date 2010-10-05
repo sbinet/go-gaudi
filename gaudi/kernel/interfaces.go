@@ -78,6 +78,8 @@ type Property struct {
 	Value interface{}
 }
 type IProperty interface {
+	/// declare a property by name and default value
+	DeclareProperty(name string, value interface{})
 	/// set the property value
 	SetProperty(name string, value interface{}) StatusCode
 	/// get the property value by name
@@ -115,7 +117,8 @@ type IAlgTool interface {
 }
 
 type IEvtCtx interface {
-	
+	//Index() int
+	//Id() int
 }
 
 type IEvtProcessor interface {
@@ -178,15 +181,21 @@ type IDataStore interface {
 */
 
 type IDataStore interface {
-	IComponent
+	//IComponent
 	Get(key string) interface{}
 	Put(key string, value interface{})
 	Has(key string) bool
 	//Keys() []string // ??
 }
 
+type IDataStoreClearer interface {
+	ClearStore() StatusCode
+}
+
 type IDataStoreMgr interface {
-	Store(ctx IEvtCtx) chan IDataStore
+	IComponent
+	Store(ctx IEvtCtx) IDataStore
+	SetNbrStreams(n int) StatusCode
 }
 
 /* EOF */
