@@ -9,80 +9,80 @@ type svcMgr struct {
 	services map[string]IService
 }
 
-func (mgr *svcMgr) GetComp(n string) IComponent {
-	c,ok := mgr.services[n]
+func (self *svcMgr) GetComp(n string) IComponent {
+	c,ok := self.services[n]
 	if ok {
 		return c.(IComponent)
 	}
 	return nil
 }
 
-func (mgr *svcMgr) GetComps() []IComponent {
-	comps := make([]IComponent, len(mgr.services))
+func (self *svcMgr) GetComps() []IComponent {
+	comps := make([]IComponent, len(self.services))
 	i := 0
-	for _,v := range mgr.services {
+	for _,v := range self.services {
 		comps[i] = v.(IComponent)
 		i++
 	}
 	return comps
 }
 
-func (mgr *svcMgr) HasComp(n string) bool {
-	_,ok := mgr.services[n]
+func (self *svcMgr) HasComp(n string) bool {
+	_,ok := self.services[n]
 	if !ok {
-		mgr.services[n] = nil, false
+		self.services[n] = nil, false
 	}
 	return ok
 }
 
-func (mgr *svcMgr) AddService(svc string) StatusCode {
+func (self *svcMgr) AddService(svc string) StatusCode {
 	isvc,ok := g_compsdb[svc].(IService)
 	if !ok {
 		//fmt.Printf("** AddService(%s) FAILED !\n", svc)
 		return StatusCode(1)
 	}
-	mgr.services[svc] = isvc
+	self.services[svc] = isvc
 	return StatusCode(0)
 }
 
-func (mgr *svcMgr) RemoveService(svc string) StatusCode {
-	if mgr.HasService(svc) == StatusCode(0) {
-		mgr.services[svc] = nil, false
+func (self *svcMgr) RemoveService(svc string) StatusCode {
+	if self.HasService(svc) == StatusCode(0) {
+		self.services[svc] = nil, false
 		return StatusCode(0)
 	}
 	return StatusCode(1)
 }
 
-func (mgr *svcMgr) HasService(svc string) StatusCode {
-	if mgr.HasComp(svc) {
+func (self *svcMgr) HasService(svc string) StatusCode {
+	if self.HasComp(svc) {
 		//fmt.Printf(":: HasService(%s) - true\n", svc)
 		return StatusCode(0)
 	}
 	return StatusCode(1)
 }
 
-func (mgr *svcMgr) GetService(svc string) IService {
-	if mgr.HasService(svc).IsSuccess() {
+func (self *svcMgr) GetService(svc string) IService {
+	if self.HasService(svc).IsSuccess() {
 		//fmt.Printf("-- GetService(%s)...\n", svc)
-		isvc := mgr.services[svc]
+		isvc := self.services[svc]
 		//fmt.Printf("-- GetService(%s)... [done]\n", svc)
 		return isvc
 	}
 	return nil
 }
 
-func (mgr *svcMgr) GetServices() []IService {
-	svcs := make([]IService, len(mgr.services))
+func (self *svcMgr) GetServices() []IService {
+	svcs := make([]IService, len(self.services))
 	i := 0
-	for _,v := range mgr.services {
+	for _,v := range self.services {
 		svcs[i] = v
 		i++
 	}
 	return svcs
 }
 
-func (mgr *svcMgr) ExistsService(svc string) bool {
-	return mgr.HasService(svc) == StatusCode(0)
+func (self *svcMgr) ExistsService(svc string) bool {
+	return self.HasService(svc) == StatusCode(0)
 }
 
 
@@ -93,48 +93,48 @@ type algMgr struct {
 	algs map[string]IAlgorithm
 }
 
-func (mgr *algMgr) GetComp(n string) IComponent {
-	c,ok := mgr.algs[n]
+func (self *algMgr) GetComp(n string) IComponent {
+	c,ok := self.algs[n]
 	if ok {
 		return c.(IComponent)
 	}
 	return nil
 }
 
-func (mgr *algMgr) GetComps() []IComponent {
-	comps := make([]IComponent, len(mgr.algs))
+func (self *algMgr) GetComps() []IComponent {
+	comps := make([]IComponent, len(self.algs))
 	i := 0
-	for _,v := range mgr.algs {
+	for _,v := range self.algs {
 		comps[i] = v.(IComponent)
 		i++
 	}
 	return comps
 }
 
-func (mgr *algMgr) HasComp(n string) bool {
-	_,ok := mgr.algs[n]
+func (self *algMgr) HasComp(n string) bool {
+	_,ok := self.algs[n]
 	if !ok {
-		mgr.algs[n] = nil, false
+		self.algs[n] = nil, false
 	}
 	return ok
 }
 
-func (mgr *algMgr) AddAlgorithm(alg IAlgorithm) StatusCode {
-	mgr.algs[alg.CompName()] = alg
+func (self *algMgr) AddAlgorithm(alg IAlgorithm) StatusCode {
+	self.algs[alg.CompName()] = alg
 	return StatusCode(0)
 }
 
-func (mgr *algMgr) RemoveAlgorithm(alg IAlgorithm) StatusCode {
+func (self *algMgr) RemoveAlgorithm(alg IAlgorithm) StatusCode {
 	n := alg.CompName()
-	if !mgr.HasComp(n) {
+	if !self.HasComp(n) {
 		return StatusCode(1)
 	}
-	mgr.algs[n] = nil, false
+	self.algs[n] = nil, false
 	return StatusCode(0)
 }
 
-func (mgr *algMgr) HasAlgorithm(algname string) bool {
-	return mgr.HasComp(algname)
+func (self *algMgr) HasAlgorithm(algname string) bool {
+	return self.HasComp(algname)
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -155,22 +155,22 @@ type appMgr struct {
 	mgrs    map[string]IComponentMgr
 }
 
-func (app *appMgr) CompType() string {
+func (self *appMgr) CompType() string {
 	return "gaudi.kernel.appMgr"
 }
 
-func (app *appMgr) CompName() string {
-	return app.name
+func (self *appMgr) CompName() string {
+	return self.name
 }
 
-func (mgr *appMgr) GetComp(n string) IComponent {
-	if !mgr.HasComp(n) {
+func (self *appMgr) GetComp(n string) IComponent {
+	if !self.HasComp(n) {
 		return nil
 	}
 	return g_compsdb[n]
 }
 
-func (mgr *appMgr) GetComps() []IComponent {
+func (self *appMgr) GetComps() []IComponent {
 	comps := make([]IComponent, len(g_compsdb))
 	i := 0
 	for _,v := range g_compsdb {
@@ -180,7 +180,7 @@ func (mgr *appMgr) GetComps() []IComponent {
 	return comps
 }
 
-func (mgr *appMgr) HasComp(n string) bool {
+func (self *appMgr) HasComp(n string) bool {
 	_,ok := g_compsdb[n]
 	if !ok {
 		g_compsdb[n] = nil, false
@@ -188,50 +188,50 @@ func (mgr *appMgr) HasComp(n string) bool {
 	return ok
 }
 
-func (app *appMgr) Configure() StatusCode {
-	app.evtproc = NewEvtProcessor("evt-proc")
-	//app.evtsel  = 
+func (self *appMgr) Configure() StatusCode {
+	self.evtproc = NewEvtProcessor("evt-proc")
+	//self.evtsel  = 
 
 	return StatusCode(0)
 }
 
-func (app *appMgr) Initialize() StatusCode {
+func (self *appMgr) Initialize() StatusCode {
 	allgood := true
-	app.MsgInfo("initialize...\n")
+	self.MsgInfo("initialize...\n")
 
-	app.MsgVerbose("components-map: %v\n", g_compsdb)
-	svcs_prop, ok := app.GetProperty("Svcs").([]string)
+	self.MsgVerbose("components-map: %v\n", g_compsdb)
+	svcs_prop, ok := self.GetProperty("Svcs").([]string)
 	if ok {
-		app.MsgInfo("svcs...\n")
+		self.MsgInfo("svcs...\n")
 		for _,svc_name := range svcs_prop {
-			isvc := app.GetService(svc_name)
+			isvc := self.GetService(svc_name)
 			sc := isvc.InitializeSvc()
 			if sc != StatusCode(0) {
-				app.MsgError("pb initializing [%s] !\n",isvc.CompName())
+				self.MsgError("pb initializing [%s] !\n",isvc.CompName())
 				allgood = false
 			}
 		}
-		_ = app.evtproc.(IService).InitializeSvc()
-		app.MsgInfo("svcs... [done]\n")
+		_ = self.evtproc.(IService).InitializeSvc()
+		self.MsgInfo("svcs... [done]\n")
 	}
 
-	algs_prop, ok := app.GetProperty("Algs").([]string)
+	algs_prop, ok := self.GetProperty("Algs").([]string)
 	if ok {
-		app.MsgInfo("algs...\n")
+		self.MsgInfo("algs...\n")
 		for _,alg_name := range algs_prop {
-			ialg,isalg := app.GetComp(alg_name).(IAlgorithm)
+			ialg,isalg := self.GetComp(alg_name).(IAlgorithm)
 			if isalg {
 				sc := ialg.Initialize()
 				if sc != StatusCode(0) {
-					app.MsgError("pb initializing [%s] !\n",ialg.CompName())
+					self.MsgError("pb initializing [%s] !\n",ialg.CompName())
 					allgood = false
 				} else {
-					app.MsgDebug("correctly initialized [%T/%s]\n",
+					self.MsgDebug("correctly initialized [%T/%s]\n",
 						ialg, ialg.CompName())
 				}
 			}
 		}
-		app.MsgInfo("algs... [done]\n")
+		self.MsgInfo("algs... [done]\n")
 	}
 	if allgood {
 		return StatusCode(0)
@@ -239,87 +239,87 @@ func (app *appMgr) Initialize() StatusCode {
 	return StatusCode(1)
 }
 
-func (app *appMgr) Start() StatusCode {
-	app.MsgInfo("start...\n")
+func (self *appMgr) Start() StatusCode {
+	self.MsgInfo("start...\n")
 	return StatusCode(0)
 }
 
-func (app *appMgr) Run() StatusCode {
-	app.MsgInfo("run...\n")
+func (self *appMgr) Run() StatusCode {
+	self.MsgInfo("run...\n")
 	// init
-	sc := app.Initialize()
+	sc := self.Initialize()
 	if !sc.IsSuccess() {
 		return sc
 	}
 
 	// start
-	sc = app.Start()
+	sc = self.Start()
 	if !sc.IsSuccess() {
 		return sc
 	}
 
 	// evtloop-run
-	sc = app.evtproc.ExecuteRun(10)
+	sc = self.evtproc.ExecuteRun(10)
 	if !sc.IsSuccess() {
 		return sc
 	}
 
 	// stop
-	sc = app.Stop()
+	sc = self.Stop()
 	if !sc.IsSuccess() {
 		return sc
 	}
 
 	// fini
-	sc = app.Finalize()
+	sc = self.Finalize()
 	if !sc.IsSuccess() {
 		return sc
 	}
 
-	return app.Terminate()
+	return self.Terminate()
 }
 
-func (app *appMgr) Stop() StatusCode {
-	app.MsgInfo("stop...\n")
+func (self *appMgr) Stop() StatusCode {
+	self.MsgInfo("stop...\n")
 	return StatusCode(0)
 }
 
-func (app *appMgr) Finalize() StatusCode {
-	app.MsgInfo("finalize...\n")
+func (self *appMgr) Finalize() StatusCode {
+	self.MsgInfo("finalize...\n")
 	allgood := true
 
-	svcs_prop, ok := app.GetProperty("Svcs").([]string)
+	svcs_prop, ok := self.GetProperty("Svcs").([]string)
 	if ok {
-		app.MsgInfo("svcs...\n")
+		self.MsgInfo("svcs...\n")
 		for _,svc_name := range svcs_prop {
-			isvc := app.GetService(svc_name)
+			isvc := self.GetService(svc_name)
 			sc := isvc.FinalizeSvc()
 			if sc != StatusCode(0) {
-				app.MsgError("pb finalizing [%s] !\n",isvc.CompName())
+				self.MsgError("pb finalizing [%s] !\n",isvc.CompName())
 				allgood = false
 			}
 		}
-		_ = app.evtproc.(IService).FinalizeSvc()
-		app.MsgInfo("svcs... [done]\n")
+		_ = self.evtproc.(IService).FinalizeSvc()
+		self.MsgInfo("svcs... [done]\n")
 	}
 
-	algs_prop, ok := app.GetProperty("Algs").([]string)
+	algs_prop, ok := self.GetProperty("Algs").([]string)
 	if ok {
-		app.MsgInfo("algs...\n")
+		self.MsgInfo("algs...\n")
 		for _,alg_name := range algs_prop {
-			ialg,isalg := app.GetComp(alg_name).(IAlgorithm)
+			ialg,isalg := self.GetComp(alg_name).(IAlgorithm)
 			if isalg {
 				sc := ialg.Finalize()
 				if sc != StatusCode(0) {
-					app.MsgError("pb finalizing [%s] !\n",ialg.CompName())
+					self.MsgError("pb finalizing [%s] !\n",ialg.CompName())
 					allgood = false
 				} else {
-					app.MsgDebug("correctly finalized [%T/%s]\n",
+					self.MsgDebug("correctly finalized [%T/%s]\n",
 						ialg, ialg.CompName())
 				}
 			}
 		}
-		app.MsgInfo("algs... [done]\n")
+		self.MsgInfo("algs... [done]\n")
 	}
 	if allgood {
 		return StatusCode(0)
@@ -327,32 +327,32 @@ func (app *appMgr) Finalize() StatusCode {
 	return StatusCode(1)
 }
 
-func (app *appMgr) Terminate() StatusCode {
-	app.MsgInfo("terminate...\n")
+func (self *appMgr) Terminate() StatusCode {
+	self.MsgInfo("terminate...\n")
 	return StatusCode(0)
 }
 
 func NewAppMgr() IAppMgr {
-	appmgr := &appMgr{}
-	appmgr.properties.props = make(map[string]interface{})
-	appmgr.name = "app-mgr"
-	appmgr.jobo = "foo.py"
-	appmgr.msgstream = msgstream{name:appmgr.name, level:LVL_INFO}
+	self := &appMgr{}
+	self.properties.props = make(map[string]interface{})
+	self.name = "app-mgr"
+	self.jobo = "foo.py"
+	self.msgstream = msgstream{name:self.name, level:LVL_INFO}
 
-	appmgr.svcMgr.services = make(map[string]IService)
-	appmgr.algMgr.algs = make(map[string]IAlgorithm)
+	self.svcMgr.services = make(map[string]IService)
+	self.algMgr.algs = make(map[string]IAlgorithm)
 
 
-	appmgr.mgrs = make(map[string]IComponentMgr)
-	appmgr.mgrs["svcmgr"] = &appmgr.svcMgr
-	appmgr.mgrs["algmgr"] = &appmgr.algMgr
+	self.mgrs = make(map[string]IComponentMgr)
+	self.mgrs["svcmgr"] = &self.svcMgr
+	self.mgrs["algmgr"] = &self.algMgr
 	
-	g_compsdb[appmgr.name] = appmgr
+	g_compsdb[self.name] = self
 
 	// completing bootstrap
-	g_isvcloc = appmgr
+	g_isvcloc = self
 
-	return appmgr
+	return self
 }
 
 // check implementations match interfaces

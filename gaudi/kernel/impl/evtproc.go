@@ -8,50 +8,50 @@ type evtProc struct {
 	algs []IAlgorithm
 }
 
-func (e *evtProc) InitializeSvc() StatusCode {
+func (self *evtProc) InitializeSvc() StatusCode {
 
-	sc := e.Service.InitializeSvc()
+	sc := self.Service.InitializeSvc()
 	if !sc.IsSuccess() {
 		return sc
 	}
 
 	svcloc := GetSvcLocator()
 	if svcloc == nil {
-		e.MsgError("could not retrieve ISvcLocator !\n")
+		self.MsgError("could not retrieve ISvcLocator !\n")
 		return StatusCode(1)
 	}
 	appmgr := svcloc.(IComponentMgr).GetComp("app-mgr")
 	if appmgr == nil {
-		e.MsgError("could not retrieve 'app-mgr'\n")
+		self.MsgError("could not retrieve 'app-mgr'\n")
 	}
 	propmgr := appmgr.(IProperty)
 	alg_names := propmgr.GetProperty("Algs").([]string)
-	e.MsgInfo("got alg-names: %v\n", alg_names)
+	self.MsgInfo("got alg-names: %v\n", alg_names)
 
 	if len(alg_names)>0 {
 		comp_mgr := appmgr.(IComponentMgr)
-		e.algs = make([]IAlgorithm, len(alg_names))
+		self.algs = make([]IAlgorithm, len(alg_names))
 		for i,alg_name := range alg_names {
 			ialg,isalg := comp_mgr.GetComp(alg_name).(IAlgorithm)
 			if isalg {
-				e.algs[i] = ialg
+				self.algs[i] = ialg
 			}
 		}
 	}
-	e.MsgInfo("got alg-list: %v\n", e.algs)
+	self.MsgInfo("got alg-list: %v\n", self.algs)
 
 	return StatusCode(0)
 }
 
-func (e *evtProc) ExecuteEvent(ictx IEvtCtx) StatusCode {
+func (self *evtProc) ExecuteEvent(ictx IEvtCtx) StatusCode {
 	if ictx != nil {
 		ctx := ictx.(int)
-		e.MsgInfo("executing event [%v]... (#algs: %v)\n", ctx, len(e.algs))
-		for i,alg := range e.algs {
-			e.MsgInfo("-- ctx:%03v --> [%s]...\n", ctx, alg.CompName())
+		self.MsgInfo("executing event [%v]... (#algs: %v)\n", ctx, len(self.algs))
+		for i,alg := range self.algs {
+			self.MsgInfo("-- ctx:%03v --> [%s]...\n", ctx, alg.CompName())
 			sc := alg.Execute(ictx)
 			if sc != 0 {
-				e.MsgError("pb executing alg #%v (%s) for ctx:%v\n",
+				self.MsgError("pb executing alg #%v (%s) for ctx:%v\n",
 					i,alg.CompName(), ictx)
 				return StatusCode(1)
 			}
@@ -61,9 +61,9 @@ func (e *evtProc) ExecuteEvent(ictx IEvtCtx) StatusCode {
 	return StatusCode(-1)
 }
 
-func (e *evtProc) ExecuteRun(evtmax int) StatusCode {
-	e.MsgInfo("execute-run [%v]\n", evtmax)
-	sc := e.NextEvent(evtmax)
+func (self *evtProc) ExecuteRun(evtmax int) StatusCode {
+	self.MsgInfo("execute-run [%v]\n", evtmax)
+	sc := self.NextEvent(evtmax)
 	return sc
 }
 
@@ -72,11 +72,11 @@ type evtRequest struct {
 	sc   StatusCode
 }
 
-func (e *evtProc) NextEvent(evtmax int) StatusCode {
+func (self *evtProc) NextEvent(evtmax int) StatusCode {
 
 	handle := func(evt *evtRequest, out_queue chan *evtRequest) {
-		e.MsgInfo("nextEvent[%v]...\n", evt.idx)
-		evt.sc = e.ExecuteEvent(evt.idx)
+		self.MsgInfo("nextEvent[%v]...\n", evt.idx)
+		evt.sc = self.ExecuteEvent(evt.idx)
 		out_queue <- evt
 	}
 
@@ -130,16 +130,16 @@ func (e *evtProc) NextEvent(evtmax int) StatusCode {
 	return StatusCode(0)
 }
 
-func (e *evtProc) StopRun() StatusCode {
-	e.MsgInfo("stopping run...\n")
+func (self *evtProc) StopRun() StatusCode {
+	self.MsgInfo("stopping run...\n")
 	return StatusCode(0)
 }
 
 func NewEvtProcessor(name string) IEvtProcessor {
 	self := &evtProc{}
 	
-	//p.properties.props = make(map[string]interface{})
-	//p.name = name
+	//self.properties.props = make(map[string]interface{})
+	//self.name = name
 	self.algs = []IAlgorithm{}
 	_ = NewSvc(&self.Service, "kernel.evtProc", name)
 	RegisterComp(self)
@@ -148,12 +148,12 @@ func NewEvtProcessor(name string) IEvtProcessor {
 
 // ---
 
-func (e *evtProc) test_0() {
+func (self *evtProc) test_0() {
 	handle := func(queue chan int) StatusCode {
 		sc := StatusCode(0)
 		for i := range queue {
-			e.MsgInfo("   --> handling [%i]...\n",i)
-			sc = e.ExecuteEvent(i)
+			self.MsgInfo("   --> handling [%i]...\n",i)
+			sc = self.ExecuteEvent(i)
 		}
 		return sc
 	}
@@ -169,19 +169,19 @@ func (e *evtProc) test_0() {
 
 	quit := make(chan bool)
 
-	e.MsgInfo("-- filling the event queue...\n")
+	self.MsgInfo("-- filling the event queue...\n")
 	queue := make(chan int)
 	go func() {
 		for i := 0; i < 20; i++ {
 			queue <- i
 		}
 	}()
-	e.MsgInfo("-- starting to serve 20 events...\n")
+	self.MsgInfo("-- starting to serve 20 events...\n")
 	go serve(queue, quit)
-	e.MsgInfo("-- requests sent...\n")
+	self.MsgInfo("-- requests sent...\n")
 	time.Sleep(2000000000)
 	quit <- true
-	e.MsgInfo("-- done.\n")
+	self.MsgInfo("-- done.\n")
 }
 
 // check implementations match interfaces

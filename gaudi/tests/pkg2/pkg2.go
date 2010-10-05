@@ -50,12 +50,17 @@ func (self *alg_adder) Initialize() kernel.StatusCode {
 	self.MsgInfo("retrieving evt-store...\n")
 	svcloc := kernel.GetSvcLocator()
 	self.evtstore = svcloc.GetService("evt-store").(kernel.IDataStore)
+	if self.evtstore == nil {
+		self.MsgError("could not retrieve evt-store !\n")
+		return kernel.StatusCode(1)
+	}
 	self.MsgInfo("retrieving evt-store... [ok]\n")
 	return kernel.StatusCode(0)
 }
 
 func (self *alg_adder) Execute(ctx kernel.IEvtCtx) kernel.StatusCode {
 	self.MsgInfo("== execute == [%v]\n", ctx)
+	//self.evtstore.Put("njets", 2)
 	return kernel.StatusCode(0)
 }
 

@@ -8,38 +8,39 @@ type Component struct {
 	comp_type string
 }
 
-func (c *Component) CompName() string {
-	return c.comp_name
+func (self *Component) CompName() string {
+	return self.comp_name
 }
 
-func (c *Component) CompType() string {
-	return c.comp_type
+func (self *Component) CompType() string {
+	return self.comp_type
 }
 
 func NewComponent(t,n string) IComponent {
-	c := &Component{comp_name: n, comp_type: t}
-	g_compsdb[n] = c
-	return c
+	self := &Component{comp_name: n, comp_type: t}
+	g_compsdb[n] = self
+	return self
 }
 
 type properties struct {
 	props map[string]interface{}
 }
-func (p *properties) SetProperty(n string, v interface{}) StatusCode {
-	p.props[n] = v
+
+func (self *properties) SetProperty(n string, v interface{}) StatusCode {
+	self.props[n] = v
 	return StatusCode(0)
 }
-func (p *properties) GetProperty(n string) interface{} {
-	v,ok := p.props[n]
+func (self *properties) GetProperty(n string) interface{} {
+	v,ok := self.props[n]
 	if ok {
 		return v
 	}
 	return nil
 }
-func (p *properties) GetProperties() []Property {
-	props := make([]Property, len(p.props))
+func (self *properties) GetProperties() []Property {
+	props := make([]Property, len(self.props))
 	i := 0
-	for k,v := range p.props {
+	for k,v := range self.props {
 		props[i] = Property{Name:k, Value:v}
 		i++
 	}
@@ -57,8 +58,8 @@ const (
 	LVL_ALWAYS
 	)
 
-func (lvl OutputLevel) String() string {
-	switch lvl {
+func (self OutputLevel) String() string {
+	switch self {
 	case LVL_VERBOSE: return "VERBOSE"
 	case LVL_DEBUG:   return "DEBUG"
 	case LVL_INFO:    return "INFO"
@@ -78,39 +79,39 @@ type msgstream struct {
 }
 
 
-func (m *msgstream) SetOutputLevel(lvl OutputLevel) {
-	m.level = lvl
+func (self *msgstream) SetOutputLevel(lvl OutputLevel) {
+	self.level = lvl
 }
-func (m *msgstream) OutputLevel() OutputLevel {
-	return m.level
+func (self *msgstream) OutputLevel() OutputLevel {
+	return self.level
 }
-func (m *msgstream) Msg(lvl OutputLevel, format string, a ...interface{}) (int, os.Error) {
-	if m.level <= lvl {
+func (self *msgstream) Msg(lvl OutputLevel, format string, a ...interface{}) (int, os.Error) {
+	if self.level <= lvl {
 		s := fmt.Sprintf(format, a...)
-		return fmt.Printf("%-10s %6s %s", m.name, lvl, s)
+		return fmt.Printf("%-10s %6s %s", self.name, lvl, s)
 	}
 	return 0, nil
 }
-func (m *msgstream) MsgVerbose(format string, a ...interface{}) (int, os.Error) {
-	return m.Msg(LVL_VERBOSE, format, a...)
+func (self *msgstream) MsgVerbose(format string, a ...interface{}) (int, os.Error) {
+	return self.Msg(LVL_VERBOSE, format, a...)
 }
-func (m *msgstream) MsgDebug(format string, a ...interface{}) (int, os.Error) {
-	return m.Msg(LVL_DEBUG, format, a...)
+func (self *msgstream) MsgDebug(format string, a ...interface{}) (int, os.Error) {
+	return self.Msg(LVL_DEBUG, format, a...)
 }
-func (m *msgstream) MsgInfo(format string, a ...interface{}) (int, os.Error) {
-	return m.Msg(LVL_INFO, format, a...)
+func (self *msgstream) MsgInfo(format string, a ...interface{}) (int, os.Error) {
+	return self.Msg(LVL_INFO, format, a...)
 }
-func (m *msgstream) MsgWarning(format string, a ...interface{}) (int, os.Error) {
-	return m.Msg(LVL_WARNING, format, a...)
+func (self *msgstream) MsgWarning(format string, a ...interface{}) (int, os.Error) {
+	return self.Msg(LVL_WARNING, format, a...)
 }
-func (m *msgstream) MsgError(format string, a ...interface{}) (int, os.Error) {
-	return m.Msg(LVL_ERROR, format, a...)
+func (self *msgstream) MsgError(format string, a ...interface{}) (int, os.Error) {
+	return self.Msg(LVL_ERROR, format, a...)
 }
-func (m *msgstream) MsgFatal(format string, a ...interface{}) (int, os.Error) {
-	return m.Msg(LVL_FATAL, format, a...)
+func (self *msgstream) MsgFatal(format string, a ...interface{}) (int, os.Error) {
+	return self.Msg(LVL_FATAL, format, a...)
 }
-func (m *msgstream) MsgAlways(format string, a ...interface{}) (int, os.Error) {
-	return m.Msg(LVL_ALWAYS, format, a...)
+func (self *msgstream) MsgAlways(format string, a ...interface{}) (int, os.Error) {
+	return self.Msg(LVL_ALWAYS, format, a...)
 }
 
 // algorithm
@@ -151,16 +152,16 @@ func (self *Algorithm) Finalize() StatusCode {
 }
 
 func NewAlg(comp IComponent, t,n string) IAlgorithm {
-	c := comp.(*Algorithm)
-	c.Component.comp_name = n
-	c.Component.comp_type = t
-	c.properties.props = make(map[string]interface{})
-	c.msgstream.name = n
-	c.msgstream.level = LVL_INFO
+	self := comp.(*Algorithm)
+	self.Component.comp_name = n
+	self.Component.comp_type = t
+	self.properties.props = make(map[string]interface{})
+	self.msgstream.name = n
+	self.msgstream.level = LVL_INFO
 
-	//g_compsdb[n] = c
+	//g_compsdb[n] = self
 
-	return c
+	return self
 }
 
 // service
