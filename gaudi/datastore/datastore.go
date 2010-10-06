@@ -6,15 +6,15 @@ import "gaudi/kernel"
 // --- datastore helper ---
 
 type datastore struct {
-	store map[string]interface{}
+	store *kernel.DataStore //map[string]interface{}
 }
 
 func (self *datastore) Put(key string, value interface{}) {
-	self.store[key] = value
+	(*self.store)[key] = value
 }
 
 func (self *datastore) Get(key string) interface{} {
-	value, ok := self.store[key]
+	value, ok := (*self.store)[key]
 	if ok {
 		return value
 	}
@@ -22,15 +22,15 @@ func (self *datastore) Get(key string) interface{} {
 }
 
 func (self *datastore) Has(key string) bool {
-	_, ok := self.store[key]
+	_, ok := (*self.store)[key]
 	if !ok {
-		self.store[key] = nil, false
+		(*self.store)[key] = nil, false
 	}
 	return ok
 }
 
 func (self *datastore) ClearStore() kernel.StatusCode {
-	self.store = make(map[string]interface{})
+	//self.store = make(kernel.DataStore)
 	return kernel.StatusCode(0)
 }
 
@@ -53,11 +53,16 @@ func (self *datastoresvc) FinalizeSvc() kernel.StatusCode {
 }
 
 func (self *datastoresvc) Store(ctx kernel.IEvtCtx) kernel.IDataStore {
-	idx := ctx.(int) % len(self.stores)
-	if idx < len(self.stores) {
+	/*
+	nstores := len(self.stores)
+	idx := ctx.Idx() % nstores
+	if idx < nstores {
+		self.MsgInfo("==> ctx=%03v idx=%03v nstores=%v\n", ctx.Idx(), idx, nstores)
 		return &self.stores[idx]
 	}
 	return nil
+	 */
+	return &datastore{ctx.Store()}
 }
 
 func (self *datastoresvc) SetNbrStreams(n int) kernel.StatusCode {

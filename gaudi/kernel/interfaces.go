@@ -116,8 +116,10 @@ type IAlgTool interface {
 	FinalizeTool() StatusCode
 }
 
+type DataStore map[string]interface{}
 type IEvtCtx interface {
-	//Index() int
+	Idx() int
+	Store() *DataStore
 	//Id() int
 }
 

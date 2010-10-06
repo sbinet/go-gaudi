@@ -15,7 +15,7 @@ func (self *alg1) Initialize() kernel.StatusCode {
 }
 
 func (self *alg1) Execute(ctx kernel.IEvtCtx) kernel.StatusCode {
-	self.MsgInfo("== execute == [%v]\n", ctx)
+	self.MsgInfo("== execute == [%v]\n", ctx.Idx())
 	return kernel.StatusCode(0)
 }
 
@@ -37,6 +37,10 @@ func (self *svc2) InitializeSvc() kernel.StatusCode {
 func (self *svc2) FinalizeSvc() kernel.StatusCode {
 	self.MsgInfo("~~ finalize ~~\n")
 	return kernel.StatusCode(0)
+}
+
+type simple_counter struct {
+	cnt int
 }
 
 // --- alg adder ---
@@ -72,9 +76,9 @@ func (self *alg_adder) Initialize() kernel.StatusCode {
 }
 
 func (self *alg_adder) Execute(ctx kernel.IEvtCtx) kernel.StatusCode {
-	self.MsgInfo("== execute == [%v]\n", ctx)
+	self.MsgInfo("== execute == [%v]\n", ctx.Idx())
 
-	njets := 1 + ctx.(int)
+	njets := 1 + ctx.Idx()
 	val := self.val + 1
 	store := self.EvtStore(ctx)
 
@@ -88,11 +92,11 @@ func (self *alg_adder) Execute(ctx kernel.IEvtCtx) kernel.StatusCode {
 	}
 	store.Put("ptjets", val)
 
-	cnt := 0
+	cnt := &simple_counter{0}
 	if store.Has(self.cnt_key) {
-		cnt = store.Get(self.cnt_key).(int)
+		cnt = store.Get(self.cnt_key).(*simple_counter)
 	}
-	cnt += 1
+	cnt.cnt += 1
 	store.Put(self.cnt_key, cnt)
 	return kernel.StatusCode(0)
 }
@@ -108,6 +112,7 @@ type alg_dumper struct {
 	njets_key string
 	ptjets_key string
 	cnt_key string
+	cnt_val int
 }
 
 func (self *alg_dumper) Initialize() kernel.StatusCode {
@@ -119,18 +124,23 @@ func (self *alg_dumper) Initialize() kernel.StatusCode {
 	self.njets_key  = self.GetProperty("NbrJets").(string)
 	self.ptjets_key = self.GetProperty("PtJets").(string)
 	self.cnt_key = self.GetProperty("SimpleCounter").(string)
+	self.cnt_val = self.GetProperty("ExpectedValue").(int)
 	return kernel.StatusCode(0)
 }
 
 func (self *alg_dumper) Execute(ctx kernel.IEvtCtx) kernel.StatusCode {
-	self.MsgInfo("== execute == [%v]\n", ctx)
+	self.MsgInfo("== execute == [%v]\n", ctx.Idx())
 
 	store := self.EvtStore(ctx)
 	njets  := store.Get(self.njets_key).(int)
 	ptjets := store.Get(self.ptjets_key).(float)
-	cnt    := store.Get(self.cnt_key).(int)
-	self.MsgInfo("[ctx:%03v] njets: %03v ptjets: %8.3v cnt: %05v\n", 
-		ctx, njets, ptjets, cnt)
+	cnt    := store.Get(self.cnt_key).(*simple_counter)
+	allgood := "ERR"
+	if self.cnt_val == cnt.cnt {
+		allgood = "OK"
+	}
+	self.MsgInfo("[ctx:%03v] njets: %03v ptjets: %8.3v [%s]\n", 
+		ctx.Idx(), njets, ptjets, allgood)
 
 	return kernel.StatusCode(0)
 }
@@ -168,6 +178,7 @@ func New(t,n string) kernel.IComponent {
 		kernel.RegisterComp(self)
 
 		self.DeclareProperty("SimpleCounter", "cnt")
+		self.DeclareProperty("ExpectedValue", -1)
 		self.DeclareProperty("NbrJets", "njets")
 		self.DeclareProperty("PtJets",  "ptjets")
 		return self
