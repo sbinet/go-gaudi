@@ -15,7 +15,7 @@ func (self *alg1) Initialize() kernel.StatusCode {
 }
 
 func (self *alg1) Execute(ctx kernel.IEvtCtx) kernel.StatusCode {
-	self.MsgInfo("== execute == [%v]\n", ctx.Idx())
+	self.MsgDebug("== execute == [%v]\n", ctx.Idx())
 	return kernel.StatusCode(0)
 }
 
@@ -66,7 +66,7 @@ func (self *alg_adder) Initialize() kernel.StatusCode {
 }
 
 func (self *alg_adder) Execute(ctx kernel.IEvtCtx) kernel.StatusCode {
-	self.MsgInfo("== execute == [%v]\n", ctx.Idx())
+	self.MsgDebug("== execute == [%v]\n", ctx.Idx())
 
 	njets := 1 + ctx.Idx()
 	val := self.val + 1
@@ -119,18 +119,21 @@ func (self *alg_dumper) Initialize() kernel.StatusCode {
 }
 
 func (self *alg_dumper) Execute(ctx kernel.IEvtCtx) kernel.StatusCode {
-	self.MsgInfo("== execute == [%v]\n", ctx.Idx())
+	self.MsgDebug("== execute == [%v]\n", ctx.Idx())
 
 	store := self.EvtStore(ctx)
 	njets  := store.Get(self.njets_key).(int)
 	ptjets := store.Get(self.ptjets_key).(float)
 	cnt    := store.Get(self.cnt_key).(*simple_counter)
-	allgood := "ERR"
+
 	if self.cnt_val == cnt.cnt {
-		allgood = "OK"
+		self.MsgDebug("[ctx:%03v] njets: %03v ptjets: %8.3v [OK]\n", 
+			ctx.Idx(), njets, ptjets)
+	} else {
+		self.MsgError("[ctx:%03v] njets: %03v ptjets: %8.3v (%v|%v) [ERR]\n", 
+			ctx.Idx(), njets, ptjets, self.cnt_val, cnt.cnt)
+		panic("race condition detected in evt-store")
 	}
-	self.MsgInfo("[ctx:%03v] njets: %03v ptjets: %8.3v [%s]\n", 
-		ctx.Idx(), njets, ptjets, allgood)
 
 	return kernel.StatusCode(0)
 }

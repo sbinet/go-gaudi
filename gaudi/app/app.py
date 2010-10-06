@@ -171,6 +171,14 @@ class AppMgr(object):
             "{",
             "c := AppMgr.(kernel.IProperty)",
             ]
+        try:
+            import multiprocessing as _mp
+            go_pkg += [
+                "c.SetProperty(\"NbrProcs\", %r)" % (_mp.cpu_count(),)
+                ]
+        except ImportError:
+            pass
+        
         for k,v in self.props.iteritems():
             if isinstance(v, basestring):
                 go_pkg += [

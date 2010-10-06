@@ -91,6 +91,7 @@ func (self *msgstream) OutputLevel() OutputLevel {
 	return self.level
 }
 func (self *msgstream) Msg(lvl OutputLevel, format string, a ...interface{}) (int, os.Error) {
+	//return 0, nil
 	if self.level <= lvl {
 		s := fmt.Sprintf(format, a...)
 		return fmt.Printf("%-10s %6s %s", self.name, lvl, s)
@@ -152,6 +153,9 @@ func (self *Algorithm) DetStore(ctx IEvtCtx) IDataStore {
 //}
 
 func (self *Algorithm) Initialize() StatusCode {
+	lvl := self.GetProperty("OutputLevel").(int)
+	self.SetOutputLevel(OutputLevel(lvl))
+
 	self.MsgInfo("initialize...\n")
 	svcloc := GetSvcLocator()
 	if svcloc == nil {
@@ -165,7 +169,7 @@ func (self *Algorithm) Initialize() StatusCode {
 }
 
 func (self *Algorithm) Execute(ctx IEvtCtx) StatusCode {
-	self.MsgInfo("execute... [%v]\n", ctx)
+	self.MsgDebug("execute... [%v]\n", ctx)
 	println("==>",self.CompName(),"execute [",ctx,"]")
 	return StatusCode(0)
 }
@@ -196,6 +200,9 @@ func NewAlg(comp IComponent, t,n string) IAlgorithm {
 
 	self.evtstore = nil
 	self.detstore = nil
+
+	self.DeclareProperty("OutputLevel", int(LVL_INFO))
+
 	//g_compsdb[n] = self
 
 	return self

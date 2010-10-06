@@ -13,8 +13,13 @@ type evtstate struct {
 }
 
 func new_evtstate(idx int) *evtstate {
-	self := &evtstate{idx:idx, sc:kernel.StatusCode(0), data:make(kernel.DataStore)}
-	self.data["evt-store"] = make(kernel.DataStore)
+	self := &evtstate{}
+	self.idx = idx
+	self.sc = kernel.StatusCode(0)
+	self.data = make(kernel.DataStore)
+
+	evtstore := make(kernel.DataStore)
+	self.data["evt-store"] = &evtstore
 	return self
 }
 
@@ -71,7 +76,7 @@ func (self *evtproc) InitializeSvc() kernel.StatusCode {
 
 func (self *evtproc) ExecuteEvent(ictx kernel.IEvtCtx) kernel.StatusCode {
 	ctx := ictx.Idx()
-	self.MsgInfo("executing event [%v]... (#algs: %v)\n", ctx, len(self.algs))
+	self.MsgDebug("executing event [%v]... (#algs: %v)\n", ctx, len(self.algs))
 	for i,alg := range self.algs {
 		self.MsgDebug("-- ctx:%03v --> [%s]...\n", ctx, alg.CompName())
 		if !alg.Execute(ictx).IsSuccess() {
@@ -80,7 +85,7 @@ func (self *evtproc) ExecuteEvent(ictx kernel.IEvtCtx) kernel.StatusCode {
 			return kernel.StatusCode(1)
 		}
 	}
-	self.MsgInfo("data: %v\n",*ictx.Store())
+	self.MsgDebug("data: %v\n",*ictx.Store())
 	return kernel.StatusCode(0)
 }
 

@@ -1,6 +1,7 @@
 package kernel
 
 //import "fmt"
+import "runtime"
 
 ///////////////////////////////////////////////////////////////////////////////
 // svc-mgr
@@ -200,6 +201,9 @@ func (self *appmgr) Initialize() StatusCode {
 	allgood := true
 	self.MsgInfo("initialize...\n")
 
+	nprocs := self.GetProperty("NbrProcs").(int)
+	runtime.GOMAXPROCS(nprocs)
+
 	self.MsgVerbose("components-map: %v\n", g_compsdb)
 	svcs_prop, ok := self.GetProperty("Svcs").([]string)
 	if ok {
@@ -288,21 +292,6 @@ func (self *appmgr) Finalize() StatusCode {
 	self.MsgInfo("finalize...\n")
 	allgood := true
 
-	svcs_prop, ok := self.GetProperty("Svcs").([]string)
-	if ok {
-		self.MsgInfo("svcs...\n")
-		for _,svc_name := range svcs_prop {
-			isvc := self.GetService(svc_name)
-			sc := isvc.FinalizeSvc()
-			if sc != StatusCode(0) {
-				self.MsgError("pb finalizing [%s] !\n",isvc.CompName())
-				allgood = false
-			}
-		}
-		_ = self.evtproc.(IService).FinalizeSvc()
-		self.MsgInfo("svcs... [done]\n")
-	}
-
 	algs_prop, ok := self.GetProperty("Algs").([]string)
 	if ok {
 		self.MsgInfo("algs...\n")
@@ -321,6 +310,22 @@ func (self *appmgr) Finalize() StatusCode {
 		}
 		self.MsgInfo("algs... [done]\n")
 	}
+
+	svcs_prop, ok := self.GetProperty("Svcs").([]string)
+	if ok {
+		self.MsgInfo("svcs...\n")
+		for _,svc_name := range svcs_prop {
+			isvc := self.GetService(svc_name)
+			sc := isvc.FinalizeSvc()
+			if sc != StatusCode(0) {
+				self.MsgError("pb finalizing [%s] !\n",isvc.CompName())
+				allgood = false
+			}
+		}
+		_ = self.evtproc.(IService).FinalizeSvc()
+		self.MsgInfo("svcs... [done]\n")
+	}
+
 	if allgood {
 		return StatusCode(0)
 	}
@@ -352,6 +357,7 @@ func NewAppMgr() IAppMgr {
 	// completing bootstrap
 	g_isvcloc = self
 
+	self.DeclareProperty("NbrProcs", 1)
 	return self
 }
 

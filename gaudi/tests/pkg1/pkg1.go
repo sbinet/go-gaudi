@@ -15,7 +15,7 @@ func (self *alg1) Initialize() kernel.StatusCode {
 }
 
 func (self *alg1) Execute(ctx kernel.IEvtCtx) kernel.StatusCode {
-	self.MsgInfo("== execute == [ctx:%v]\n", ctx.Idx())
+	self.MsgDebug("== execute == [ctx:%v]\n", ctx.Idx())
 	return kernel.StatusCode(0)
 }
 
@@ -36,7 +36,7 @@ func (self *alg2) Initialize() kernel.StatusCode {
 }
 
 func (self *alg2) Execute(ctx kernel.IEvtCtx) kernel.StatusCode {
-	self.MsgInfo("~~ execute ~~ [ctx:%v]\n", ctx.Idx())
+	self.MsgDebug("~~ execute ~~ [ctx:%v]\n", ctx.Idx())
 	return kernel.StatusCode(0)
 }
 

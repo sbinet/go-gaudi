@@ -1,31 +1,33 @@
-app.props.EvtMax = 500
+app.props.EvtMax = 10000
 app.props.OutputLevel = 1
+#app.props.NbrProcs = 1
 
 app.svcs += Svc("gaudi/kernel/evtproc:evtproc",
                 "evt-proc",
-                NbrWorkers=100)
+                OutputLevel=Lvl.INFO,
+                NbrWorkers=5000)
 
-app.algs += Alg("gaudi/tests/pkg1:alg1", "alg1", OutputLevel=Lvl.INFO)
-app.algs += Alg("gaudi/tests/pkg1:alg2", "alg2", OutputLevel=Lvl.INFO)
-app.algs += Alg("gaudi/tests/pkg2:alg1", "alg_one", OutputLevel=Lvl.INFO)
+app.algs += Alg("gaudi/tests/pkg1:alg1", "alg1", OutputLevel=Lvl.ERROR)
+app.algs += Alg("gaudi/tests/pkg1:alg2", "alg2", OutputLevel=Lvl.ERROR)
+app.algs += Alg("gaudi/tests/pkg2:alg1", "alg_one", OutputLevel=Lvl.ERROR)
 
-app.svcs += Svc("gaudi/tests/pkg1:svc1", name="svc1", OutputLevel=Lvl.INFO)
+app.svcs += Svc("gaudi/tests/pkg1:svc1", name="svc1", OutputLevel=Lvl.ERROR)
 app.svcs += Svc("gaudi/tests/pkg2:svc2", "svc2")
 
 app.svcs += Svc("gaudi/datastore:datastoresvc", "evt-store")
 app.svcs += Svc("gaudi/datastore:datastoresvc", "det-store")
 
 app.algs += Alg("gaudi/tests/pkg2:alg_adder", "adder_1",
-                OutputLevel=Lvl.INFO,
+                OutputLevel=Lvl.ERROR,
                 Val=0.)
 app.algs += Alg("gaudi/tests/pkg2:alg_dumper", "dumper-1",
-                ExpectedValue=Lvl.INFO)
+                ExpectedValue=1)
 
 app.algs += Alg("gaudi/tests/pkg2:alg_adder", "adder_2",
-                OutputLevel=Lvl.INFO,
+                OutputLevel=Lvl.ERROR,
                 Val=3.)
 app.algs += Alg("gaudi/tests/pkg2:alg_dumper", "dumper-2",
-                ExpectedValue=Lvl.INFO)
+                ExpectedValue=2)
 
 app.algs += Alg("gaudi/tests/pkg2:alg_adder", "adder_3")
 app.algs += Alg("gaudi/tests/pkg2:alg_dumper", "dumper-3",
@@ -34,7 +36,7 @@ app.algs += Alg("gaudi/tests/pkg2:alg_dumper", "dumper-3",
 app.algs += Alg("gaudi/tests/pkg2:alg_dumper", "dumper",
                 NbrJets = "njets",
                 ExpectedValue=3,
-                OutputLevel=Lvl.INFO)
+                OutputLevel=Lvl.ERROR)
 
 if 1:
     for i in xrange(500):
