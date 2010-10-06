@@ -39,7 +39,7 @@ func (self *evtproc) InitializeSvc() kernel.StatusCode {
 		return sc
 	}
 	self.nworkers = self.GetProperty("NbrWorkers").(int)
-	self.nworkers = 2
+	//self.nworkers = 2
 	self.MsgInfo("n-workers: %v\n", self.nworkers)
 	svcloc := kernel.GetSvcLocator()
 	if svcloc == nil {

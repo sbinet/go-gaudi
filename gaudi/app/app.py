@@ -44,7 +44,15 @@ def _save_formatted_go_src(fname, src, show=False):
     return
 
 ### classes ------------------------------------------------------------------
-
+class Lvl:
+    VERBOSE = 0
+    DEBUG = 1
+    INFO = 2
+    WARNING = 3
+    ERROR = 4
+    FATAL = 5
+    ALWAYS = 6
+    
 class Configurable(object):
     def __init__(self, pkg_name, **kwds):
         self.pkg_name, self.comp_type = pkg_name.split(":")
@@ -64,13 +72,24 @@ class cfglist(list):
         if isinstance(o, Configurable):
             o = [o]
         return list.__iadd__(self, o)
-            
+
+class attrdict(dict):
+    def __setattr__(self, k, v):
+        self[k] = v
+    def __getattr__(self, k):
+        return self[k]
+    
 class AppMgr(object):
     def __init__(self):
         self.algs = cfglist()
         self.svcs = cfglist()
         self.toolsvc = cfglist()
 
+        self.props = attrdict(
+            EvtMax=10,
+            OutputLevel=1,
+            )
+        
         self._workdir = tempfile.mkdtemp(prefix='ng-gaudi-go-')
         #self._workdir = "/tmp/ng-gaudi/gaudi-jobopt"
         return
@@ -142,10 +161,29 @@ class AppMgr(object):
                    "var Algs []CompCfg",
                    "var Svcs []CompCfg",
                    "var Tools []CompCfg",
+                   "var AppMgr kernel.IAppMgr",
                    ""
                    ]
         go_pkg += ["func init() {"]
 
+        go_pkg += [
+            "AppMgr = kernel.NewAppMgr()",
+            "{",
+            "c := AppMgr.(kernel.IProperty)",
+            ]
+        for k,v in self.props.iteritems():
+            if isinstance(v, basestring):
+                go_pkg += [
+                    "c.SetProperty(\"%s\", \"%s\")" % (k,v)
+                    ]
+            else:
+                go_pkg += [
+                    "c.SetProperty(\"%s\", %r)" % (k,v)
+                    ]
+        go_pkg += [
+            "}",
+            ]
+        
         for comps,name in [(self.algs, "Algs"),
                            (self.svcs, "Svcs"),
                            (self.toolsvc, "Tools")]:
@@ -165,6 +203,7 @@ class AppMgr(object):
                     continue
                 go_pkg += [
                     "{",
+                    "// %s" % (comp.name,),
                     "c,ok := %s[%i].Instance.(kernel.IProperty)" % (name, i),
                     "if ok {"
                     ]
@@ -178,6 +217,7 @@ class AppMgr(object):
                             "c.SetProperty(\"%s\", %r)" % (k, val)
                             ]
                 go_pkg += ["}","}"]
+
         go_pkg += ["}"]
 
         go_pkg += ["", "/* EOF */", ""]
@@ -220,9 +260,10 @@ import "./gaudi_jobopt"
 
 func main() {
    fmt.Printf("::: gaudi\\n")
-   app := kernel.NewAppMgr()
-   fmt.Printf(" -> created [%s/%s]\\n", app.CompType(), app.CompName())
-   fmt.Printf("::: configure...\\n")
+   app := gaudi_jobopt.AppMgr
+   msg := app.(kernel.IMessager)
+   msg.MsgInfo(" -> created [%s/%s]\\n", app.CompType(), app.CompName())
+   msg.MsgInfo("::: configure...\\n")
    app_prop,_ := app.(kernel.IProperty)
    {
      mgr,_ := app.(kernel.IAlgMgr)
@@ -230,14 +271,14 @@ func main() {
      for i,alg := range gaudi_jobopt.Algs {
      ialg,ok := alg.Instance.(kernel.IAlgorithm)
        if ok {
-          //ai := alg.Instance
+          ai := alg.Instance
           mgr.AddAlgorithm(ialg)
           algs[i] = ialg.CompName()
-          //fmt.Printf("%s: algorithm [%T/%T/%s] registered\\n", app.CompName(), ai, ialg, ialg.CompName())
+          msg.MsgDebug("algorithm [%T/%T/%s] registered\\n", ai, ialg, ialg.CompName())
           iprop, ok := alg.Instance.(kernel.IProperty)
           if ok {
            if iprop != nil {
-              //fmt.Printf("%s: alg [%s] implements kernel.IProperty\\n", app.CompName(), ialg.CompName())
+              msg.MsgDebug("alg [%s] implements kernel.IProperty\\n", ialg.CompName())
            }
           }
        }
@@ -250,22 +291,22 @@ func main() {
      for i,svc := range gaudi_jobopt.Svcs {
        isvc,ok := svc.Instance.(kernel.IService)
        if ok && isvc.CompName() != "" {
-          fmt.Printf("app-mgr adding service [%s]...\\n", isvc.CompName())
+          msg.MsgDebug("adding service [%s]...\\n", isvc.CompName())
           if !mgr.AddService(isvc.CompName()).IsSuccess() {
-             fmt.Printf("** pb adding svc [%s]\\n", isvc.CompName())
+             msg.MsgError("pb adding svc [%s]\\n", isvc.CompName())
           }
           svcs[i] = isvc.CompName()
-          fmt.Printf("%s: adding service [%s]... [done]\\n", app.CompName(), isvc.CompName())
+          msg.MsgDebug("adding service [%s]... [done]\\n", isvc.CompName())
        }
      }
      app_prop.SetProperty("Svcs", svcs)
    }
    sc := app.Configure()
-   fmt.Printf("::: configure... [%d]\\n", int(sc))
-   fmt.Printf("::: run...\\n")
+   msg.MsgInfo("::: configure... [%d]\\n", int(sc))
+   msg.MsgInfo("::: run...\\n")
    sc = app.Run()
-   fmt.Printf("::: run... [%d]\\n", int(sc))
-   fmt.Printf("::: bye.\\n")
+   msg.MsgInfo("::: run... [%d]\\n", int(sc))
+   msg.MsgInfo("::: bye.\\n")
 }
 
 /* EOF */

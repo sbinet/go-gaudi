@@ -1,6 +1,7 @@
 package kernel
 
 import "fmt"
+import "os"
 
 type comps_db map[string]IComponent
 
@@ -186,4 +187,14 @@ type IDataStoreMgr interface {
 	Store(ctx IEvtCtx) IDataStore
 }
 
+type IMessager interface {
+	Msg(lvl OutputLevel, format string, a ...interface{}) (int, os.Error)
+	MsgVerbose(format string, a ...interface{}) (int, os.Error)
+	MsgDebug(format string, a ...interface{}) (int, os.Error)
+	MsgInfo(format string, a ...interface{}) (int, os.Error)
+	MsgWarning(format string, a ...interface{}) (int, os.Error)
+	MsgError(format string, a ...interface{}) (int, os.Error)
+	MsgFatal(format string, a ...interface{}) (int, os.Error)
+	MsgAlways(format string, a ...interface{}) (int, os.Error)
+}
 /* EOF */

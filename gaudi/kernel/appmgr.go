@@ -258,7 +258,8 @@ func (self *appmgr) Run() StatusCode {
 	}
 
 	// evtloop-run
-	sc = self.evtproc.ExecuteRun(10)
+	evtmax := self.GetProperty("EvtMax").(int)
+	sc = self.evtproc.ExecuteRun(evtmax)
 	if !sc.IsSuccess() {
 		return sc
 	}
