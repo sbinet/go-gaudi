@@ -4,11 +4,9 @@
 
 include ${GOROOT}/src/Make.inc
 
-TARG=gaudi/kernel
+TARG=gaudi/kernel/evtproc
 GOFILES=\
-	interfaces.go\
-	components.go\
-	appmgr.go
+	evtproc.go
 
 include ${GOROOT}/src/Make.pkg
 

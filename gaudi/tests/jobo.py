@@ -1,3 +1,5 @@
+app.svcs += Svc("gaudi/kernel/evtproc:evtproc", "evt-proc")
+
 app.algs += Alg("gaudi/tests/pkg1:alg1", "alg1", OutputLevel=1)
 app.algs += Alg("gaudi/tests/pkg1:alg2", "alg2", OutputLevel=1)
 app.algs += Alg("gaudi/tests/pkg2:alg1", "alg_one", OutputLevel=1)
@@ -31,7 +33,7 @@ app.algs += Alg("gaudi/tests/pkg2:alg_dumper", "dumper",
 
 for i in xrange(1000):
     app.algs += Alg("gaudi/tests/pkg2:alg_adder",
-                    "add--%04i" % i,
+                    "addr--%04i" % i,
                     SimpleCounter="my_counter")
     app.algs += Alg("gaudi/tests/pkg2:alg_dumper",
                     "dump--%04i" % i,

@@ -4,11 +4,9 @@
 
 include ${GOROOT}/src/Make.inc
 
-TARG=gaudi/kernel
+TARG=gaudi/kernel/datastore
 GOFILES=\
-	interfaces.go\
-	components.go\
-	appmgr.go
+	datastore.go
 
 include ${GOROOT}/src/Make.pkg
 

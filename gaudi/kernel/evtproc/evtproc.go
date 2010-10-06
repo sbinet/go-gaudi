@@ -1,36 +1,38 @@
-package kernel
+package evtproc
 
 import "time"
 //import "fmt"
 
+import "gaudi/kernel"
+
 // --- evt state ---
 type evtstate struct {
 	idx  int
-	sc   StatusCode
-	data DataStore
+	sc   kernel.StatusCode
+	data kernel.DataStore
 }
 
 func new_evtstate(idx int) *evtstate {
-	self := &evtstate{idx:idx, sc:StatusCode(0), data:make(DataStore)}
-	self.data["evt-store"] = make(DataStore)
+	self := &evtstate{idx:idx, sc:kernel.StatusCode(0), data:make(kernel.DataStore)}
+	self.data["evt-store"] = make(kernel.DataStore)
 	return self
 }
 
 func (self *evtstate) Idx() int {
 	return self.idx
 }
-func (self *evtstate) Store() *DataStore {
+func (self *evtstate) Store() *kernel.DataStore {
 	return &self.data
 }
 
 // --- evt processor ---
 type evtproc struct {
-	Service
-	algs []IAlgorithm
+	kernel.Service
+	algs []kernel.IAlgorithm
 	nworkers int
 }
 
-func (self *evtproc) InitializeSvc() StatusCode {
+func (self *evtproc) InitializeSvc() kernel.StatusCode {
 
 	sc := self.Service.InitializeSvc()
 	if !sc.IsSuccess() {
@@ -39,24 +41,24 @@ func (self *evtproc) InitializeSvc() StatusCode {
 	self.nworkers = self.GetProperty("NbrWorkers").(int)
 	self.nworkers = 2
 	self.MsgInfo("n-workers: %v\n", self.nworkers)
-	svcloc := GetSvcLocator()
+	svcloc := kernel.GetSvcLocator()
 	if svcloc == nil {
 		self.MsgError("could not retrieve ISvcLocator !\n")
-		return StatusCode(1)
+		return kernel.StatusCode(1)
 	}
-	appmgr := svcloc.(IComponentMgr).GetComp("app-mgr")
+	appmgr := svcloc.(kernel.IComponentMgr).GetComp("app-mgr")
 	if appmgr == nil {
 		self.MsgError("could not retrieve 'app-mgr'\n")
 	}
-	propmgr := appmgr.(IProperty)
+	propmgr := appmgr.(kernel.IProperty)
 	alg_names := propmgr.GetProperty("Algs").([]string)
 	self.MsgInfo("got alg-names: %v\n", len(alg_names))
 
 	if len(alg_names)>0 {
-		comp_mgr := appmgr.(IComponentMgr)
-		self.algs = make([]IAlgorithm, len(alg_names))
+		comp_mgr := appmgr.(kernel.IComponentMgr)
+		self.algs = make([]kernel.IAlgorithm, len(alg_names))
 		for i,alg_name := range alg_names {
-			ialg,isalg := comp_mgr.GetComp(alg_name).(IAlgorithm)
+			ialg,isalg := comp_mgr.GetComp(alg_name).(kernel.IAlgorithm)
 			if isalg {
 				self.algs[i] = ialg
 			}
@@ -64,10 +66,10 @@ func (self *evtproc) InitializeSvc() StatusCode {
 	}
 	self.MsgInfo("got alg-list: %v\n", len(self.algs))
 
-	return StatusCode(0)
+	return kernel.StatusCode(0)
 }
 
-func (self *evtproc) ExecuteEvent(ictx IEvtCtx) StatusCode {
+func (self *evtproc) ExecuteEvent(ictx kernel.IEvtCtx) kernel.StatusCode {
 	ctx := ictx.Idx()
 	self.MsgInfo("executing event [%v]... (#algs: %v)\n", ctx, len(self.algs))
 	for i,alg := range self.algs {
@@ -75,20 +77,20 @@ func (self *evtproc) ExecuteEvent(ictx IEvtCtx) StatusCode {
 		if !alg.Execute(ictx).IsSuccess() {
 			self.MsgError("pb executing alg #%v (%s) for ctx:%v\n",
 				i,alg.CompName(), ictx.Idx())
-			return StatusCode(1)
+			return kernel.StatusCode(1)
 		}
 	}
 	self.MsgInfo("data: %v\n",*ictx.Store())
-	return StatusCode(0)
+	return kernel.StatusCode(0)
 }
 
-func (self *evtproc) ExecuteRun(evtmax int) StatusCode {
+func (self *evtproc) ExecuteRun(evtmax int) kernel.StatusCode {
 	self.MsgInfo("execute-run [%v]\n", evtmax)
 	sc := self.NextEvent(evtmax)
 	return sc
 }
 
-func (self *evtproc) NextEvent(evtmax int) StatusCode {
+func (self *evtproc) NextEvent(evtmax int) kernel.StatusCode {
 
 	if self.nworkers > 1 {
 		return self.mp_NextEvent(evtmax)
@@ -96,19 +98,19 @@ func (self *evtproc) NextEvent(evtmax int) StatusCode {
 	return self.seq_NextEvent(evtmax)
 }
 
-func (self *evtproc) seq_NextEvent(evtmax int) StatusCode {
+func (self *evtproc) seq_NextEvent(evtmax int) kernel.StatusCode {
 	
 	self.MsgInfo("nextEvent[%v]...\n", evtmax)
 	for i:=0; i<evtmax; i++ {
 		ctx := new_evtstate(i)
 		if !self.ExecuteEvent(ctx).IsSuccess() {
 			self.MsgError("failed to execute evt idx %03v\n", i)
-			return StatusCode(1)
+			return kernel.StatusCode(1)
 		}
 	}
-	return StatusCode(0)
+	return kernel.StatusCode(0)
 }
-func (self *evtproc) mp_NextEvent(evtmax int) StatusCode {
+func (self *evtproc) mp_NextEvent(evtmax int) kernel.StatusCode {
 
 	handle := func(evt *evtstate, out_queue chan *evtstate) {
 		self.MsgInfo("nextEvent[%v]...\n", evt.idx)
@@ -148,7 +150,7 @@ func (self *evtproc) mp_NextEvent(evtmax int) StatusCode {
 	n_processed := 0
 	for evt := range out_evt_queue {
 		//self.MsgDebug("out-evt-queue: %v %v\n",evt.idx, evt.sc)
-		if evt.sc != StatusCode(0) {
+		if !evt.sc.IsSuccess() {
 			n_fails++
 		}
 		n_processed++
@@ -160,33 +162,21 @@ func (self *evtproc) mp_NextEvent(evtmax int) StatusCode {
 		}
 	}
 	if n_fails != 0 {
-		return StatusCode(1)
+		return kernel.StatusCode(1)
 	}
-	return StatusCode(0)
+	return kernel.StatusCode(0)
 }
 
-func (self *evtproc) StopRun() StatusCode {
+func (self *evtproc) StopRun() kernel.StatusCode {
 	self.MsgInfo("stopping run...\n")
-	return StatusCode(0)
-}
-
-func NewEvtProcessor(name string) IEvtProcessor {
-	self := &evtproc{}
-	
-	//self.properties.props = make(map[string]interface{})
-	//self.name = name
-	self.algs = []IAlgorithm{}
-	_ = NewSvc(&self.Service, "kernel.evtproc", name)
-	RegisterComp(self)
-	self.DeclareProperty("NbrWorkers", 2)
-	return self
+	return kernel.StatusCode(0)
 }
 
 // ---
 
 func (self *evtproc) test_0() {
-	handle := func(queue chan int) StatusCode {
-		sc := StatusCode(0)
+	handle := func(queue chan int) kernel.StatusCode {
+		sc := kernel.StatusCode(0)
 		for i := range queue {
 			ctx := new_evtstate(i)
 			self.MsgInfo("   --> handling [%i]...\n",i)
@@ -196,12 +186,12 @@ func (self *evtproc) test_0() {
 	}
 
 	max_in_flight := 4
-	serve := func(queue chan int, quit chan bool) StatusCode {
+	serve := func(queue chan int, quit chan bool) kernel.StatusCode {
 		for i := 0; i < max_in_flight; i++ {
 			go handle(queue)
 		}
 		<-quit // wait to be told to exit
-		return StatusCode(0)
+		return kernel.StatusCode(0)
 	}
 
 	quit := make(chan bool)
@@ -222,11 +212,32 @@ func (self *evtproc) test_0() {
 }
 
 // check implementations match interfaces
-var _ = IEvtCtx(&evtstate{})
+var _ = kernel.IEvtCtx(&evtstate{})
 
-var _ = IComponent(&evtproc{})
-var _ = IEvtProcessor(&evtproc{})
-var _ = IProperty(&evtproc{})
-var _ = IService(&evtproc{})
+var _ = kernel.IComponent(&evtproc{})
+var _ = kernel.IEvtProcessor(&evtproc{})
+var _ = kernel.IProperty(&evtproc{})
+var _ = kernel.IService(&evtproc{})
+
+// --- factory function ---
+func New(t,n string) kernel.IComponent {
+	switch t {
+	case "evtproc":
+		self := &evtproc{}
+	
+		//self.properties.props = make(map[string]interface{})
+		//self.name = name
+		self.algs = []kernel.IAlgorithm{}
+		_ = kernel.NewSvc(&self.Service, t, n)
+		kernel.RegisterComp(self)
+		self.DeclareProperty("NbrWorkers", 2)
+		return self
+
+	default:
+		err := "no such type ["+t+"]"
+		panic(err)
+	}
+	return nil
+}
 
 /* EOF */

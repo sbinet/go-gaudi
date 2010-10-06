@@ -189,7 +189,8 @@ func (self *appmgr) HasComp(n string) bool {
 }
 
 func (self *appmgr) Configure() StatusCode {
-	self.evtproc = NewEvtProcessor("evt-proc")
+	//self.evtproc = NewEvtProcessor("evt-proc")
+	self.evtproc = self.GetService("evt-proc").(IEvtProcessor)
 	//self.evtsel  = 
 
 	return StatusCode(0)
@@ -210,7 +211,7 @@ func (self *appmgr) Initialize() StatusCode {
 				allgood = false
 			}
 		}
-		_ = self.evtproc.(IService).InitializeSvc()
+		//_ = self.evtproc.(IService).InitializeSvc()
 		self.MsgInfo("svcs... [done]\n")
 	}
 
