@@ -37,7 +37,7 @@ func (self *evtproc) InitializeSvc() StatusCode {
 		return sc
 	}
 	self.nworkers = self.GetProperty("NbrWorkers").(int)
-	//self.nworkers = 1
+	self.nworkers = 2
 	self.MsgInfo("n-workers: %v\n", self.nworkers)
 	svcloc := GetSvcLocator()
 	if svcloc == nil {
@@ -50,7 +50,7 @@ func (self *evtproc) InitializeSvc() StatusCode {
 	}
 	propmgr := appmgr.(IProperty)
 	alg_names := propmgr.GetProperty("Algs").([]string)
-	self.MsgInfo("got alg-names: %v\n", alg_names)
+	self.MsgInfo("got alg-names: %v\n", len(alg_names))
 
 	if len(alg_names)>0 {
 		comp_mgr := appmgr.(IComponentMgr)
@@ -62,7 +62,7 @@ func (self *evtproc) InitializeSvc() StatusCode {
 			}
 		}
 	}
-	self.MsgInfo("got alg-list: %v\n", self.algs)
+	self.MsgInfo("got alg-list: %v\n", len(self.algs))
 
 	return StatusCode(0)
 }
@@ -138,24 +138,16 @@ func (self *evtproc) mp_NextEvent(evtmax int) StatusCode {
 		return in_evt_queue, out_evt_queue, quit
 	}
 
-	/*
-	smgr := GetSvcLocator().GetService("evt-store").(IDataStoreMgr)
-	if !smgr.SetNbrStreams(self.nworkers).IsSuccess() {
-		self.MsgWarning("problem setting the correct number of parallel evt-stores\n")
-		return StatusCode(1)
-	}
-	 */
-
 	in_evt_queue, out_evt_queue, quit := start_evt_server(self.nworkers)
-	//println(e.CompName(), "sending requests...")
+	//self.MsgInfo("sending requests...\n")
 	for i:=0; i<evtmax; i++ {
 		in_evt_queue <- new_evtstate(i)
 	}
-	//println(e.CompName(), "sending requests... [done]")
+	//self.MsgInfo("sending requests... [done]\n")
 	n_fails := 0
 	n_processed := 0
 	for evt := range out_evt_queue {
-		//println(e.CompName(), "out-evt-queue:",evt.idx, evt.sc)
+		//self.MsgDebug("out-evt-queue: %v %v\n",evt.idx, evt.sc)
 		if evt.sc != StatusCode(0) {
 			n_fails++
 		}
@@ -163,7 +155,7 @@ func (self *evtproc) mp_NextEvent(evtmax int) StatusCode {
 		if n_processed == evtmax {
 			quit <- true
 			close(out_evt_queue)
-			//println("closing evt server...")
+			//self.MsgDebug("closing evt server...\n")
 			break
 		}
 	}
@@ -186,7 +178,7 @@ func NewEvtProcessor(name string) IEvtProcessor {
 	self.algs = []IAlgorithm{}
 	_ = NewSvc(&self.Service, "kernel.evtproc", name)
 	RegisterComp(self)
-	self.DeclareProperty("NbrWorkers", 4)
+	self.DeclareProperty("NbrWorkers", 2)
 	return self
 }
 

@@ -230,14 +230,14 @@ func main() {
      for i,alg := range gaudi_jobopt.Algs {
      ialg,ok := alg.Instance.(kernel.IAlgorithm)
        if ok {
-          ai := alg.Instance
+          //ai := alg.Instance
           mgr.AddAlgorithm(ialg)
           algs[i] = ialg.CompName()
-          fmt.Printf("%s: algorithm [%T/%T/%s] registered\\n", app.CompName(), ai, ialg, ialg.CompName())
+          //fmt.Printf("%s: algorithm [%T/%T/%s] registered\\n", app.CompName(), ai, ialg, ialg.CompName())
           iprop, ok := alg.Instance.(kernel.IProperty)
           if ok {
            if iprop != nil {
-             fmt.Printf("%s: alg [%s] implements kernel.IProperty\\n", app.CompName(), ialg.CompName())
+              //fmt.Printf("%s: alg [%s] implements kernel.IProperty\\n", app.CompName(), ialg.CompName())
            }
           }
        }
@@ -255,7 +255,7 @@ func main() {
              fmt.Printf("** pb adding svc [%s]\\n", isvc.CompName())
           }
           svcs[i] = isvc.CompName()
-          fmt.Printf("app-mgr adding service [%s]... [done]\\n", isvc.CompName())
+          fmt.Printf("%s: adding service [%s]... [done]\\n", app.CompName(), isvc.CompName())
        }
      }
      app_prop.SetProperty("Svcs", svcs)

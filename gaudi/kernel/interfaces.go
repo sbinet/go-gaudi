@@ -173,15 +173,6 @@ type ISvcLocator interface {
 	ExistsService(svc string) bool
 }
 
-/*
-type IDataStore interface {
-	IComponent
-	Get(key string) (chan *interface{}, bool)
-	Put(key string, value *interface{}) bool
-	Has(key string) bool
-}
-*/
-
 type IDataStore interface {
 	//IComponent
 	Get(key string) interface{}
@@ -190,14 +181,9 @@ type IDataStore interface {
 	//Keys() []string // ??
 }
 
-type IDataStoreClearer interface {
-	ClearStore() StatusCode
-}
-
 type IDataStoreMgr interface {
 	IComponent
 	Store(ctx IEvtCtx) IDataStore
-	SetNbrStreams(n int) StatusCode
 }
 
 /* EOF */

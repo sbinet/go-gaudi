@@ -5,11 +5,11 @@ package kernel
 ///////////////////////////////////////////////////////////////////////////////
 // svc-mgr
 
-type svcMgr struct {
+type svcmgr struct {
 	services map[string]IService
 }
 
-func (self *svcMgr) GetComp(n string) IComponent {
+func (self *svcmgr) GetComp(n string) IComponent {
 	c,ok := self.services[n]
 	if ok {
 		return c.(IComponent)
@@ -17,7 +17,7 @@ func (self *svcMgr) GetComp(n string) IComponent {
 	return nil
 }
 
-func (self *svcMgr) GetComps() []IComponent {
+func (self *svcmgr) GetComps() []IComponent {
 	comps := make([]IComponent, len(self.services))
 	i := 0
 	for _,v := range self.services {
@@ -27,7 +27,7 @@ func (self *svcMgr) GetComps() []IComponent {
 	return comps
 }
 
-func (self *svcMgr) HasComp(n string) bool {
+func (self *svcmgr) HasComp(n string) bool {
 	_,ok := self.services[n]
 	if !ok {
 		self.services[n] = nil, false
@@ -35,7 +35,7 @@ func (self *svcMgr) HasComp(n string) bool {
 	return ok
 }
 
-func (self *svcMgr) AddService(svc string) StatusCode {
+func (self *svcmgr) AddService(svc string) StatusCode {
 	isvc,ok := g_compsdb[svc].(IService)
 	if !ok {
 		//fmt.Printf("** AddService(%s) FAILED !\n", svc)
@@ -45,7 +45,7 @@ func (self *svcMgr) AddService(svc string) StatusCode {
 	return StatusCode(0)
 }
 
-func (self *svcMgr) RemoveService(svc string) StatusCode {
+func (self *svcmgr) RemoveService(svc string) StatusCode {
 	if self.HasService(svc) == StatusCode(0) {
 		self.services[svc] = nil, false
 		return StatusCode(0)
@@ -53,7 +53,7 @@ func (self *svcMgr) RemoveService(svc string) StatusCode {
 	return StatusCode(1)
 }
 
-func (self *svcMgr) HasService(svc string) StatusCode {
+func (self *svcmgr) HasService(svc string) StatusCode {
 	if self.HasComp(svc) {
 		//fmt.Printf(":: HasService(%s) - true\n", svc)
 		return StatusCode(0)
@@ -61,7 +61,7 @@ func (self *svcMgr) HasService(svc string) StatusCode {
 	return StatusCode(1)
 }
 
-func (self *svcMgr) GetService(svc string) IService {
+func (self *svcmgr) GetService(svc string) IService {
 	if self.HasService(svc).IsSuccess() {
 		//fmt.Printf("-- GetService(%s)...\n", svc)
 		isvc := self.services[svc]
@@ -71,7 +71,7 @@ func (self *svcMgr) GetService(svc string) IService {
 	return nil
 }
 
-func (self *svcMgr) GetServices() []IService {
+func (self *svcmgr) GetServices() []IService {
 	svcs := make([]IService, len(self.services))
 	i := 0
 	for _,v := range self.services {
@@ -81,7 +81,7 @@ func (self *svcMgr) GetServices() []IService {
 	return svcs
 }
 
-func (self *svcMgr) ExistsService(svc string) bool {
+func (self *svcmgr) ExistsService(svc string) bool {
 	return self.HasService(svc) == StatusCode(0)
 }
 
@@ -89,11 +89,11 @@ func (self *svcMgr) ExistsService(svc string) bool {
 //////////////////////////////////////////////////////////////////////////////
 // alg-mgr
 
-type algMgr struct {
+type algmgr struct {
 	algs map[string]IAlgorithm
 }
 
-func (self *algMgr) GetComp(n string) IComponent {
+func (self *algmgr) GetComp(n string) IComponent {
 	c,ok := self.algs[n]
 	if ok {
 		return c.(IComponent)
@@ -101,7 +101,7 @@ func (self *algMgr) GetComp(n string) IComponent {
 	return nil
 }
 
-func (self *algMgr) GetComps() []IComponent {
+func (self *algmgr) GetComps() []IComponent {
 	comps := make([]IComponent, len(self.algs))
 	i := 0
 	for _,v := range self.algs {
@@ -111,7 +111,7 @@ func (self *algMgr) GetComps() []IComponent {
 	return comps
 }
 
-func (self *algMgr) HasComp(n string) bool {
+func (self *algmgr) HasComp(n string) bool {
 	_,ok := self.algs[n]
 	if !ok {
 		self.algs[n] = nil, false
@@ -119,12 +119,12 @@ func (self *algMgr) HasComp(n string) bool {
 	return ok
 }
 
-func (self *algMgr) AddAlgorithm(alg IAlgorithm) StatusCode {
+func (self *algmgr) AddAlgorithm(alg IAlgorithm) StatusCode {
 	self.algs[alg.CompName()] = alg
 	return StatusCode(0)
 }
 
-func (self *algMgr) RemoveAlgorithm(alg IAlgorithm) StatusCode {
+func (self *algmgr) RemoveAlgorithm(alg IAlgorithm) StatusCode {
 	n := alg.CompName()
 	if !self.HasComp(n) {
 		return StatusCode(1)
@@ -133,18 +133,18 @@ func (self *algMgr) RemoveAlgorithm(alg IAlgorithm) StatusCode {
 	return StatusCode(0)
 }
 
-func (self *algMgr) HasAlgorithm(algname string) bool {
+func (self *algmgr) HasAlgorithm(algname string) bool {
 	return self.HasComp(algname)
 }
 
 //////////////////////////////////////////////////////////////////////////////
 // app-mgr
 
-type appMgr struct {
+type appmgr struct {
 	properties
 	msgstream
-	svcMgr
-	algMgr
+	svcmgr
+	algmgr
 
 	name string
 	jobo string
@@ -155,22 +155,22 @@ type appMgr struct {
 	mgrs    map[string]IComponentMgr
 }
 
-func (self *appMgr) CompType() string {
-	return "gaudi.kernel.appMgr"
+func (self *appmgr) CompType() string {
+	return "gaudi.kernel.appmgr"
 }
 
-func (self *appMgr) CompName() string {
+func (self *appmgr) CompName() string {
 	return self.name
 }
 
-func (self *appMgr) GetComp(n string) IComponent {
+func (self *appmgr) GetComp(n string) IComponent {
 	if !self.HasComp(n) {
 		return nil
 	}
 	return g_compsdb[n]
 }
 
-func (self *appMgr) GetComps() []IComponent {
+func (self *appmgr) GetComps() []IComponent {
 	comps := make([]IComponent, len(g_compsdb))
 	i := 0
 	for _,v := range g_compsdb {
@@ -180,7 +180,7 @@ func (self *appMgr) GetComps() []IComponent {
 	return comps
 }
 
-func (self *appMgr) HasComp(n string) bool {
+func (self *appmgr) HasComp(n string) bool {
 	_,ok := g_compsdb[n]
 	if !ok {
 		g_compsdb[n] = nil, false
@@ -188,14 +188,14 @@ func (self *appMgr) HasComp(n string) bool {
 	return ok
 }
 
-func (self *appMgr) Configure() StatusCode {
+func (self *appmgr) Configure() StatusCode {
 	self.evtproc = NewEvtProcessor("evt-proc")
 	//self.evtsel  = 
 
 	return StatusCode(0)
 }
 
-func (self *appMgr) Initialize() StatusCode {
+func (self *appmgr) Initialize() StatusCode {
 	allgood := true
 	self.MsgInfo("initialize...\n")
 
@@ -205,8 +205,7 @@ func (self *appMgr) Initialize() StatusCode {
 		self.MsgInfo("svcs...\n")
 		for _,svc_name := range svcs_prop {
 			isvc := self.GetService(svc_name)
-			sc := isvc.InitializeSvc()
-			if sc != StatusCode(0) {
+			if !isvc.InitializeSvc().IsSuccess() {
 				self.MsgError("pb initializing [%s] !\n",isvc.CompName())
 				allgood = false
 			}
@@ -221,8 +220,7 @@ func (self *appMgr) Initialize() StatusCode {
 		for _,alg_name := range algs_prop {
 			ialg,isalg := self.GetComp(alg_name).(IAlgorithm)
 			if isalg {
-				sc := ialg.Initialize()
-				if sc != StatusCode(0) {
+				if !ialg.Initialize().IsSuccess() {
 					self.MsgError("pb initializing [%s] !\n",ialg.CompName())
 					allgood = false
 				} else {
@@ -239,12 +237,12 @@ func (self *appMgr) Initialize() StatusCode {
 	return StatusCode(1)
 }
 
-func (self *appMgr) Start() StatusCode {
+func (self *appmgr) Start() StatusCode {
 	self.MsgInfo("start...\n")
 	return StatusCode(0)
 }
 
-func (self *appMgr) Run() StatusCode {
+func (self *appmgr) Run() StatusCode {
 	self.MsgInfo("run...\n")
 	// init
 	sc := self.Initialize()
@@ -279,12 +277,12 @@ func (self *appMgr) Run() StatusCode {
 	return self.Terminate()
 }
 
-func (self *appMgr) Stop() StatusCode {
+func (self *appmgr) Stop() StatusCode {
 	self.MsgInfo("stop...\n")
 	return StatusCode(0)
 }
 
-func (self *appMgr) Finalize() StatusCode {
+func (self *appmgr) Finalize() StatusCode {
 	self.MsgInfo("finalize...\n")
 	allgood := true
 
@@ -327,25 +325,25 @@ func (self *appMgr) Finalize() StatusCode {
 	return StatusCode(1)
 }
 
-func (self *appMgr) Terminate() StatusCode {
+func (self *appmgr) Terminate() StatusCode {
 	self.MsgInfo("terminate...\n")
 	return StatusCode(0)
 }
 
 func NewAppMgr() IAppMgr {
-	self := &appMgr{}
+	self := &appmgr{}
 	self.properties.props = make(map[string]interface{})
 	self.name = "app-mgr"
 	self.jobo = "foo.py"
 	self.msgstream = msgstream{name:self.name, level:LVL_INFO}
 
-	self.svcMgr.services = make(map[string]IService)
-	self.algMgr.algs = make(map[string]IAlgorithm)
+	self.svcmgr.services = make(map[string]IService)
+	self.algmgr.algs = make(map[string]IAlgorithm)
 
 
 	self.mgrs = make(map[string]IComponentMgr)
-	self.mgrs["svcmgr"] = &self.svcMgr
-	self.mgrs["algmgr"] = &self.algMgr
+	self.mgrs["svcmgr"] = &self.svcmgr
+	self.mgrs["algmgr"] = &self.algmgr
 	
 	g_compsdb[self.name] = self
 
@@ -356,20 +354,20 @@ func NewAppMgr() IAppMgr {
 }
 
 // check implementations match interfaces
-var _ = IAlgMgr(&algMgr{})
-var _ = IComponentMgr(&algMgr{})
+var _ = IAlgMgr(&algmgr{})
+var _ = IComponentMgr(&algmgr{})
 
-var _ = IComponentMgr(&svcMgr{})
-var _ = ISvcMgr(&svcMgr{})
-var _ = ISvcLocator(&svcMgr{})
+var _ = IComponentMgr(&svcmgr{})
+var _ = ISvcMgr(&svcmgr{})
+var _ = ISvcLocator(&svcmgr{})
 
-var _ = IComponent(&appMgr{})
-var _ = IComponentMgr(&appMgr{})
-var _ = IAlgMgr(&appMgr{})
-var _ = ISvcMgr(&appMgr{})
-var _ = ISvcLocator(&appMgr{})
-var _ = IAppMgr(&appMgr{})
-var _ = IProperty(&appMgr{})
+var _ = IComponent(&appmgr{})
+var _ = IComponentMgr(&appmgr{})
+var _ = IAlgMgr(&appmgr{})
+var _ = ISvcMgr(&appmgr{})
+var _ = ISvcLocator(&appmgr{})
+var _ = IAppMgr(&appmgr{})
+var _ = IProperty(&appmgr{})
 
 
 /* EOF */

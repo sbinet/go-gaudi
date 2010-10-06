@@ -31,10 +31,10 @@ app.algs += Alg("gaudi/tests/pkg2:alg_dumper", "dumper",
 
 for i in xrange(1000):
     app.algs += Alg("gaudi/tests/pkg2:alg_adder",
-                    "adder--%04i" % i,
+                    "add--%04i" % i,
                     SimpleCounter="my_counter")
     app.algs += Alg("gaudi/tests/pkg2:alg_dumper",
-                    "dumper--%04i" % i,
+                    "dump--%04i" % i,
                     SimpleCounter="my_counter",
                     ExpectedValue=i+1)
     

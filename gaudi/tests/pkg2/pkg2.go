@@ -57,16 +57,6 @@ func (self *alg_adder) Initialize() kernel.StatusCode {
 		return kernel.StatusCode(1)
 	}
 	
-	/*
-	self.MsgInfo("retrieving evt-store...\n")
-	svcloc := kernel.GetSvcLocator()
-	self.evtstore = svcloc.GetService("evt-store").(kernel.IDataStore)
-	if self.evtstore == nil {
-		self.MsgError("could not retrieve evt-store !\n")
-		return kernel.StatusCode(1)
-	}
-	self.MsgInfo("retrieving evt-store... [ok]\n")
-	 */
 	self.MsgInfo("--> val: %v\n", self.val)
 	self.val = self.GetProperty("Val").(float)
 	self.MsgInfo("--> val: %v\n", self.val)
