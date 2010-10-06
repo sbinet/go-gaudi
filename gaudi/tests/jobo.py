@@ -6,26 +6,26 @@ app.svcs += Svc("gaudi/kernel/evtproc:evtproc",
                 NbrWorkers=100)
 
 app.algs += Alg("gaudi/tests/pkg1:alg1", "alg1", OutputLevel=Lvl.INFO)
-app.algs += Alg("gaudi/tests/pkg1:alg2", "alg2", OutputLevel=1)
-app.algs += Alg("gaudi/tests/pkg2:alg1", "alg_one", OutputLevel=1)
+app.algs += Alg("gaudi/tests/pkg1:alg2", "alg2", OutputLevel=Lvl.INFO)
+app.algs += Alg("gaudi/tests/pkg2:alg1", "alg_one", OutputLevel=Lvl.INFO)
 
-app.svcs += Svc("gaudi/tests/pkg1:svc1", name="svc1", OutputLevel=1)
+app.svcs += Svc("gaudi/tests/pkg1:svc1", name="svc1", OutputLevel=Lvl.INFO)
 app.svcs += Svc("gaudi/tests/pkg2:svc2", "svc2")
 
 app.svcs += Svc("gaudi/datastore:datastoresvc", "evt-store")
 app.svcs += Svc("gaudi/datastore:datastoresvc", "det-store")
 
 app.algs += Alg("gaudi/tests/pkg2:alg_adder", "adder_1",
-                OutputLevel=1,
+                OutputLevel=Lvl.INFO,
                 Val=0.)
 app.algs += Alg("gaudi/tests/pkg2:alg_dumper", "dumper-1",
-                ExpectedValue=1)
+                ExpectedValue=Lvl.INFO)
 
 app.algs += Alg("gaudi/tests/pkg2:alg_adder", "adder_2",
-                OutputLevel=1,
+                OutputLevel=Lvl.INFO,
                 Val=3.)
 app.algs += Alg("gaudi/tests/pkg2:alg_dumper", "dumper-2",
-                ExpectedValue=2)
+                ExpectedValue=Lvl.INFO)
 
 app.algs += Alg("gaudi/tests/pkg2:alg_adder", "adder_3")
 app.algs += Alg("gaudi/tests/pkg2:alg_dumper", "dumper-3",
@@ -34,7 +34,7 @@ app.algs += Alg("gaudi/tests/pkg2:alg_dumper", "dumper-3",
 app.algs += Alg("gaudi/tests/pkg2:alg_dumper", "dumper",
                 NbrJets = "njets",
                 ExpectedValue=3,
-                OutputLevel=Lvl.ERROR)
+                OutputLevel=Lvl.INFO)
 
 if 1:
     for i in xrange(500):
