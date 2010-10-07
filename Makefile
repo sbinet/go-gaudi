@@ -10,6 +10,7 @@ DIRS=\
 	gaudi/kernel\
 	gaudi/kernel/datastore\
 	gaudi/kernel/evtproc\
+	gaudi/kernel/outstream\
 	gaudi/app\
 	gaudi/tests/pkg1\
 	gaudi/tests/pkg2\

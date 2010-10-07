@@ -1,0 +1,42 @@
+app.props.EvtMax = 10
+app.props.OutputLevel = 1
+#app.props.NbrProcs = 1
+
+app.svcs += Svc("gaudi/kernel/evtproc:evtproc",
+                "evt-proc",
+                OutputLevel=Lvl.INFO,
+                NbrWorkers=50)
+
+app.algs += Alg("gaudi/tests/pkg1:alg1", "alg1", OutputLevel=Lvl.ERROR)
+app.algs += Alg("gaudi/tests/pkg1:alg2", "alg2", OutputLevel=Lvl.ERROR)
+app.algs += Alg("gaudi/tests/pkg2:alg1", "alg_one", OutputLevel=Lvl.ERROR)
+
+app.svcs += Svc("gaudi/tests/pkg1:svc1", name="svc1", OutputLevel=Lvl.ERROR)
+app.svcs += Svc("gaudi/tests/pkg2:svc2", "svc2")
+
+app.svcs += Svc("gaudi/kernel/datastore:datastoresvc", "evt-store")
+app.svcs += Svc("gaudi/kernel/datastore:datastoresvc", "det-store")
+
+app.algs += Alg("gaudi/tests/pkg2:alg_adder", "adder_1",
+                OutputLevel=Lvl.ERROR,
+                Val=0.)
+app.algs += Alg("gaudi/tests/pkg2:alg_dumper", "dumper-1",
+                ExpectedValue=1)
+
+app.algs += Alg("gaudi/tests/pkg2:alg_adder", "adder_2",
+                OutputLevel=Lvl.ERROR,
+                Val=3.)
+app.algs += Alg("gaudi/tests/pkg2:alg_dumper", "dumper-2",
+                ExpectedValue=2)
+
+app.algs += Alg("gaudi/tests/pkg2:alg_adder", "adder_3")
+app.algs += Alg("gaudi/tests/pkg2:alg_dumper", "dumper-3",
+                ExpectedValue=3)
+
+app.algs += Alg("gaudi/tests/pkg2:alg_dumper", "dumper",
+                NbrJets = "njets",
+                ExpectedValue=3,
+                OutputLevel=Lvl.ERROR)
+
+app.toolsvc += Tool("gaudi/tests/pkg1:tool1", name="tool1")
+
