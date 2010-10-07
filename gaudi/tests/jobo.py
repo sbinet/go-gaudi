@@ -14,8 +14,8 @@ app.algs += Alg("gaudi/tests/pkg2:alg1", "alg_one", OutputLevel=Lvl.ERROR)
 app.svcs += Svc("gaudi/tests/pkg1:svc1", name="svc1", OutputLevel=Lvl.ERROR)
 app.svcs += Svc("gaudi/tests/pkg2:svc2", "svc2")
 
-app.svcs += Svc("gaudi/datastore:datastoresvc", "evt-store")
-app.svcs += Svc("gaudi/datastore:datastoresvc", "det-store")
+app.svcs += Svc("gaudi/kernel/datastore:datastoresvc", "evt-store")
+app.svcs += Svc("gaudi/kernel/datastore:datastoresvc", "det-store")
 
 app.algs += Alg("gaudi/tests/pkg2:alg_adder", "adder_1",
                 OutputLevel=Lvl.ERROR,
