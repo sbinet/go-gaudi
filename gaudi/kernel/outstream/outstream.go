@@ -14,6 +14,31 @@ var g_keys = []string{
 	"cnt",
 }
 
+// simple interface to gather all encoders
+type iwriter interface {
+	Encode(v interface{}) os.Error
+}
+
+func data_sink(w iwriter) (datachan, chan bool) {
+	in   := make(datachan)
+	quit := make(chan bool)
+	go func() {
+		for {
+			select {
+			case data := <-in:
+				err := w.Encode(data)
+				if err != nil {
+					println("** error **", err)
+				}
+			case <-quit:
+				return
+			}
+		}
+	}()
+	return in, quit
+}
+
+
 // --- gob_outstream ---
 type gob_outstream struct {
 	kernel.Algorithm
@@ -87,34 +112,9 @@ type datachan chan interface{}
 type json_outstream struct {
 	kernel.Algorithm
 	w *os.File
-	enc *json.Encoder
 	item_names []string
 	out datachan
 	ctl chan bool
-}
-
-// simple interface to gather all encoders
-type iwriter interface {
-	Encode(v interface{}) os.Error
-}
-
-func data_sink(w iwriter) (datachan, chan bool) {
-	ch := make(datachan)
-	ctrl:= make(chan bool)
-	go func() {
-		for {
-			select {
-			case data := <-ch:
-				err := w.Encode(data)
-				if err != nil {
-					println("** error **", err)
-				}
-			case <-ctrl:
-				return
-			}
-		}
-	}()
-	return ch, ctrl
 }
 
 func (self *json_outstream) Initialize() kernel.StatusCode {
