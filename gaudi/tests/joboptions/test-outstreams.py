@@ -12,6 +12,9 @@ app.svcs += Svc("gaudi/kernel/evtproc:evtproc",
 
 app.svcs += Svc("gaudi/kernel/datastore:datastoresvc", "evt-store")
 app.svcs += Svc("gaudi/kernel/datastore:datastoresvc", "det-store")
+app.svcs += Svc("gaudi/kernel/outstream:json_outstream_svc",
+                "outstreamsvc",
+                OutputLevel=Lvl.INFO)
 
 app.algs += Alg("gaudi/tests/pkg2:alg_adder", "adder_1",
                 OutputLevel=Lvl.ERROR,

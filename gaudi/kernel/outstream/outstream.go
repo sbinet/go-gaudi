@@ -19,25 +19,6 @@ type iwriter interface {
 	Encode(v interface{}) os.Error
 }
 
-func data_sink(w iwriter) (datachan, chan bool) {
-	in   := make(datachan)
-	quit := make(chan bool)
-	go func() {
-		for {
-			select {
-			case data := <-in:
-				err := w.Encode(data)
-				if err != nil {
-					println("** error **", err)
-				}
-			case <-quit:
-				return
-			}
-		}
-	}()
-	return in, quit
-}
-
 
 // --- gob_outstream ---
 type gob_outstream struct {
@@ -120,16 +101,11 @@ func (self *gob_outstream) Finalize() kernel.Error {
 	return kernel.StatusCode(0)
 }
 
-// ---
-type datachan chan interface{}
-
 // --- json_outstream ---
 type json_outstream struct {
 	kernel.Algorithm
-	w *os.File
 	item_names []string
-	out datachan
-	ctl chan bool
+	handle kernel.IOutputStream
 }
 
 func (self *json_outstream) Initialize() kernel.Error {
@@ -145,15 +121,23 @@ func (self *json_outstream) Initialize() kernel.Error {
 	self.MsgInfo("output file: [%v]\n", fname)
 	self.MsgInfo("items: %v\n", self.item_names)
 
-	flag := os.O_WRONLY | os.O_CREATE | os.O_TRUNC
-	perm := uint32(0666)
-	w,err := os.Open(fname, flag, perm)
-	if err != nil {
-		self.MsgError("problem while opening file [%v]: %v\n", fname, err)
+	svcloc := kernel.GetSvcLocator()
+	if svcloc == nil {
+		self.MsgError("could not retrieve service locator !\n")
 		return kernel.StatusCode(1)
 	}
-	self.w = w
-	self.out, self.ctl = data_sink(json.NewEncoder(self.w))
+	svc := svcloc.GetService("outstreamsvc").(kernel.IOutputStreamSvc)
+	if svc == nil {
+		self.MsgError("could not retrieve [outstreamsvc] !\n")
+		return kernel.StatusCode(1)
+	}
+
+	self.handle = svc.NewOutputStream(fname)
+	if self.handle == nil {
+		self.MsgError("could not retrieve json output stream [%s] !\n", fname)
+		return kernel.StatusCode(1)
+	}
+
 	return kernel.StatusCode(0)
 }
 
@@ -173,27 +157,178 @@ func (self *json_outstream) Execute(ctx kernel.IEvtCtx) kernel.Error {
 		val[i+hdr_offset] = store.Get(k)
 	}
 
-	self.out <- val
-	/*
-	err := self.enc.Encode(val)
-	if err != nil {
-		self.MsgError("error while writing store content: %v\n", err)
-		return kernel.StatusCode(1)
-	}
-	 */
-	return kernel.StatusCode(0)
+	return self.handle.Write(val)
 }
 
 func (self *json_outstream) Finalize() kernel.Error {
 	self.MsgDebug("== finalize ==\n")
-	// close out our data channels
-	self.ctl <- true
-	close(self.ctl)
-	close(self.out)
 
-	self.w.Close()
+	// close out our data channels
+	sc := self.handle.Close()
+	if !sc.IsSuccess() {
+		self.MsgError("problem closing json outstream: %v", sc.Err())
+		return sc
+	}
 
 	return kernel.StatusCode(0)
+}
+
+/// an output stream using JSON as a format
+type json_outstream_handle struct {
+	svc kernel.IService
+	w *os.File
+	enc *json.Encoder
+	data chan interface{}
+	errs chan os.Error
+	quit chan bool
+}
+
+func (self *json_outstream_handle) Write(data interface{}) kernel.Error {
+	/* // FIXME: how to get the error back ??
+	err := self.enc.Encode(data)
+	if err != nil {
+		return kernel.StatusCodeWithErr(1, err)
+	}
+	 */
+	self.data <- data
+	err, ready := <- self.errs
+	if ready && err != nil {
+		msg := self.svc.(kernel.IMessager)
+		msg.MsgError("--> write got: %v\n", err)
+		return kernel.StatusCodeWithErr(1, err)
+	}
+	return kernel.StatusCode(0)
+}
+
+func (self *json_outstream_handle) Close() kernel.Error {
+	if !closed(self.quit) {
+		msg := self.svc.(kernel.IMessager)
+		msg.MsgDebug("--> closing json-handle [%v]\n", self.w.Name())
+
+		self.quit <- true
+		close(self.quit)
+		close(self.errs)
+		close(self.data)
+
+		fd := self.w.Fd()
+		if fd >= 0 {
+			fname := self.w.Name()
+			err := self.w.Close()
+			if err != nil {
+				msg.MsgError("closing fd: [%v] name [%v]. err: %v\n", 
+					fd, fname, err)
+				return kernel.StatusCodeWithErr(1, err)
+			}
+		}
+	}
+	return kernel.StatusCode(0)
+}
+
+func (self *json_outstream_handle) Name() string {
+	if self.w != nil {
+		return self.w.Name()
+	}
+	return "<N/A>"
+}
+
+func (self *json_outstream_handle) Fd() int {
+	if self.w != nil {
+		return self.w.Fd()
+	}
+	return -1
+}
+
+// --- json outputstream srv
+type json_outstream_svc struct {
+	kernel.Service
+	streams map[string]kernel.IOutputStream
+}
+
+func (self *json_outstream_svc) InitializeSvc() kernel.Error {
+	
+	self.MsgDebug("== initialize ==\n")
+	if !self.Service.InitializeSvc().IsSuccess() {
+		self.MsgError("could not initialize base-class\n")
+		return kernel.StatusCode(1)
+	}
+
+	return kernel.StatusCode(0)
+}
+
+func (self *json_outstream_svc) FinalizeSvc() kernel.Error {
+	
+	self.MsgDebug("== finalize ==\n")
+	if !self.Service.FinalizeSvc().IsSuccess() {
+		self.MsgError("could not finalize base-class\n")
+		return kernel.StatusCode(1)
+	}
+
+	self.MsgDebug("== closing output streams...\n")
+	allgood := true
+	for n,stream := range self.streams {
+		self.MsgDebug("-- closing [%s]...\n", n)
+		sc := stream.Close()
+		if !sc.IsSuccess() {
+			self.MsgError("problem closing stream [%s]: %v\n",n,sc)
+			allgood = false
+		}
+	}
+	if !allgood {
+		return kernel.StatusCode(1)
+	}
+
+	return kernel.StatusCode(0)
+}
+
+func
+(self *json_outstream_svc) NewOutputStream(n string) kernel.IOutputStream {
+	_,ok := self.streams[n]
+	if ok {
+		self.MsgError("a json output stream with name [%s] "+
+			"has already been created !\n", n)
+	}
+	
+	stream := &json_outstream_handle{}
+	stream.svc = self
+	self.streams[n] = stream
+
+	make_chans := func(w iwriter) (chan interface{}, 
+		                           chan os.Error, 
+		                           chan bool) {
+		in   := make(chan interface{})
+		errs := make(chan os.Error)
+		quit := make(chan bool)
+		go func() {
+			for {
+				select {
+				case data := <-in:
+					err := w.Encode(data)
+					//errs <- err // FIXME: how to pass back the errors ?!?
+					if err != nil {
+						println("** error **", err)
+					}
+				case <-quit:
+					return
+				}
+				
+			}
+		}()
+		return in, errs, quit
+	}
+
+	flags := os.O_WRONLY | os.O_CREATE | os.O_TRUNC
+	perms := uint32(0666)
+	w,err := os.Open(n, flags, perms)
+	if err != nil {
+		self.MsgError("problem opening stream [%v]: %v\n", n, err)
+		return nil
+	}
+
+	stream.w = w
+	stream.enc = json.NewEncoder(stream.w)
+	stream.data, stream.errs, stream.quit = make_chans(stream.enc)
+
+	return stream
 }
 
 // check implementations match interfaces
@@ -202,6 +337,12 @@ var _ = kernel.IAlgorithm(&gob_outstream{})
 
 var _ = kernel.IComponent(&json_outstream{})
 var _ = kernel.IAlgorithm(&json_outstream{})
+
+var _ = kernel.IComponent(&json_outstream_svc{})
+var _ = kernel.IService(&json_outstream_svc{})
+var _ = kernel.IOutputStreamSvc(&json_outstream_svc{})
+
+var _ = kernel.IOutputStream(&json_outstream_handle{})
 
 // --- factory ---
 func New(t,n string) kernel.IComponent {
@@ -224,6 +365,16 @@ func New(t,n string) kernel.IComponent {
 		// properties
 		self.DeclareProperty("Output", "foo.json")
 		self.DeclareProperty("Items", g_keys)
+		return self
+
+	case "json_outstream_svc":
+		self := &json_outstream_svc{}
+		kernel.NewSvc(&self.Service, t, n)
+		kernel.RegisterComp(self)
+
+		self.streams = make(map[string]kernel.IOutputStream)
+		// properties
+
 		return self
 
 	default:

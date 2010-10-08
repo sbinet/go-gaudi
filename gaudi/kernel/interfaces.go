@@ -33,6 +33,10 @@ func StatusCode(code int) Error {
 	return &statuscode{code:code, err:nil}
 }
 
+func StatusCodeWithErr(code int, err os.Error) Error {
+	return &statuscode{code:code, err:err}
+}
+
 func (sc *statuscode) Code() int {
 	return sc.code
 }
@@ -42,7 +46,7 @@ func (sc *statuscode) Err() os.Error {
 }
 
 func (sc *statuscode) String() string {
-	return fmt.Sprintf("code:%i err:%v", sc.code, sc.err)
+	return fmt.Sprintf("code:%v err:%v", sc.code, sc.err)
 }
 
 func (sc *statuscode) IsSuccess() bool {
@@ -150,6 +154,7 @@ type IAlgTool interface {
 }
 
 type DataStore map[string]interface{}
+
 type IEvtCtx interface {
 	Idx() int
 	Store() *DataStore
@@ -229,4 +234,26 @@ type IMessager interface {
 	MsgFatal(format string, a ...interface{}) (int, os.Error)
 	MsgAlways(format string, a ...interface{}) (int, os.Error)
 }
+
+/// handle to a concurrent output stream
+type IOutputStream interface {
+	/// writes (and possibly commit) data to the stream
+	Write(data interface{}) Error
+	/// closes and flushes the output stream
+	Close() Error
+	/// returns the name of the output stream (ie: URI)
+	Name() string
+	/// returns the file-descriptor associated to that output stream
+	Fd() int
+}
+
+/// interface to a concurrent output stream server
+type IOutputStreamSvc interface {
+	//IComponent
+
+	/// returns a new output stream
+	NewOutputStream(stream_name string) IOutputStream
+
+}
+
 /* EOF */
