@@ -1,4 +1,4 @@
-app.props.EvtMax = 10
+app.props.EvtMax = 50
 app.props.OutputLevel = 1
 #app.props.NbrProcs = 1
 
