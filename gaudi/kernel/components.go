@@ -94,7 +94,7 @@ func (self *msgstream) Msg(lvl OutputLevel, format string, a ...interface{}) (in
 	//return 0, nil
 	if self.level <= lvl {
 		s := fmt.Sprintf(format, a...)
-		return fmt.Printf("%-10s %6s %s", self.name, lvl, s)
+		return fmt.Printf("%-15s %6s %s", self.name, lvl, s)
 	}
 	return 0, nil
 }
