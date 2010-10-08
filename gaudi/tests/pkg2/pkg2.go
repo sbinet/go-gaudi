@@ -9,7 +9,7 @@ type alg1 struct {
 	kernel.Algorithm
 }
 
-func (self *alg1) Initialize() kernel.StatusCode {
+func (self *alg1) Initialize() kernel.Error {
 	self.MsgInfo("== initialize ==\n")
 	if !self.Algorithm.Initialize().IsSuccess() {
 		self.MsgError("could not initialize base-class\n")
@@ -18,12 +18,12 @@ func (self *alg1) Initialize() kernel.StatusCode {
 	return kernel.StatusCode(0)
 }
 
-func (self *alg1) Execute(ctx kernel.IEvtCtx) kernel.StatusCode {
+func (self *alg1) Execute(ctx kernel.IEvtCtx) kernel.Error {
 	self.MsgDebug("== execute == [%v]\n", ctx.Idx())
 	return kernel.StatusCode(0)
 }
 
-func (self *alg1) Finalize() kernel.StatusCode {
+func (self *alg1) Finalize() kernel.Error {
 	self.MsgInfo("== finalize ==\n")
 	return kernel.StatusCode(0)
 }
@@ -33,7 +33,7 @@ type svc2 struct {
 	kernel.Service
 }
 
-func (self *svc2) InitializeSvc() kernel.StatusCode {
+func (self *svc2) InitializeSvc() kernel.Error {
 	self.MsgInfo("~~ initialize ~~\n")
 	if !self.Service.InitializeSvc().IsSuccess() {
 		self.MsgError("could not initialize base-class\n")
@@ -42,7 +42,7 @@ func (self *svc2) InitializeSvc() kernel.StatusCode {
 	return kernel.StatusCode(0)
 }
 
-func (self *svc2) FinalizeSvc() kernel.StatusCode {
+func (self *svc2) FinalizeSvc() kernel.Error {
 	self.MsgInfo("~~ finalize ~~\n")
 	return kernel.StatusCode(0)
 }
@@ -58,7 +58,7 @@ type alg_adder struct {
 	cnt_key string
 }
 
-func (self *alg_adder) Initialize() kernel.StatusCode {
+func (self *alg_adder) Initialize() kernel.Error {
 	self.MsgInfo("== initialize ==\n")
 	if !self.Algorithm.Initialize().IsSuccess() {
 		self.MsgError("could not initialize base-class\n")
@@ -73,7 +73,7 @@ func (self *alg_adder) Initialize() kernel.StatusCode {
 	return kernel.StatusCode(0)
 }
 
-func (self *alg_adder) Execute(ctx kernel.IEvtCtx) kernel.StatusCode {
+func (self *alg_adder) Execute(ctx kernel.IEvtCtx) kernel.Error {
 	self.MsgDebug("== execute == [%v]\n", ctx.Idx())
 
 	njets := 1 + ctx.Idx()
@@ -99,7 +99,7 @@ func (self *alg_adder) Execute(ctx kernel.IEvtCtx) kernel.StatusCode {
 	return kernel.StatusCode(0)
 }
 
-func (self *alg_adder) Finalize() kernel.StatusCode {
+func (self *alg_adder) Finalize() kernel.Error {
 	self.MsgInfo("== finalize ==\n")
 	return kernel.StatusCode(0)
 }
@@ -113,7 +113,7 @@ type alg_dumper struct {
 	cnt_val int
 }
 
-func (self *alg_dumper) Initialize() kernel.StatusCode {
+func (self *alg_dumper) Initialize() kernel.Error {
 	self.MsgInfo("== initialize ==\n")
 	if !self.Algorithm.Initialize().IsSuccess() {
 		self.MsgError("could not initialize base-class\n")
@@ -126,7 +126,7 @@ func (self *alg_dumper) Initialize() kernel.StatusCode {
 	return kernel.StatusCode(0)
 }
 
-func (self *alg_dumper) Execute(ctx kernel.IEvtCtx) kernel.StatusCode {
+func (self *alg_dumper) Execute(ctx kernel.IEvtCtx) kernel.Error {
 	self.MsgDebug("== execute == [%v]\n", ctx.Idx())
 
 	store := self.EvtStore(ctx)
@@ -146,7 +146,7 @@ func (self *alg_dumper) Execute(ctx kernel.IEvtCtx) kernel.StatusCode {
 	return kernel.StatusCode(0)
 }
 
-func (self *alg_dumper) Finalize() kernel.StatusCode {
+func (self *alg_dumper) Finalize() kernel.Error {
 	self.MsgInfo("== finalize ==\n")
 	return kernel.StatusCode(0)
 }

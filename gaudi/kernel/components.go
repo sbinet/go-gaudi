@@ -30,7 +30,7 @@ type properties struct {
 func (self *properties) DeclareProperty(n string, v interface{}) {
 	self.SetProperty(n, v)
 }
-func (self *properties) SetProperty(n string, v interface{}) StatusCode {
+func (self *properties) SetProperty(n string, v interface{}) Error {
 	self.props[n] = v
 	return StatusCode(0)
 }
@@ -138,21 +138,21 @@ func (self *Algorithm) DetStore(ctx IEvtCtx) IDataStore {
 	return self.detstore.Store(ctx)
 }
 
-//func (self *Algorithm) SysInitialize() StatusCode {
+//func (self *Algorithm) SysInitialize() Error {
 //	return self.Initialize()
 //}
 
-//func (self *Algorithm) SysExecute(ctx IEvtCtx) StatusCode {
+//func (self *Algorithm) SysExecute(ctx IEvtCtx) Error {
 //	self.MsgInfo("sys-execute... [%v]\n", ctx)
 //	println("==>",self.CompName(),"sys-execute [",ctx,"]")
 //	return self.Execute(ctx)
 //}
 
-//func (self *Algorithm) SysFinalize() StatusCode {
+//func (self *Algorithm) SysFinalize() Error {
 //	return self.Finalize()
 //}
 
-func (self *Algorithm) Initialize() StatusCode {
+func (self *Algorithm) Initialize() Error {
 	lvl := self.GetProperty("OutputLevel").(int)
 	self.SetOutputLevel(OutputLevel(lvl))
 
@@ -168,13 +168,13 @@ func (self *Algorithm) Initialize() StatusCode {
 	return StatusCode(0)
 }
 
-func (self *Algorithm) Execute(ctx IEvtCtx) StatusCode {
+func (self *Algorithm) Execute(ctx IEvtCtx) Error {
 	self.MsgDebug("execute... [%v]\n", ctx)
 	println("==>",self.CompName(),"execute [",ctx,"]")
 	return StatusCode(0)
 }
 
-func (self *Algorithm) Finalize() StatusCode {
+func (self *Algorithm) Finalize() Error {
 	self.MsgInfo("finalize...\n")
 	return StatusCode(0)
 }
@@ -215,20 +215,20 @@ type Service struct {
 	msgstream
 }
 
-//func (self *Service) SysInitializeSvc() StatusCode {
+//func (self *Service) SysInitializeSvc() Error {
 //	return self.InitializeSvc()
 //}
 
-//func (self *Service) SysFinalizeSvc() StatusCode {
+//func (self *Service) SysFinalizeSvc() Error {
 //	return self.FinalizeSvc()
 //}
 
-func (self *Service) InitializeSvc() StatusCode {
+func (self *Service) InitializeSvc() Error {
 	self.MsgInfo("initialize...\n")
 	return StatusCode(0)
 }
 
-func (self *Service) FinalizeSvc() StatusCode {
+func (self *Service) FinalizeSvc() Error {
 	self.MsgInfo("finalize...\n")
 	return StatusCode(0)
 }
@@ -262,20 +262,20 @@ func (self *AlgTool) CompName() string {
 	return "ToolSvc." + self.Component.CompName()
 }
 
-//func (self *AlgTool) SysInitializeTool() StatusCode {
+//func (self *AlgTool) SysInitializeTool() Error {
 //	return self.InitializeTool()
 //}
 
-//func (self *AlgTool) SysFinalizeTool() StatusCode {
+//func (self *AlgTool) SysFinalizeTool() Error {
 //	return self.FinalizeTool()
 //}
 
-func (self *AlgTool) InitializeTool() StatusCode {
+func (self *AlgTool) InitializeTool() Error {
 	self.MsgInfo("initialize...\n")
 	return StatusCode(0)
 }
 
-func (self *AlgTool) FinalizeTool() StatusCode {
+func (self *AlgTool) FinalizeTool() Error {
 	self.MsgInfo("finalize...\n")
 	return StatusCode(0)
 }

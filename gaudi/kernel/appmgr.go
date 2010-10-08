@@ -36,7 +36,7 @@ func (self *svcmgr) HasComp(n string) bool {
 	return ok
 }
 
-func (self *svcmgr) AddService(svc string) StatusCode {
+func (self *svcmgr) AddService(svc string) Error {
 	isvc,ok := g_compsdb[svc].(IService)
 	if !ok {
 		//fmt.Printf("** AddService(%s) FAILED !\n", svc)
@@ -46,15 +46,15 @@ func (self *svcmgr) AddService(svc string) StatusCode {
 	return StatusCode(0)
 }
 
-func (self *svcmgr) RemoveService(svc string) StatusCode {
-	if self.HasService(svc) == StatusCode(0) {
+func (self *svcmgr) RemoveService(svc string) Error {
+	if self.HasService(svc).IsSuccess() {
 		self.services[svc] = nil, false
 		return StatusCode(0)
 	}
 	return StatusCode(1)
 }
 
-func (self *svcmgr) HasService(svc string) StatusCode {
+func (self *svcmgr) HasService(svc string) Error {
 	if self.HasComp(svc) {
 		//fmt.Printf(":: HasService(%s) - true\n", svc)
 		return StatusCode(0)
@@ -83,7 +83,7 @@ func (self *svcmgr) GetServices() []IService {
 }
 
 func (self *svcmgr) ExistsService(svc string) bool {
-	return self.HasService(svc) == StatusCode(0)
+	return self.HasService(svc).IsSuccess()
 }
 
 
@@ -120,12 +120,12 @@ func (self *algmgr) HasComp(n string) bool {
 	return ok
 }
 
-func (self *algmgr) AddAlgorithm(alg IAlgorithm) StatusCode {
+func (self *algmgr) AddAlgorithm(alg IAlgorithm) Error {
 	self.algs[alg.CompName()] = alg
 	return StatusCode(0)
 }
 
-func (self *algmgr) RemoveAlgorithm(alg IAlgorithm) StatusCode {
+func (self *algmgr) RemoveAlgorithm(alg IAlgorithm) Error {
 	n := alg.CompName()
 	if !self.HasComp(n) {
 		return StatusCode(1)
@@ -189,7 +189,7 @@ func (self *appmgr) HasComp(n string) bool {
 	return ok
 }
 
-func (self *appmgr) Configure() StatusCode {
+func (self *appmgr) Configure() Error {
 	//self.evtproc = NewEvtProcessor("evt-proc")
 	self.evtproc = self.GetService("evt-proc").(IEvtProcessor)
 	//self.evtsel  = 
@@ -197,7 +197,7 @@ func (self *appmgr) Configure() StatusCode {
 	return StatusCode(0)
 }
 
-func (self *appmgr) Initialize() StatusCode {
+func (self *appmgr) Initialize() Error {
 	allgood := true
 	self.MsgInfo("initialize...\n")
 
@@ -242,12 +242,12 @@ func (self *appmgr) Initialize() StatusCode {
 	return StatusCode(1)
 }
 
-func (self *appmgr) Start() StatusCode {
+func (self *appmgr) Start() Error {
 	self.MsgInfo("start...\n")
 	return StatusCode(0)
 }
 
-func (self *appmgr) Run() StatusCode {
+func (self *appmgr) Run() Error {
 	self.MsgInfo("run...\n")
 	// init
 	sc := self.Initialize()
@@ -283,12 +283,12 @@ func (self *appmgr) Run() StatusCode {
 	return self.Terminate()
 }
 
-func (self *appmgr) Stop() StatusCode {
+func (self *appmgr) Stop() Error {
 	self.MsgInfo("stop...\n")
 	return StatusCode(0)
 }
 
-func (self *appmgr) Finalize() StatusCode {
+func (self *appmgr) Finalize() Error {
 	self.MsgInfo("finalize...\n")
 	allgood := true
 
@@ -299,7 +299,7 @@ func (self *appmgr) Finalize() StatusCode {
 			ialg,isalg := self.GetComp(alg_name).(IAlgorithm)
 			if isalg {
 				sc := ialg.Finalize()
-				if sc != StatusCode(0) {
+				if !sc.IsSuccess() {
 					self.MsgError("pb finalizing [%s] !\n",ialg.CompName())
 					allgood = false
 				} else {
@@ -317,7 +317,7 @@ func (self *appmgr) Finalize() StatusCode {
 		for _,svc_name := range svcs_prop {
 			isvc := self.GetService(svc_name)
 			sc := isvc.FinalizeSvc()
-			if sc != StatusCode(0) {
+			if !sc.IsSuccess() {
 				self.MsgError("pb finalizing [%s] !\n",isvc.CompName())
 				allgood = false
 			}
@@ -332,7 +332,7 @@ func (self *appmgr) Finalize() StatusCode {
 	return StatusCode(1)
 }
 
-func (self *appmgr) Terminate() StatusCode {
+func (self *appmgr) Terminate() Error {
 	self.MsgInfo("terminate...\n")
 	return StatusCode(0)
 }

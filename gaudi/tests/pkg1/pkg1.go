@@ -9,7 +9,7 @@ type alg1 struct {
 	kernel.Algorithm
 }
 
-func (self *alg1) Initialize() kernel.StatusCode {
+func (self *alg1) Initialize() kernel.Error {
 	self.MsgInfo("== initialize ==\n")
 	if !self.Algorithm.Initialize().IsSuccess() {
 		self.MsgError("could not initialize base-class\n")
@@ -18,14 +18,14 @@ func (self *alg1) Initialize() kernel.StatusCode {
 	return kernel.StatusCode(0)
 }
 
-func (self *alg1) Execute(ctx kernel.IEvtCtx) kernel.StatusCode {
+func (self *alg1) Execute(ctx kernel.IEvtCtx) kernel.Error {
 	self.MsgDebug("== execute == [ctx:%v]\n", ctx.Idx())
 	detstore := self.DetStore(ctx)
 	self.MsgDebug("det-store: %v\n", detstore)
 	return kernel.StatusCode(0)
 }
 
-func (self *alg1) Finalize() kernel.StatusCode {
+func (self *alg1) Finalize() kernel.Error {
 	self.MsgInfo("== finalize ==\n")
 	return kernel.StatusCode(0)
 }
@@ -36,7 +36,7 @@ type alg2 struct {
 	kernel.Algorithm
 }
 
-func (self *alg2) Initialize() kernel.StatusCode {
+func (self *alg2) Initialize() kernel.Error {
 	self.MsgInfo("~~ initialize ~~\n")
 	if !self.Algorithm.Initialize().IsSuccess() {
 		self.MsgError("could not initialize base-class\n")
@@ -45,12 +45,12 @@ func (self *alg2) Initialize() kernel.StatusCode {
 	return kernel.StatusCode(0)
 }
 
-func (self *alg2) Execute(ctx kernel.IEvtCtx) kernel.StatusCode {
+func (self *alg2) Execute(ctx kernel.IEvtCtx) kernel.Error {
 	self.MsgDebug("~~ execute ~~ [ctx:%v]\n", ctx.Idx())
 	return kernel.StatusCode(0)
 }
 
-func (self *alg2) Finalize() kernel.StatusCode {
+func (self *alg2) Finalize() kernel.Error {
 	self.MsgInfo("~~ finalize ~~\n")
 	return kernel.StatusCode(0)
 }
@@ -60,7 +60,7 @@ type svc1 struct {
 	kernel.Service
 }
 
-func (self *svc1) InitializeSvc() kernel.StatusCode {
+func (self *svc1) InitializeSvc() kernel.Error {
 	self.MsgInfo("~~ initialize ~~\n")
 	if !self.Service.InitializeSvc().IsSuccess() {
 		self.MsgError("could not initialize base-class\n")
@@ -69,7 +69,7 @@ func (self *svc1) InitializeSvc() kernel.StatusCode {
 	return kernel.StatusCode(0)
 }
 
-func (self *svc1) FinalizeSvc() kernel.StatusCode {
+func (self *svc1) FinalizeSvc() kernel.Error {
 	self.MsgInfo("~~ finalize ~~\n")
 	return kernel.StatusCode(0)
 }
@@ -79,7 +79,7 @@ type tool1 struct {
 	kernel.AlgTool
 }
 
-func (self *tool1) InitializeTool() kernel.StatusCode {
+func (self *tool1) InitializeTool() kernel.Error {
 	self.MsgInfo("~~ initialize ~~\n")
 	if !self.AlgTool.InitializeTool().IsSuccess() {
 		self.MsgError("could not initialize base-class\n")
@@ -88,7 +88,7 @@ func (self *tool1) InitializeTool() kernel.StatusCode {
 	return kernel.StatusCode(0)
 }
 
-func (self *tool1) FinalizeTool() kernel.StatusCode {
+func (self *tool1) FinalizeTool() kernel.Error {
 	self.MsgInfo("~~ finalize ~~\n")
 	return kernel.StatusCode(0)
 }

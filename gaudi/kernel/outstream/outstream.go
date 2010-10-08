@@ -47,7 +47,7 @@ type gob_outstream struct {
 	item_names []string
 }
 
-func (self *gob_outstream) Initialize() kernel.StatusCode {
+func (self *gob_outstream) Initialize() kernel.Error {
 	self.MsgDebug("== initialize ==\n")
 	if !self.Algorithm.Initialize().IsSuccess() {
 		self.MsgError("could not initialize base-class\n")
@@ -72,7 +72,7 @@ func (self *gob_outstream) Initialize() kernel.StatusCode {
 	return kernel.StatusCode(0)
 }
 
-func (self *gob_outstream) Execute(ctx kernel.IEvtCtx) kernel.StatusCode {
+func (self *gob_outstream) Execute(ctx kernel.IEvtCtx) kernel.Error {
 	self.MsgDebug("== execute ==\n")
 	store := self.EvtStore(ctx)
 	if store == nil {
@@ -113,7 +113,7 @@ func (self *gob_outstream) Execute(ctx kernel.IEvtCtx) kernel.StatusCode {
 	return kernel.StatusCode(0)
 }
 
-func (self *gob_outstream) Finalize() kernel.StatusCode {
+func (self *gob_outstream) Finalize() kernel.Error {
 	self.MsgDebug("== finalize ==\n")
 	self.w.Close()
 
@@ -132,7 +132,7 @@ type json_outstream struct {
 	ctl chan bool
 }
 
-func (self *json_outstream) Initialize() kernel.StatusCode {
+func (self *json_outstream) Initialize() kernel.Error {
 	self.MsgDebug("== initialize ==\n")
 	if !self.Algorithm.Initialize().IsSuccess() {
 		self.MsgError("could not initialize base-class\n")
@@ -157,7 +157,7 @@ func (self *json_outstream) Initialize() kernel.StatusCode {
 	return kernel.StatusCode(0)
 }
 
-func (self *json_outstream) Execute(ctx kernel.IEvtCtx) kernel.StatusCode {
+func (self *json_outstream) Execute(ctx kernel.IEvtCtx) kernel.Error {
 	self.MsgDebug("== execute ==\n")
 	store := self.EvtStore(ctx)
 	if store == nil {
@@ -184,7 +184,7 @@ func (self *json_outstream) Execute(ctx kernel.IEvtCtx) kernel.StatusCode {
 	return kernel.StatusCode(0)
 }
 
-func (self *json_outstream) Finalize() kernel.StatusCode {
+func (self *json_outstream) Finalize() kernel.Error {
 	self.MsgDebug("== finalize ==\n")
 	// close out our data channels
 	self.ctl <- true

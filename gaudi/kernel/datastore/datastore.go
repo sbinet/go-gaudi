@@ -29,7 +29,7 @@ func (self *datastore) Has(key string) bool {
 	return ok
 }
 
-func (self *datastore) ClearStore() kernel.StatusCode {
+func (self *datastore) ClearStore() kernel.Error {
 	for k,_ := range (*self.store) {
 		(*self.store)[k] = nil, false
 	}
@@ -42,12 +42,12 @@ type datastoresvc struct {
 	kernel.Service
 }
 
-func (self *datastoresvc) InitializeSvc() kernel.StatusCode {
+func (self *datastoresvc) InitializeSvc() kernel.Error {
 	self.MsgInfo("~~ initialize [datastore svc] ~~\n")
 	return kernel.StatusCode(0)
 }
 
-func (self *datastoresvc) FinalizeSvc() kernel.StatusCode {
+func (self *datastoresvc) FinalizeSvc() kernel.Error {
 	self.MsgInfo("~~ finalize [datastore svc] ~~\n")
 	return kernel.StatusCode(0)
 }

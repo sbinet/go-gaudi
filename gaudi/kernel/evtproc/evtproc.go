@@ -8,7 +8,7 @@ import "gaudi/kernel"
 // --- evt state ---
 type evtstate struct {
 	idx  int
-	sc   kernel.StatusCode
+	sc   kernel.Error
 	data kernel.DataStore
 }
 
@@ -34,7 +34,7 @@ type evtproc struct {
 	nworkers int
 }
 
-func (self *evtproc) InitializeSvc() kernel.StatusCode {
+func (self *evtproc) InitializeSvc() kernel.Error {
 
 	sc := self.Service.InitializeSvc()
 	if !sc.IsSuccess() {
@@ -71,7 +71,7 @@ func (self *evtproc) InitializeSvc() kernel.StatusCode {
 	return kernel.StatusCode(0)
 }
 
-func (self *evtproc) ExecuteEvent(ictx kernel.IEvtCtx) kernel.StatusCode {
+func (self *evtproc) ExecuteEvent(ictx kernel.IEvtCtx) kernel.Error {
 	ctx := ictx.Idx()
 	self.MsgDebug("executing event [%v]... (#algs: %v)\n", ctx, len(self.algs))
 	for i,alg := range self.algs {
@@ -86,13 +86,13 @@ func (self *evtproc) ExecuteEvent(ictx kernel.IEvtCtx) kernel.StatusCode {
 	return kernel.StatusCode(0)
 }
 
-func (self *evtproc) ExecuteRun(evtmax int) kernel.StatusCode {
+func (self *evtproc) ExecuteRun(evtmax int) kernel.Error {
 	self.MsgInfo("execute-run [%v]\n", evtmax)
 	sc := self.NextEvent(evtmax)
 	return sc
 }
 
-func (self *evtproc) NextEvent(evtmax int) kernel.StatusCode {
+func (self *evtproc) NextEvent(evtmax int) kernel.Error {
 
 	if self.nworkers > 1 {
 		return self.mp_NextEvent(evtmax)
@@ -100,7 +100,7 @@ func (self *evtproc) NextEvent(evtmax int) kernel.StatusCode {
 	return self.seq_NextEvent(evtmax)
 }
 
-func (self *evtproc) seq_NextEvent(evtmax int) kernel.StatusCode {
+func (self *evtproc) seq_NextEvent(evtmax int) kernel.Error {
 	
 	self.MsgInfo("nextEvent[%v]...\n", evtmax)
 	for i:=0; i<evtmax; i++ {
@@ -112,7 +112,7 @@ func (self *evtproc) seq_NextEvent(evtmax int) kernel.StatusCode {
 	}
 	return kernel.StatusCode(0)
 }
-func (self *evtproc) mp_NextEvent(evtmax int) kernel.StatusCode {
+func (self *evtproc) mp_NextEvent(evtmax int) kernel.Error {
 
 	handle := func(evt *evtstate, out_queue chan *evtstate) {
 		self.MsgInfo("nextEvent[%v]...\n", evt.idx)
@@ -169,7 +169,7 @@ func (self *evtproc) mp_NextEvent(evtmax int) kernel.StatusCode {
 	return kernel.StatusCode(0)
 }
 
-func (self *evtproc) StopRun() kernel.StatusCode {
+func (self *evtproc) StopRun() kernel.Error {
 	self.MsgInfo("stopping run...\n")
 	return kernel.StatusCode(0)
 }
@@ -177,7 +177,7 @@ func (self *evtproc) StopRun() kernel.StatusCode {
 // ---
 
 func (self *evtproc) test_0() {
-	handle := func(queue chan int) kernel.StatusCode {
+	handle := func(queue chan int) kernel.Error {
 		sc := kernel.StatusCode(0)
 		for i := range queue {
 			ctx := new_evtstate(i)
@@ -188,7 +188,7 @@ func (self *evtproc) test_0() {
 	}
 
 	max_in_flight := 4
-	serve := func(queue chan int, quit chan bool) kernel.StatusCode {
+	serve := func(queue chan int, quit chan bool) kernel.Error {
 		for i := 0; i < max_in_flight; i++ {
 			go handle(queue)
 		}

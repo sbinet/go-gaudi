@@ -10,22 +10,45 @@ var g_isvcloc ISvcLocator = nil
 /// the central repository of all gaudi components
 var g_compsdb comps_db
 
-type StatusCode int
-
-func (sc StatusCode) String() string {
-	return fmt.Sprintf("%i", int(sc))
+type Error interface {
+	Code() int
+	Err() os.Error
+	IsSuccess() bool
+	IsFailure() bool
+	IsRecoverable() bool
 }
 
-func (sc StatusCode) IsSuccess() bool {
-	return sc == StatusCode(0)
+type statuscode struct {
+	code int
+	err  os.Error
 }
 
-func (sc StatusCode) IsFailure() bool {
+func StatusCode(code int) Error {
+	return &statuscode{code:code, err:nil}
+}
+
+func (sc *statuscode) Code() int {
+	return sc.code
+}
+
+func (sc *statuscode) Err() os.Error {
+	return sc.err
+}
+
+func (sc *statuscode) String() string {
+	return fmt.Sprintf("code:%i err:%v", sc.code, sc.err)
+}
+
+func (sc *statuscode) IsSuccess() bool {
+	return sc.code == 0
+}
+
+func (sc *statuscode) IsFailure() bool {
 	return !sc.IsSuccess()
 }
 
-func (sc StatusCode) IsRecoverable() bool {
-	return sc == StatusCode(2)
+func (sc *statuscode) IsRecoverable() bool {
+	return sc.code == 2
 }
 
 func GetSvcLocator() ISvcLocator {
@@ -82,7 +105,7 @@ type IProperty interface {
 	/// declare a property by name and default value
 	DeclareProperty(name string, value interface{})
 	/// set the property value
-	SetProperty(name string, value interface{}) StatusCode
+	SetProperty(name string, value interface{}) Error
 	/// get the property value by name
 	GetProperty(name string) interface{}
 	/// get the list of properties
@@ -91,30 +114,30 @@ type IProperty interface {
 
 type IService interface {
 	IComponent
-	//SysInitializeSvc() StatusCode
-	//SysFinalizeSvc() StatusCode
+	//SysInitializeSvc() Error
+	//SysFinalizeSvc() Error
 
-	InitializeSvc() StatusCode
-	FinalizeSvc() StatusCode
+	InitializeSvc() Error
+	FinalizeSvc() Error
 }
 
 type IAlgorithm interface {
 	IComponent
-	//SysInitialize() StatusCode
-	//SysExecute(evtctx IEvtCtx) StatusCode
-	//SysFinalize() StatusCode
-	Initialize() StatusCode
-	Execute(evtctx IEvtCtx) StatusCode
-	Finalize() StatusCode
+	//SysInitialize() Error
+	//SysExecute(evtctx IEvtCtx) Error
+	//SysFinalize() Error
+	Initialize() Error
+	Execute(evtctx IEvtCtx) Error
+	Finalize() Error
 }
 
 type IAlgTool interface {
 	IComponent
-	//SysInitializeTool() StatusCode
-	//SysFinalizeTool() StatusCode
+	//SysInitializeTool() Error
+	//SysFinalizeTool() Error
 
-	InitializeTool() StatusCode
-	FinalizeTool() StatusCode
+	InitializeTool() Error
+	FinalizeTool() Error
 }
 
 type DataStore map[string]interface{}
@@ -126,45 +149,45 @@ type IEvtCtx interface {
 
 type IEvtProcessor interface {
 	IComponent
-	ExecuteEvent(evtctx IEvtCtx) StatusCode
-	ExecuteRun(maxevt int) StatusCode
-	NextEvent(maxevt int) StatusCode
-	StopRun() StatusCode
+	ExecuteEvent(evtctx IEvtCtx) Error
+	ExecuteRun(maxevt int) Error
+	NextEvent(maxevt int) Error
+	StopRun() Error
 }
 
 type IEvtSelector interface {
 	IComponent
-	CreateContext(ctx *IEvtCtx) StatusCode
-	Next(ctx *IEvtCtx, jump int) StatusCode
-	Previous(ctx *IEvtCtx, jump int) StatusCode
-	Last(ctx *IEvtCtx) StatusCode
-	Rewind(ctx *IEvtCtx) StatusCode
+	CreateContext(ctx *IEvtCtx) Error
+	Next(ctx *IEvtCtx, jump int) Error
+	Previous(ctx *IEvtCtx, jump int) Error
+	Last(ctx *IEvtCtx) Error
+	Rewind(ctx *IEvtCtx) Error
 }
 
 type IAppMgr interface {
 	IComponent
-	Configure() StatusCode
-	Initialize() StatusCode
-	Start() StatusCode
+	Configure() Error
+	Initialize() Error
+	Start() Error
 	/// Run the complete job (from Initialize to Terminate)
-	Run() StatusCode
-	Stop() StatusCode
-	Finalize() StatusCode
-	Terminate() StatusCode
+	Run() Error
+	Stop() Error
+	Finalize() Error
+	Terminate() Error
 }
 
 type IAlgMgr interface {
 	//IComponent
-	AddAlgorithm(alg IAlgorithm) StatusCode
-	RemoveAlgorithm(alg IAlgorithm) StatusCode
+	AddAlgorithm(alg IAlgorithm) Error
+	RemoveAlgorithm(alg IAlgorithm) Error
 	HasAlgorithm(algname string) bool
 }
 
 type ISvcMgr interface {
 	//IComponent
-	AddService(svc string) StatusCode
-	RemoveService(svc string) StatusCode
-	HasService(svc string) StatusCode
+	AddService(svc string) Error
+	RemoveService(svc string) Error
+	HasService(svc string) Error
 }
 
 type ISvcLocator interface {

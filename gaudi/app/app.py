@@ -312,10 +312,10 @@ func main() {
      app_prop.SetProperty("Svcs", svcs)
    }
    sc := app.Configure()
-   msg.MsgInfo("::: configure... [%d]\\n", int(sc))
+   msg.MsgInfo("::: configure... [%d]\\n", sc.Code())
    msg.MsgInfo("::: run...\\n")
    sc = app.Run()
-   msg.MsgInfo("::: run... [%d]\\n", int(sc))
+   msg.MsgInfo("::: run... [%d]\\n", sc.Code())
    msg.MsgInfo("::: bye.\\n")
 }
 
