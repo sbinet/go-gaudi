@@ -55,9 +55,10 @@ func (self *gob_outstream) Initialize() kernel.StatusCode {
 	}
 
 	self.item_names = self.GetProperty("Items").([]string)
-	
 	fname := self.GetProperty("Output").(string)
+
 	self.MsgInfo("output file: [%v]\n", fname)
+	self.MsgInfo("items: %v\n", self.item_names)
 
 	flag := os.O_WRONLY | os.O_CREATE | os.O_TRUNC
 	perm := uint32(0666)
@@ -78,20 +79,35 @@ func (self *gob_outstream) Execute(ctx kernel.IEvtCtx) kernel.StatusCode {
 		self.MsgError("could not retrieve evt-store\n")
 	}
 	var err os.Error
-	keys := []string{
-		"njets",
-		"ptjets",
-		"cnt",
-	}
 	allgood := true
-	for _,k := range keys {
-		err = self.enc.Encode(store.Get("njets"))
+	for _,k := range self.item_names {
+		err = self.enc.Encode(store.Get(k))
+		//err = self.enc.Encode(store)
 		if err != nil {
 			self.MsgError("error while writing store content at [%v]: %v\n", 
 				k,err)
 			allgood = false
 		}
 	}
+
+	/*
+	hdr_offset := 1
+	val := make([]interface{}, len(self.item_names)+hdr_offset)
+	val[0] = ctx.Idx()
+
+	for i,k := range self.item_names {
+		val[i+hdr_offset] = store.Get(k)
+	}
+	for idx,v := range val {
+		err = self.enc.Encode(val)
+		if err != nil {
+			self.MsgError("error while encoding data [%v|%v]: %v\n", 
+				idx, v, err)
+			allgood = false
+		}
+	}
+	 */
+
 	if !allgood {
 		return kernel.StatusCode(1)
 	}
@@ -128,6 +144,7 @@ func (self *json_outstream) Initialize() kernel.StatusCode {
 
 	fname := self.GetProperty("Output").(string)
 	self.MsgInfo("output file: [%v]\n", fname)
+	self.MsgInfo("items: %v\n", self.item_names)
 
 	flag := os.O_WRONLY | os.O_CREATE | os.O_TRUNC
 	perm := uint32(0666)

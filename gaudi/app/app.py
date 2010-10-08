@@ -178,16 +178,23 @@ class AppMgr(object):
                 ]
         except ImportError:
             pass
-        
-        for k,v in self.props.iteritems():
+
+        def to_gorepr(v):
+            #print "-- got [%r] type:[%s]..." % (v,type(v).__name__)
             if isinstance(v, basestring):
-                go_pkg += [
-                    "c.SetProperty(\"%s\", \"%s\")" % (k,v)
-                    ]
+                return '\"%s\"' % (v,)
+            elif isinstance(v, list):
+                cls = type(v[0])
+                cls_str = 'string' if isinstance(v[0], basestring) else cls.__name__
+                return '[]%s{%s}' % (cls_str,
+                                     ",".join(map(to_gorepr, v)))
             else:
-                go_pkg += [
-                    "c.SetProperty(\"%s\", %r)" % (k,v)
-                    ]
+                return v
+            
+        for k,v in self.props.iteritems():
+            go_pkg += [
+                "c.SetProperty(\"%s\", %r)" % (k, to_gorepr(v))
+                ]
         go_pkg += [
             "}",
             ]
@@ -216,14 +223,9 @@ class AppMgr(object):
                     "if ok {"
                     ]
                 for k, val in comp.props.iteritems():
-                    if isinstance(val, basestring):
-                        go_pkg += [
-                            "c.SetProperty(\"%s\", \"%s\")" % (k, val)
-                            ]
-                    else:
-                        go_pkg += [
-                            "c.SetProperty(\"%s\", %r)" % (k, val)
-                            ]
+                    fmt = "c.SetProperty(\"%s\", %s)"
+                    val = fmt % (k, to_gorepr(val))
+                    go_pkg += [ val ]
                 go_pkg += ["}","}"]
 
         go_pkg += ["}"]

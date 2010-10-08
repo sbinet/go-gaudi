@@ -36,6 +36,7 @@ app.algs += Alg("gaudi/tests/pkg2:alg_dumper", "dumper",
 
 app.algs += Alg("gaudi/kernel/outstream:gob_outstream",
                 "gobwriter",
+                Items=["cnt",],
                 Output="/tmp/foo.gob")
 
 app.algs += Alg("gaudi/kernel/outstream:json_outstream",
