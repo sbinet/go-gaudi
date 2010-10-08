@@ -11,6 +11,10 @@ type alg1 struct {
 
 func (self *alg1) Initialize() kernel.StatusCode {
 	self.MsgInfo("== initialize ==\n")
+	if !self.Algorithm.Initialize().IsSuccess() {
+		self.MsgError("could not initialize base-class\n")
+		return kernel.StatusCode(1)
+	}
 	return kernel.StatusCode(0)
 }
 
@@ -31,6 +35,10 @@ type svc2 struct {
 
 func (self *svc2) InitializeSvc() kernel.StatusCode {
 	self.MsgInfo("~~ initialize ~~\n")
+	if !self.Service.InitializeSvc().IsSuccess() {
+		self.MsgError("could not initialize base-class\n")
+		return kernel.StatusCode(1)
+	}
 	return kernel.StatusCode(0)
 }
 

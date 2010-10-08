@@ -11,11 +11,17 @@ type alg1 struct {
 
 func (self *alg1) Initialize() kernel.StatusCode {
 	self.MsgInfo("== initialize ==\n")
+	if !self.Algorithm.Initialize().IsSuccess() {
+		self.MsgError("could not initialize base-class\n")
+		return kernel.StatusCode(1)
+	}
 	return kernel.StatusCode(0)
 }
 
 func (self *alg1) Execute(ctx kernel.IEvtCtx) kernel.StatusCode {
 	self.MsgDebug("== execute == [ctx:%v]\n", ctx.Idx())
+	detstore := self.DetStore(ctx)
+	self.MsgDebug("det-store: %v\n", detstore)
 	return kernel.StatusCode(0)
 }
 
@@ -32,6 +38,10 @@ type alg2 struct {
 
 func (self *alg2) Initialize() kernel.StatusCode {
 	self.MsgInfo("~~ initialize ~~\n")
+	if !self.Algorithm.Initialize().IsSuccess() {
+		self.MsgError("could not initialize base-class\n")
+		return kernel.StatusCode(1)
+	}
 	return kernel.StatusCode(0)
 }
 
@@ -52,6 +62,10 @@ type svc1 struct {
 
 func (self *svc1) InitializeSvc() kernel.StatusCode {
 	self.MsgInfo("~~ initialize ~~\n")
+	if !self.Service.InitializeSvc().IsSuccess() {
+		self.MsgError("could not initialize base-class\n")
+		return kernel.StatusCode(1)
+	}
 	return kernel.StatusCode(0)
 }
 
@@ -67,6 +81,10 @@ type tool1 struct {
 
 func (self *tool1) InitializeTool() kernel.StatusCode {
 	self.MsgInfo("~~ initialize ~~\n")
+	if !self.AlgTool.InitializeTool().IsSuccess() {
+		self.MsgError("could not initialize base-class\n")
+		return kernel.StatusCode(1)
+	}
 	return kernel.StatusCode(0)
 }
 

@@ -2,10 +2,13 @@ app.props.EvtMax = 10
 app.props.OutputLevel = 1
 #app.props.NbrProcs = 1
 
+nworkers = 1
+nworkers = 50
+
 app.svcs += Svc("gaudi/kernel/evtproc:evtproc",
                 "evt-proc",
                 OutputLevel=Lvl.INFO,
-                NbrWorkers=50)
+                NbrWorkers=nworkers)
 
 app.algs += Alg("gaudi/tests/pkg1:alg1", "alg1", OutputLevel=Lvl.ERROR)
 app.algs += Alg("gaudi/tests/pkg1:alg2", "alg2", OutputLevel=Lvl.ERROR)

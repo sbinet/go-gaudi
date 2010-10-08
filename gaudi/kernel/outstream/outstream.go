@@ -82,7 +82,6 @@ func (self *gob_outstream) Execute(ctx kernel.IEvtCtx) kernel.StatusCode {
 	allgood := true
 	for _,k := range self.item_names {
 		err = self.enc.Encode(store.Get(k))
-		//err = self.enc.Encode(store)
 		if err != nil {
 			self.MsgError("error while writing store content at [%v]: %v\n", 
 				k,err)

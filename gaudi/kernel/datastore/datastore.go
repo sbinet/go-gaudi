@@ -53,7 +53,19 @@ func (self *datastoresvc) FinalizeSvc() kernel.StatusCode {
 }
 
 func (self *datastoresvc) Store(ctx kernel.IEvtCtx) kernel.IDataStore {
-	return &datastore{ctx.Store()}
+	store := ctx.Store()
+	n := self.CompName()
+	if _,ok := (*store)[n]; !ok {
+		dstore := make(kernel.DataStore)
+		(*store)[n] = &dstore
+	}
+
+	dstore := (*store)[n].(*kernel.DataStore)
+	if dstore != nil {
+		return &datastore{dstore}
+	}
+
+	return nil
 }
 
 // check matching interfaces

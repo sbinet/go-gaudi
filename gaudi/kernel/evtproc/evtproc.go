@@ -17,9 +17,6 @@ func new_evtstate(idx int) *evtstate {
 	self.idx = idx
 	self.sc = kernel.StatusCode(0)
 	self.data = make(kernel.DataStore)
-
-	evtstore := make(kernel.DataStore)
-	self.data["evt-store"] = &evtstore
 	return self
 }
 
