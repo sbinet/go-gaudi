@@ -10,8 +10,11 @@ var g_isvcloc ISvcLocator = nil
 /// the central repository of all gaudi components
 var g_compsdb comps_db
 
+/// the interface to assess if everything went right and report why otherwise
 type Error interface {
+	/// return the error code (0 is success)
 	Code() int
+	/// the error reason, piggybacking on go's os.Error
 	Err() os.Error
 	IsSuccess() bool
 	IsFailure() bool
@@ -22,6 +25,9 @@ type statuscode struct {
 	code int
 	err  os.Error
 }
+// check statuscode implements kernel.Error
+var _ = Error(&statuscode{})
+//
 
 func StatusCode(code int) Error {
 	return &statuscode{code:code, err:nil}
@@ -86,6 +92,9 @@ func RegisterComp(c IComponent) bool {
 	//fmt.Printf("--> registering [%T/%s]... [done]\n", c, n)
 	return true
 }
+
+/// the central interface to the Gaudi component object model
+/// a component has a type and an instance name
 type IComponent interface {
 	CompName() string
 	CompType() string
