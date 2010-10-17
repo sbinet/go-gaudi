@@ -69,10 +69,10 @@ func (self *datastoresvc) Store(ctx kernel.IEvtCtx) kernel.IDataStore {
 }
 
 // check matching interfaces
-var _ = kernel.IDataStore(&datastore{})
-var _ = kernel.IComponent(&datastoresvc{})
-var _ = kernel.IService(&datastoresvc{})
-var _ = kernel.IProperty(&datastoresvc{})
+var _ kernel.IDataStore = (*datastore)(nil)
+var _ kernel.IComponent = (*datastoresvc)(nil)
+var _ kernel.IService = (*datastoresvc)(nil)
+var _ kernel.IProperty = (*datastoresvc)(nil)
 
 // --- factory function ---
 func New(t,n string) kernel.IComponent {

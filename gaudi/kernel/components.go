@@ -298,16 +298,16 @@ func init() {
 }
 
 // checking implementations match interfaces
-var _ = IAlgorithm(&Algorithm{})
-var _ = IComponent(&Algorithm{})
-var _ = IProperty(&Algorithm{})
+var _ IAlgorithm = (*Algorithm)(nil)
+var _ IComponent = (*Algorithm)(nil)
+var _ IProperty  = (*Algorithm)(nil)
 
-var _ = IAlgTool(&AlgTool{})
-var _ = IComponent(&AlgTool{})
-var _ = IProperty(&AlgTool{})
+var _ IAlgTool = (*AlgTool)(nil)
+var _ IComponent = (*AlgTool)(nil)
+var _ IProperty  = (*AlgTool)(nil)
 
-var _ = IService(&Service{})
-var _ = IComponent(&Service{})
-var _ = IProperty(&Service{})
+var _ IService = (*Service)(nil)
+var _ IComponent = (*Service)(nil)
+var _ IProperty  = (*Service)(nil)
 
 /* EOF */

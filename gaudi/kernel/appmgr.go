@@ -362,20 +362,20 @@ func NewAppMgr() IAppMgr {
 }
 
 // check implementations match interfaces
-var _ = IAlgMgr(&algmgr{})
-var _ = IComponentMgr(&algmgr{})
+var _ IAlgMgr = (*algmgr)(nil)
+var _ IComponentMgr = (*algmgr)(nil)
 
-var _ = IComponentMgr(&svcmgr{})
-var _ = ISvcMgr(&svcmgr{})
-var _ = ISvcLocator(&svcmgr{})
-
-var _ = IComponent(&appmgr{})
-var _ = IComponentMgr(&appmgr{})
-var _ = IAlgMgr(&appmgr{})
-var _ = ISvcMgr(&appmgr{})
-var _ = ISvcLocator(&appmgr{})
-var _ = IAppMgr(&appmgr{})
-var _ = IProperty(&appmgr{})
+var _ IComponentMgr = (*svcmgr)(nil)
+var _ ISvcMgr = (*svcmgr)(nil)
+var _ ISvcLocator = (*svcmgr)(nil)
+      
+var _ IComponent = (*appmgr)(nil)
+var _ IComponentMgr = (*appmgr)(nil)
+var _ IAlgMgr = (*appmgr)(nil)
+var _ ISvcMgr = (*appmgr)(nil)
+var _ ISvcLocator = (*appmgr)(nil)
+var _ IAppMgr = (*appmgr)(nil)
+var _ IProperty = (*appmgr)(nil)
 
 
 /* EOF */

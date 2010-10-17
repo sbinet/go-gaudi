@@ -332,17 +332,17 @@ func
 }
 
 // check implementations match interfaces
-var _ = kernel.IComponent(&gob_outstream{})
-var _ = kernel.IAlgorithm(&gob_outstream{})
-
-var _ = kernel.IComponent(&json_outstream{})
-var _ = kernel.IAlgorithm(&json_outstream{})
-
-var _ = kernel.IComponent(&json_outstream_svc{})
-var _ = kernel.IService(&json_outstream_svc{})
-var _ = kernel.IOutputStreamSvc(&json_outstream_svc{})
-
-var _ = kernel.IOutputStream(&json_outstream_handle{})
+var _ kernel.IComponent = (*gob_outstream)(nil)
+var _ kernel.IAlgorithm = (*gob_outstream)(nil)
+      
+var _ kernel.IComponent = (*json_outstream)(nil)
+var _ kernel.IAlgorithm = (*json_outstream)(nil)
+      
+var _ kernel.IComponent = (*json_outstream_svc)(nil)
+var _ kernel.IService = (*json_outstream_svc)(nil)
+var _ kernel.IOutputStreamSvc = (*json_outstream_svc)(nil)
+      
+var _ kernel.IOutputStream = (*json_outstream_handle)(nil)
 
 // --- factory ---
 func New(t,n string) kernel.IComponent {
