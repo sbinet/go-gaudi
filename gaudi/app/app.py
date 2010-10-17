@@ -11,6 +11,8 @@ import sys
 import os
 import subprocess
 import tempfile
+if not tempfile.tempdir:
+    tempfile.tempdir = "/tmp"
 import shutil
 
 ### functions ----------------------------------------------------------------
@@ -91,7 +93,7 @@ class AppMgr(object):
             )
         
         self._workdir = tempfile.mkdtemp(prefix='ng-gaudi-go-')
-        #self._workdir = "/tmp/ng-gaudi/gaudi-jobopt"
+        #self._workdir = "/tmp/%s/ng-gaudi/gaudi-jobopt" % (os.getenv('LOGNAME'),)'
         return
 
     def configure(self, jobopts):
@@ -236,9 +238,9 @@ class AppMgr(object):
         return
 
     def _compile_golang_pkg(self, fname):
-        import platform
-        arch = platform.architecture()[0]
-
+        goarch = os.getenv('GOARCH')
+        arch = '32bit' if '32' in goarch else '64bit'
+        
         compiler = {
             '64bit': '6g',
             '32bit': '8g',
@@ -255,6 +257,7 @@ class AppMgr(object):
             # obj_fname = os.path.basename(fname)
             # obj_fname = os.splitext(obj_fname)[0] + '.o'
             cmd = [compiler, fname]
+            #print "::: curdir: %s" % (os.getcwd(),)
             print "::: compiling 'gaudi_jobopt'..."
             subprocess.check_call(cmd)
             print "::: compiling 'gaudi_jobopt'... [ok]"
