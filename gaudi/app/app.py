@@ -124,7 +124,7 @@ class AppMgr(object):
         try:
             os.chdir(self._workdir)
             print os.listdir('.')
-            cmd = ["./gaudi-main",]
+            cmd = ["time", "./gaudi-main",]
             subprocess.check_call(cmd)
         except Exception:
             import traceback
