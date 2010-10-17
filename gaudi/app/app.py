@@ -70,11 +70,23 @@ class Configurable(object):
 class cfglist(list):
     def __init__(self, *args, **kw):
         list.__init__(self, *args, **kw)
+        self._db = {}
     def __iadd__(self, o):
         if isinstance(o, Configurable):
+            self._db[o.name] = o
             o = [o]
         return list.__iadd__(self, o)
-
+    def __getitem__(self, idx):
+        if isinstance(idx, basestring):
+            return self._db[idx]
+        return list.__getitem__(idx)
+    def __delitem__(self, idx):
+        # FIXME: keep dict and list in-sync !!
+        if isinstance(idx, basestring):
+            del self._db[idx]
+            return
+        return list.__getitem__(idx)
+    
 class attrdict(dict):
     def __setattr__(self, k, v):
         self[k] = v
@@ -124,7 +136,8 @@ class AppMgr(object):
         try:
             os.chdir(self._workdir)
             print os.listdir('.')
-            cmd = ["time", "./gaudi-main",]
+            cmd = ["./gaudi-main",]
+            #cmd = ["/usr/bin/time", "-o", "gaudi.profile.out", "./gaudi-main",]
             subprocess.check_call(cmd)
         except Exception:
             import traceback

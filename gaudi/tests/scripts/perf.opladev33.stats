@@ -1,0 +1,464 @@
+TESTS_DIR: /storage/binet/dev/go/dev/ng-go-gaudi/gaudi/tests/scripts
+GAUDI_APP: /storage/binet/dev/go/dev/ng-go-gaudi/gaudi/app/app.py
+::: nworkers: 0000 nprocs: 0000     WORK_DIR: /tmp/ng-gaudi-go-8wAjnC
+24.63user 0.33system 0:24.95elapsed 100%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+73765minor)pagefaults 0swaps
+::: nworkers: 0010 nprocs: 0000     WORK_DIR: /tmp/ng-gaudi-go-k66Zax
+25.20user 0.29system 0:25.51elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+73648minor)pagefaults 0swaps
+::: nworkers: 0020 nprocs: 0000     WORK_DIR: /tmp/ng-gaudi-go-pwnRoq
+24.68user 0.34system 0:25.04elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+73648minor)pagefaults 0swaps
+::: nworkers: 0030 nprocs: 0000     WORK_DIR: /tmp/ng-gaudi-go-iVzSr7
+25.54user 0.32system 0:25.89elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+73609minor)pagefaults 0swaps
+::: nworkers: 0050 nprocs: 0000     WORK_DIR: /tmp/ng-gaudi-go-MgiSmM
+24.22user 0.30system 0:24.52elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+73754minor)pagefaults 0swaps
+::: nworkers: 0100 nprocs: 0000     WORK_DIR: /tmp/ng-gaudi-go-EWySH8
+24.67user 0.32system 0:25.01elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+73675minor)pagefaults 0swaps
+::: nworkers: 0200 nprocs: 0000     WORK_DIR: /tmp/ng-gaudi-go-P8y8NI
+26.26user 0.31system 0:26.59elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+73629minor)pagefaults 0swaps
+::: nworkers: 0500 nprocs: 0000     WORK_DIR: /tmp/ng-gaudi-go-13xi4b
+25.54user 0.35system 0:25.89elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+73908minor)pagefaults 0swaps
+::: nworkers: 1000 nprocs: 0000     WORK_DIR: /tmp/ng-gaudi-go-tpPIDN
+24.88user 0.33system 0:25.24elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+73464minor)pagefaults 0swaps
+::: nworkers: 2000 nprocs: 0000     WORK_DIR: /tmp/ng-gaudi-go-68MiW1
+24.50user 0.31system 0:24.83elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+73679minor)pagefaults 0swaps
+::: nworkers: 5000 nprocs: 0000     WORK_DIR: /tmp/ng-gaudi-go-7y40PK
+24.48user 0.31system 0:24.81elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+73527minor)pagefaults 0swaps
+::: nworkers: 0000 nprocs: 0001     WORK_DIR: /tmp/ng-gaudi-go-hKnfJO
+24.32user 0.33system 0:24.68elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+73482minor)pagefaults 0swaps
+::: nworkers: 0010 nprocs: 0001     WORK_DIR: /tmp/ng-gaudi-go-9BA5jP
+25.89user 0.34system 0:26.25elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+73704minor)pagefaults 0swaps
+::: nworkers: 0020 nprocs: 0001     WORK_DIR: /tmp/ng-gaudi-go-rlHaDu
+25.14user 0.32system 0:25.47elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+73447minor)pagefaults 0swaps
+::: nworkers: 0030 nprocs: 0001     WORK_DIR: /tmp/ng-gaudi-go-bUEt53
+25.24user 0.35system 0:25.62elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+73701minor)pagefaults 0swaps
+::: nworkers: 0050 nprocs: 0001     WORK_DIR: /tmp/ng-gaudi-go-B96EJm
+24.90user 0.32system 0:25.23elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+73752minor)pagefaults 0swaps
+::: nworkers: 0100 nprocs: 0001     WORK_DIR: /tmp/ng-gaudi-go-yE6IFj
+25.45user 0.30system 0:25.79elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+73593minor)pagefaults 0swaps
+::: nworkers: 0200 nprocs: 0001     WORK_DIR: /tmp/ng-gaudi-go-6Gdv4R
+24.53user 0.32system 0:24.87elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+73734minor)pagefaults 0swaps
+::: nworkers: 0500 nprocs: 0001     WORK_DIR: /tmp/ng-gaudi-go-1hGw6Z
+24.68user 0.33system 0:25.04elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+73658minor)pagefaults 0swaps
+::: nworkers: 1000 nprocs: 0001     WORK_DIR: /tmp/ng-gaudi-go-9ommug
+25.53user 0.34system 0:25.90elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+73664minor)pagefaults 0swaps
+::: nworkers: 2000 nprocs: 0001     WORK_DIR: /tmp/ng-gaudi-go-RDmnUr
+24.59user 0.31system 0:24.91elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+73731minor)pagefaults 0swaps
+::: nworkers: 5000 nprocs: 0001     WORK_DIR: /tmp/ng-gaudi-go-ZhaDzN
+25.41user 0.32system 0:25.78elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+73647minor)pagefaults 0swaps
+::: nworkers: 0000 nprocs: 0002     WORK_DIR: /tmp/ng-gaudi-go-PxOSXM
+42.46user 0.43system 0:24.45elapsed 175%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+61280minor)pagefaults 0swaps
+::: nworkers: 0010 nprocs: 0002     WORK_DIR: /tmp/ng-gaudi-go-_f9HnA
+42.69user 0.46system 0:24.65elapsed 175%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+60669minor)pagefaults 0swaps
+::: nworkers: 0020 nprocs: 0002     WORK_DIR: /tmp/ng-gaudi-go-9_t68s
+43.49user 0.42system 0:24.99elapsed 175%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+63382minor)pagefaults 0swaps
+::: nworkers: 0030 nprocs: 0002     WORK_DIR: /tmp/ng-gaudi-go-tsUUrZ
+44.43user 0.41system 0:25.51elapsed 175%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+59210minor)pagefaults 0swaps
+::: nworkers: 0050 nprocs: 0002     WORK_DIR: /tmp/ng-gaudi-go-Ang2df
+42.97user 0.41system 0:24.78elapsed 175%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+56709minor)pagefaults 0swaps
+::: nworkers: 0100 nprocs: 0002     WORK_DIR: /tmp/ng-gaudi-go-YrMTl6
+43.49user 0.51system 0:25.05elapsed 175%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+70613minor)pagefaults 0swaps
+::: nworkers: 0200 nprocs: 0002     WORK_DIR: /tmp/ng-gaudi-go-EOBCvx
+43.22user 0.43system 0:24.82elapsed 175%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+65884minor)pagefaults 0swaps
+::: nworkers: 0500 nprocs: 0002     WORK_DIR: /tmp/ng-gaudi-go-sCYYSS
+42.90user 0.46system 0:24.76elapsed 175%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+61947minor)pagefaults 0swaps
+::: nworkers: 1000 nprocs: 0002     WORK_DIR: /tmp/ng-gaudi-go-914NmT
+42.27user 0.45system 0:24.42elapsed 174%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+67164minor)pagefaults 0swaps
+::: nworkers: 2000 nprocs: 0002     WORK_DIR: /tmp/ng-gaudi-go-f1P0i1
+43.10user 0.48system 0:24.82elapsed 175%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+69263minor)pagefaults 0swaps
+::: nworkers: 5000 nprocs: 0002     WORK_DIR: /tmp/ng-gaudi-go-vmtVNV
+41.99user 0.47system 0:24.22elapsed 175%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+71148minor)pagefaults 0swaps
+::: nworkers: 0000 nprocs: 0004     WORK_DIR: /tmp/ng-gaudi-go-P6C3P1
+61.49user 0.72system 0:20.11elapsed 309%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+67565minor)pagefaults 0swaps
+::: nworkers: 0010 nprocs: 0004     WORK_DIR: /tmp/ng-gaudi-go-UqJGrt
+69.53user 0.66system 0:22.08elapsed 317%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+58848minor)pagefaults 0swaps
+::: nworkers: 0020 nprocs: 0004     WORK_DIR: /tmp/ng-gaudi-go-J_OHf6
+61.07user 0.72system 0:20.04elapsed 308%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+60945minor)pagefaults 0swaps
+::: nworkers: 0030 nprocs: 0004     WORK_DIR: /tmp/ng-gaudi-go-JyasS8
+60.20user 0.63system 0:19.94elapsed 305%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+57762minor)pagefaults 0swaps
+::: nworkers: 0050 nprocs: 0004     WORK_DIR: /tmp/ng-gaudi-go-r7OtmN
+62.88user 0.71system 0:20.51elapsed 310%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+70827minor)pagefaults 0swaps
+::: nworkers: 0100 nprocs: 0004     WORK_DIR: /tmp/ng-gaudi-go-wF38Po
+60.55user 0.70system 0:19.90elapsed 307%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+63874minor)pagefaults 0swaps
+::: nworkers: 0200 nprocs: 0004     WORK_DIR: /tmp/ng-gaudi-go-GejLmm
+61.12user 0.62system 0:20.00elapsed 308%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+57525minor)pagefaults 0swaps
+::: nworkers: 0500 nprocs: 0004     WORK_DIR: /tmp/ng-gaudi-go-wrnjnq
+53.92user 0.71system 0:18.42elapsed 296%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+56933minor)pagefaults 0swaps
+::: nworkers: 1000 nprocs: 0004     WORK_DIR: /tmp/ng-gaudi-go-WXISJY
+70.15user 0.68system 0:22.26elapsed 318%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+64484minor)pagefaults 0swaps
+::: nworkers: 2000 nprocs: 0004     WORK_DIR: /tmp/ng-gaudi-go-utDeZD
+61.13user 0.67system 0:20.14elapsed 306%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+60323minor)pagefaults 0swaps
+::: nworkers: 5000 nprocs: 0004     WORK_DIR: /tmp/ng-gaudi-go-5YTSvg
+61.10user 0.67system 0:19.99elapsed 309%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+55841minor)pagefaults 0swaps
+::: nworkers: 0000 nprocs: 0006     WORK_DIR: /tmp/ng-gaudi-go-qj58Bs
+83.99user 0.88system 0:19.46elapsed 435%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+68217minor)pagefaults 0swaps
+::: nworkers: 0010 nprocs: 0006     WORK_DIR: /tmp/ng-gaudi-go-kNA1fN
+81.52user 0.85system 0:18.94elapsed 434%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+63134minor)pagefaults 0swaps
+::: nworkers: 0020 nprocs: 0006     WORK_DIR: /tmp/ng-gaudi-go-yFJoZY
+81.81user 0.91system 0:19.02elapsed 434%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+64742minor)pagefaults 0swaps
+::: nworkers: 0030 nprocs: 0006     WORK_DIR: /tmp/ng-gaudi-go-xYN2Bs
+82.75user 0.87system 0:19.04elapsed 439%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+61682minor)pagefaults 0swaps
+::: nworkers: 0050 nprocs: 0006     WORK_DIR: /tmp/ng-gaudi-go-dXxtpP
+83.79user 0.79system 0:19.17elapsed 441%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+68566minor)pagefaults 0swaps
+::: nworkers: 0100 nprocs: 0006     WORK_DIR: /tmp/ng-gaudi-go-WuOmao
+101.01user 0.83system 0:22.18elapsed 459%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+60773minor)pagefaults 0swaps
+::: nworkers: 0200 nprocs: 0006     WORK_DIR: /tmp/ng-gaudi-go-2Qlb72
+101.20user 0.75system 0:22.21elapsed 459%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+62832minor)pagefaults 0swaps
+::: nworkers: 0500 nprocs: 0006     WORK_DIR: /tmp/ng-gaudi-go-qEI5su
+82.70user 0.85system 0:19.10elapsed 437%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+61999minor)pagefaults 0swaps
+::: nworkers: 1000 nprocs: 0006     WORK_DIR: /tmp/ng-gaudi-go-ZLhCH_
+81.37user 0.86system 0:18.90elapsed 435%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+61141minor)pagefaults 0swaps
+::: nworkers: 2000 nprocs: 0006     WORK_DIR: /tmp/ng-gaudi-go-bHThii
+82.43user 0.90system 0:19.00elapsed 438%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+63818minor)pagefaults 0swaps
+::: nworkers: 5000 nprocs: 0006     WORK_DIR: /tmp/ng-gaudi-go-sAY3Vc
+82.09user 0.84system 0:18.89elapsed 439%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+65593minor)pagefaults 0swaps
+::: nworkers: 0000 nprocs: 0008     WORK_DIR: /tmp/ng-gaudi-go-KH0Cy9
+103.98user 1.04system 0:18.54elapsed 566%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+63269minor)pagefaults 0swaps
+::: nworkers: 0010 nprocs: 0008     WORK_DIR: /tmp/ng-gaudi-go-7BATPi
+104.56user 0.94system 0:18.60elapsed 566%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+60043minor)pagefaults 0swaps
+::: nworkers: 0020 nprocs: 0008     WORK_DIR: /tmp/ng-gaudi-go-Xgs1QP
+129.78user 0.85system 0:21.65elapsed 603%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+62560minor)pagefaults 0swaps
+::: nworkers: 0030 nprocs: 0008     WORK_DIR: /tmp/ng-gaudi-go-XtiS0C
+102.60user 1.02system 0:18.42elapsed 562%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+69667minor)pagefaults 0swaps
+::: nworkers: 0050 nprocs: 0008     WORK_DIR: /tmp/ng-gaudi-go-5QdFCo
+104.23user 0.97system 0:18.64elapsed 564%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+67254minor)pagefaults 0swaps
+::: nworkers: 0100 nprocs: 0008     WORK_DIR: /tmp/ng-gaudi-go-bNP5Qt
+87.47user 1.09system 0:16.40elapsed 539%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+60399minor)pagefaults 0swaps
+::: nworkers: 0200 nprocs: 0008     WORK_DIR: /tmp/ng-gaudi-go-kxefS2
+104.08user 1.05system 0:18.45elapsed 569%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+68008minor)pagefaults 0swaps
+::: nworkers: 0500 nprocs: 0008     WORK_DIR: /tmp/ng-gaudi-go-HqY3Ki
+129.87user 0.98system 0:21.74elapsed 601%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+58866minor)pagefaults 0swaps
+::: nworkers: 1000 nprocs: 0008     WORK_DIR: /tmp/ng-gaudi-go-nJVw_I
+130.33user 0.94system 0:21.98elapsed 597%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+71957minor)pagefaults 0swaps
+::: nworkers: 2000 nprocs: 0008     WORK_DIR: /tmp/ng-gaudi-go-2Cd5UU
+103.27user 1.07system 0:18.38elapsed 567%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+62948minor)pagefaults 0swaps
+::: nworkers: 5000 nprocs: 0008     WORK_DIR: /tmp/ng-gaudi-go-SsjE05
+102.99user 1.04system 0:18.32elapsed 567%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+64058minor)pagefaults 0swaps
+::: nworkers: 0000 nprocs: 0010     WORK_DIR: /tmp/ng-gaudi-go-ysUitQ
+124.71user 1.02system 0:18.14elapsed 693%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+71599minor)pagefaults 0swaps
+::: nworkers: 0010 nprocs: 0010     WORK_DIR: /tmp/ng-gaudi-go-rP21ku
+123.92user 1.34system 0:18.07elapsed 693%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+64216minor)pagefaults 0swaps
+::: nworkers: 0020 nprocs: 0010     WORK_DIR: /tmp/ng-gaudi-go-mekH9E
+122.85user 1.21system 0:17.96elapsed 690%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+68945minor)pagefaults 0swaps
+::: nworkers: 0030 nprocs: 0010     WORK_DIR: /tmp/ng-gaudi-go-MmGBoP
+123.75user 1.20system 0:18.05elapsed 692%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+61347minor)pagefaults 0swaps
+::: nworkers: 0050 nprocs: 0010     WORK_DIR: /tmp/ng-gaudi-go-C2cjUg
+158.84user 1.32system 0:21.57elapsed 742%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+65797minor)pagefaults 0swaps
+::: nworkers: 0100 nprocs: 0010     WORK_DIR: /tmp/ng-gaudi-go-fOjixu
+122.63user 1.22system 0:17.89elapsed 692%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+62203minor)pagefaults 0swaps
+::: nworkers: 0200 nprocs: 0010     WORK_DIR: /tmp/ng-gaudi-go-2sFQ41
+159.24user 1.05system 0:21.74elapsed 737%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+61654minor)pagefaults 0swaps
+::: nworkers: 0500 nprocs: 0010     WORK_DIR: /tmp/ng-gaudi-go-J6PbTO
+123.65user 1.23system 0:17.99elapsed 694%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+68468minor)pagefaults 0swaps
+::: nworkers: 1000 nprocs: 0010     WORK_DIR: /tmp/ng-gaudi-go-j_BKEi
+158.96user 1.09system 0:21.56elapsed 742%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+63758minor)pagefaults 0swaps
+::: nworkers: 2000 nprocs: 0010     WORK_DIR: /tmp/ng-gaudi-go-go34RB
+123.88user 1.27system 0:18.12elapsed 690%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+69052minor)pagefaults 0swaps
+::: nworkers: 5000 nprocs: 0010     WORK_DIR: /tmp/ng-gaudi-go-66yyRV
+123.75user 1.30system 0:18.09elapsed 691%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+67634minor)pagefaults 0swaps
+::: nworkers: 0000 nprocs: 0012     WORK_DIR: /tmp/ng-gaudi-go-Z_R12U
+146.30user 1.40system 0:17.94elapsed 823%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+61011minor)pagefaults 0swaps
+::: nworkers: 0010 nprocs: 0012     WORK_DIR: /tmp/ng-gaudi-go-AopIiM
+147.64user 1.47system 0:18.26elapsed 816%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+58398minor)pagefaults 0swaps
+::: nworkers: 0020 nprocs: 0012     WORK_DIR: /tmp/ng-gaudi-go-rNJtkJ
+147.75user 1.49system 0:18.34elapsed 813%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+58215minor)pagefaults 0swaps
+::: nworkers: 0030 nprocs: 0012     WORK_DIR: /tmp/ng-gaudi-go-BRihrg
+146.63user 1.38system 0:18.08elapsed 818%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+60143minor)pagefaults 0swaps
+::: nworkers: 0050 nprocs: 0012     WORK_DIR: /tmp/ng-gaudi-go-15Cl9v
+146.05user 1.43system 0:17.97elapsed 820%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+60055minor)pagefaults 0swaps
+::: nworkers: 0100 nprocs: 0012     WORK_DIR: /tmp/ng-gaudi-go-rMbQ0x
+143.64user 1.39system 0:17.80elapsed 814%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+60767minor)pagefaults 0swaps
+::: nworkers: 0200 nprocs: 0012     WORK_DIR: /tmp/ng-gaudi-go-FrncWB
+145.36user 1.22system 0:17.91elapsed 818%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+63046minor)pagefaults 0swaps
+::: nworkers: 0500 nprocs: 0012     WORK_DIR: /tmp/ng-gaudi-go-KBj0PM
+144.65user 1.56system 0:17.80elapsed 821%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+63339minor)pagefaults 0swaps
+::: nworkers: 1000 nprocs: 0012     WORK_DIR: /tmp/ng-gaudi-go-6Yd2tI
+143.18user 1.48system 0:17.73elapsed 815%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+60254minor)pagefaults 0swaps
+::: nworkers: 2000 nprocs: 0012     WORK_DIR: /tmp/ng-gaudi-go-OTILbn
+146.31user 1.76system 0:18.12elapsed 816%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+71973minor)pagefaults 0swaps
+::: nworkers: 5000 nprocs: 0012     WORK_DIR: /tmp/ng-gaudi-go-HYL1zt
+123.28user 1.61system 0:16.10elapsed 775%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+69521minor)pagefaults 0swaps
+::: nworkers: 0000 nprocs: 0024     WORK_DIR: /tmp/ng-gaudi-go-6zUCPH
+182.25user 4.12system 0:13.92elapsed 1338%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+58992minor)pagefaults 0swaps
+::: nworkers: 0010 nprocs: 0024     WORK_DIR: /tmp/ng-gaudi-go-oNBZFi
+184.02user 9.27system 0:14.68elapsed 1316%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+59159minor)pagefaults 0swaps
+::: nworkers: 0020 nprocs: 0024     WORK_DIR: /tmp/ng-gaudi-go-bhWhIV
+183.29user 3.82system 0:14.05elapsed 1331%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+59384minor)pagefaults 0swaps
+::: nworkers: 0030 nprocs: 0024     WORK_DIR: /tmp/ng-gaudi-go-nzndkO
+183.59user 4.00system 0:14.05elapsed 1334%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+59391minor)pagefaults 0swaps
+::: nworkers: 0050 nprocs: 0024     WORK_DIR: /tmp/ng-gaudi-go-wOp1SP
+215.36user 3.86system 0:15.54elapsed 1410%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+61810minor)pagefaults 0swaps
+::: nworkers: 0100 nprocs: 0024     WORK_DIR: /tmp/ng-gaudi-go-iT2l91
+183.16user 3.30system 0:14.09elapsed 1323%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+60889minor)pagefaults 0swaps
+::: nworkers: 0200 nprocs: 0024     WORK_DIR: /tmp/ng-gaudi-go-MLxOix
+183.12user 3.93system 0:14.04elapsed 1331%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+70663minor)pagefaults 0swaps
+::: nworkers: 0500 nprocs: 0024     WORK_DIR: /tmp/ng-gaudi-go-FxnbBZ
+181.93user 3.96system 0:14.09elapsed 1318%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+63782minor)pagefaults 0swaps
+::: nworkers: 1000 nprocs: 0024     WORK_DIR: /tmp/ng-gaudi-go-ohEvTI
+182.91user 4.42system 0:14.15elapsed 1323%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+68909minor)pagefaults 0swaps
+::: nworkers: 2000 nprocs: 0024     WORK_DIR: /tmp/ng-gaudi-go-4aZCGK
+182.96user 4.25system 0:14.01elapsed 1335%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+64035minor)pagefaults 0swaps
+::: nworkers: 5000 nprocs: 0024     WORK_DIR: /tmp/ng-gaudi-go-12zcNN
+182.51user 4.04system 0:14.08elapsed 1324%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+58397minor)pagefaults 0swaps
+::: nworkers: 0000 nprocs: 0026     WORK_DIR: /tmp/ng-gaudi-go-Qu0w_d
+184.67user 5.36system 0:14.00elapsed 1356%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+61930minor)pagefaults 0swaps
+::: nworkers: 0010 nprocs: 0026     WORK_DIR: /tmp/ng-gaudi-go-IVY9ms
+184.36user 4.90system 0:13.98elapsed 1353%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+62265minor)pagefaults 0swaps
+::: nworkers: 0020 nprocs: 0026     WORK_DIR: /tmp/ng-gaudi-go-d3MHp4
+152.10user 5.33system 0:12.75elapsed 1234%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+69520minor)pagefaults 0swaps
+::: nworkers: 0030 nprocs: 0026     WORK_DIR: /tmp/ng-gaudi-go-jug_5j
+216.32user 5.53system 0:15.52elapsed 1428%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+75908minor)pagefaults 0swaps
+::: nworkers: 0050 nprocs: 0026     WORK_DIR: /tmp/ng-gaudi-go-iLhkjU
+184.66user 4.64system 0:14.14elapsed 1338%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+67354minor)pagefaults 0swaps
+::: nworkers: 0100 nprocs: 0026     WORK_DIR: /tmp/ng-gaudi-go-t67UYT
+184.29user 4.78system 0:14.05elapsed 1345%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+60448minor)pagefaults 0swaps
+::: nworkers: 0200 nprocs: 0026     WORK_DIR: /tmp/ng-gaudi-go-iIPwKC
+216.61user 5.03system 0:15.46elapsed 1433%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+60435minor)pagefaults 0swaps
+::: nworkers: 0500 nprocs: 0026     WORK_DIR: /tmp/ng-gaudi-go-4uHOIE
+184.19user 5.86system 0:14.09elapsed 1348%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+62153minor)pagefaults 0swaps
+::: nworkers: 1000 nprocs: 0026     WORK_DIR: /tmp/ng-gaudi-go-ICHyd7
+183.17user 5.33system 0:14.03elapsed 1342%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+58591minor)pagefaults 0swaps
+::: nworkers: 2000 nprocs: 0026     WORK_DIR: /tmp/ng-gaudi-go-9OgWqi
+184.45user 5.41system 0:14.03elapsed 1353%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+62143minor)pagefaults 0swaps
+::: nworkers: 5000 nprocs: 0026     WORK_DIR: /tmp/ng-gaudi-go-U8X173
+184.61user 4.23system 0:14.00elapsed 1348%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+59091minor)pagefaults 0swaps
+::: nworkers: 0000 nprocs: 0028     WORK_DIR: /tmp/ng-gaudi-go-DvOyVi
+184.68user 5.65system 0:14.26elapsed 1334%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+68056minor)pagefaults 0swaps
+::: nworkers: 0010 nprocs: 0028     WORK_DIR: /tmp/ng-gaudi-go-ECkn5x
+217.28user 4.72system 0:15.44elapsed 1437%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+60448minor)pagefaults 0swaps
+::: nworkers: 0020 nprocs: 0028     WORK_DIR: /tmp/ng-gaudi-go-VCK1Df
+183.36user 4.80system 0:13.93elapsed 1350%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+62263minor)pagefaults 0swaps
+::: nworkers: 0030 nprocs: 0028     WORK_DIR: /tmp/ng-gaudi-go-rdsIVN
+184.33user 4.73system 0:13.92elapsed 1357%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+65079minor)pagefaults 0swaps
+::: nworkers: 0050 nprocs: 0028     WORK_DIR: /tmp/ng-gaudi-go-GRGLz0
+216.06user 5.26system 0:15.53elapsed 1424%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+74331minor)pagefaults 0swaps
+::: nworkers: 0100 nprocs: 0028     WORK_DIR: /tmp/ng-gaudi-go-dQmYSw
+183.40user 6.99system 0:14.21elapsed 1339%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+67980minor)pagefaults 0swaps
+::: nworkers: 0200 nprocs: 0028     WORK_DIR: /tmp/ng-gaudi-go-jlvzLe
+151.97user 5.41system 0:12.61elapsed 1248%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+67761minor)pagefaults 0swaps
+::: nworkers: 0500 nprocs: 0028     WORK_DIR: /tmp/ng-gaudi-go-TeeeOm
+183.60user 4.41system 0:13.79elapsed 1362%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+62909minor)pagefaults 0swaps
+::: nworkers: 1000 nprocs: 0028     WORK_DIR: /tmp/ng-gaudi-go-XYCczP
+184.39user 5.22system 0:14.12elapsed 1342%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+60848minor)pagefaults 0swaps
+::: nworkers: 2000 nprocs: 0028     WORK_DIR: /tmp/ng-gaudi-go-GOOYzn
+217.41user 5.00system 0:15.33elapsed 1450%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+63840minor)pagefaults 0swaps
+::: nworkers: 5000 nprocs: 0028     WORK_DIR: /tmp/ng-gaudi-go-QUNGb2
+183.82user 5.48system 0:14.13elapsed 1339%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+58922minor)pagefaults 0swaps
+::: nworkers: 0000 nprocs: 0030     WORK_DIR: /tmp/ng-gaudi-go-t8igHU
+184.99user 5.44system 0:14.04elapsed 1356%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+60357minor)pagefaults 0swaps
+::: nworkers: 0010 nprocs: 0030     WORK_DIR: /tmp/ng-gaudi-go-ZFZ99u
+182.59user 6.49system 0:13.96elapsed 1353%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+67191minor)pagefaults 0swaps
+::: nworkers: 0020 nprocs: 0030     WORK_DIR: /tmp/ng-gaudi-go-ISAtK3
+184.13user 4.93system 0:13.99elapsed 1350%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+66244minor)pagefaults 0swaps
+::: nworkers: 0030 nprocs: 0030     WORK_DIR: /tmp/ng-gaudi-go-xaNGAJ
+182.23user 8.05system 0:14.14elapsed 1345%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+65275minor)pagefaults 0swaps
+::: nworkers: 0050 nprocs: 0030     WORK_DIR: /tmp/ng-gaudi-go-n_09fQ
+218.53user 4.91system 0:15.41elapsed 1449%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+72711minor)pagefaults 0swaps
+::: nworkers: 0100 nprocs: 0030     WORK_DIR: /tmp/ng-gaudi-go-RYFGjB
+215.35user 6.12system 0:15.34elapsed 1442%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+69753minor)pagefaults 0swaps
+::: nworkers: 0200 nprocs: 0030     WORK_DIR: /tmp/ng-gaudi-go-0fBMWy
+183.85user 5.55system 0:13.91elapsed 1361%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+62933minor)pagefaults 0swaps
+::: nworkers: 0500 nprocs: 0030     WORK_DIR: /tmp/ng-gaudi-go-JrNhxI
+216.06user 5.83system 0:15.59elapsed 1422%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+75269minor)pagefaults 0swaps
+::: nworkers: 1000 nprocs: 0030     WORK_DIR: /tmp/ng-gaudi-go-FZze1O
+184.18user 6.24system 0:14.14elapsed 1346%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+59260minor)pagefaults 0swaps
+::: nworkers: 2000 nprocs: 0030     WORK_DIR: /tmp/ng-gaudi-go-qgMz9O
+184.32user 5.06system 0:14.08elapsed 1344%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+63622minor)pagefaults 0swaps
+::: nworkers: 5000 nprocs: 0030     WORK_DIR: /tmp/ng-gaudi-go-Wgyp7F
+183.73user 6.54system 0:14.17elapsed 1342%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+68413minor)pagefaults 0swaps
+::: nworkers: 0000 nprocs: 0040     WORK_DIR: /tmp/ng-gaudi-go-kOZksq
+183.08user 6.94system 0:14.02elapsed 1354%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+59612minor)pagefaults 0swaps
+::: nworkers: 0010 nprocs: 0040     WORK_DIR: /tmp/ng-gaudi-go-ggUz4M
+183.91user 7.05system 0:14.14elapsed 1350%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+65525minor)pagefaults 0swaps
+::: nworkers: 0020 nprocs: 0040     WORK_DIR: /tmp/ng-gaudi-go-7Xsa17
+155.86user 7.91system 0:13.05elapsed 1254%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+67002minor)pagefaults 0swaps
+::: nworkers: 0030 nprocs: 0040     WORK_DIR: /tmp/ng-gaudi-go-2esmWI
+183.24user 8.20system 0:16.16elapsed 1184%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+70144minor)pagefaults 0swaps
+::: nworkers: 0050 nprocs: 0040     WORK_DIR: /tmp/ng-gaudi-go-A9Iyoi
+183.27user 7.57system 0:14.20elapsed 1343%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+61893minor)pagefaults 0swaps
+::: nworkers: 0100 nprocs: 0040     WORK_DIR: /tmp/ng-gaudi-go-rF0Lr3
+185.06user 6.59system 0:14.33elapsed 1336%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+69590minor)pagefaults 0swaps
+::: nworkers: 0200 nprocs: 0040     WORK_DIR: /tmp/ng-gaudi-go-vOtw8X
+183.20user 8.01system 0:14.23elapsed 1343%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+69467minor)pagefaults 0swaps
+::: nworkers: 0500 nprocs: 0040     WORK_DIR: /tmp/ng-gaudi-go-SgylCI
+184.05user 7.04system 0:14.20elapsed 1345%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+66657minor)pagefaults 0swaps
+::: nworkers: 1000 nprocs: 0040     WORK_DIR: /tmp/ng-gaudi-go-pMcxhb
+182.62user 9.35system 0:14.33elapsed 1339%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+62586minor)pagefaults 0swaps
+::: nworkers: 2000 nprocs: 0040     WORK_DIR: /tmp/ng-gaudi-go-UmxKLJ
+184.66user 6.91system 0:14.24elapsed 1345%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+63077minor)pagefaults 0swaps
+::: nworkers: 5000 nprocs: 0040     WORK_DIR: /tmp/ng-gaudi-go-GZB6QV
+184.61user 6.35system 0:14.06elapsed 1357%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+68657minor)pagefaults 0swaps
+::: nworkers: 0000 nprocs: 0048     WORK_DIR: /tmp/ng-gaudi-go-OLd9lx
+183.23user 8.60system 0:14.36elapsed 1335%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+59272minor)pagefaults 0swaps
+::: nworkers: 0010 nprocs: 0048     WORK_DIR: /tmp/ng-gaudi-go-WF1x2A
+184.67user 7.69system 0:14.20elapsed 1354%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+63157minor)pagefaults 0swaps
+::: nworkers: 0020 nprocs: 0048     WORK_DIR: /tmp/ng-gaudi-go-EmDyIl
+214.90user 7.12system 0:15.46elapsed 1435%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+72282minor)pagefaults 0swaps
+::: nworkers: 0030 nprocs: 0048     WORK_DIR: /tmp/ng-gaudi-go-RKbitH
+183.76user 7.13system 0:14.17elapsed 1346%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+59610minor)pagefaults 0swaps
+::: nworkers: 0050 nprocs: 0048     WORK_DIR: /tmp/ng-gaudi-go-S5F16t
+183.42user 7.78system 0:14.19elapsed 1346%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+75925minor)pagefaults 0swaps
+::: nworkers: 0100 nprocs: 0048     WORK_DIR: /tmp/ng-gaudi-go-EsEUQ6
+183.63user 8.35system 0:14.19elapsed 1352%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+70515minor)pagefaults 0swaps
+::: nworkers: 0200 nprocs: 0048     WORK_DIR: /tmp/ng-gaudi-go-XAn7Cz
+183.01user 7.95system 0:14.08elapsed 1356%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+61332minor)pagefaults 0swaps
+::: nworkers: 0500 nprocs: 0048     WORK_DIR: /tmp/ng-gaudi-go-1Vmy_9
+214.81user 9.91system 0:15.71elapsed 1430%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+74982minor)pagefaults 0swaps
+::: nworkers: 1000 nprocs: 0048     WORK_DIR: /tmp/ng-gaudi-go-nqc54h
+183.06user 8.88system 0:14.27elapsed 1344%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+61924minor)pagefaults 0swaps
+::: nworkers: 2000 nprocs: 0048     WORK_DIR: /tmp/ng-gaudi-go-tS1e6B
+156.97user 7.84system 0:13.05elapsed 1262%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+61857minor)pagefaults 0swaps
+::: nworkers: 5000 nprocs: 0048     WORK_DIR: /tmp/ng-gaudi-go-DkYxzZ
+183.51user 8.99system 0:14.17elapsed 1357%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+66135minor)pagefaults 0swaps
