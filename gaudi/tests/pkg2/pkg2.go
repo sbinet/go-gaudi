@@ -1,6 +1,8 @@
 // test package 'pkg2'
 package pkg2
 
+import "time"
+
 import "gaudi/kernel"
 
 // --- alg1 ---
@@ -143,6 +145,8 @@ func (self *alg_dumper) Execute(ctx kernel.IEvtCtx) kernel.Error {
 		panic("race condition detected in evt-store")
 	}
 
+	// simulate a cpu-burning algorithm
+	time.Sleep(3*10e6) // 3ms
 	return kernel.StatusCode(0)
 }
 
