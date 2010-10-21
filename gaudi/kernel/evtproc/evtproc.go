@@ -214,12 +214,12 @@ func (self *evtproc) test_0() {
 }
 
 // check implementations match interfaces
-var _ kernel.IEvtCtx = (*evtstate{})(nil)
+var _ kernel.IEvtCtx = (*evtstate)(nil)
 
-var _ kernel.IComponent = (*evtproc{})(nil)
-var _ kernel.IEvtProcessor = (*evtproc{})(nil)
-var _ kernel.IProperty = (*evtproc{})(nil)
-var _ kernel.IService = (*evtproc{})(nil)
+var _ kernel.IComponent = (*evtproc)(nil)
+var _ kernel.IEvtProcessor = (*evtproc)(nil)
+var _ kernel.IProperty = (*evtproc)(nil)
+var _ kernel.IService = (*evtproc)(nil)
 
 // --- factory function ---
 func New(t,n string) kernel.IComponent {

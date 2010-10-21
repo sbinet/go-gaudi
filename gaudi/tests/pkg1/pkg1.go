@@ -94,9 +94,18 @@ func (self *tool1) FinalizeTool() kernel.Error {
 }
 
 // check matching interfaces
-var _ kernel.IComponent = (*alg1{})(nil)
-var _ kernel.IAlgorithm = (*alg1{})(nil)
-//var _ kernel.Algorithm = (*alg1{})(nil)
+var _ kernel.IComponent = (*alg1)(nil)
+var _ kernel.IAlgorithm = (*alg1)(nil)
+//var _ kernel.Algorithm = (*alg1)(nil)
+
+var _ kernel.IComponent = (*alg2)(nil)
+var _ kernel.IAlgorithm = (*alg2)(nil)
+
+var _ kernel.IComponent = (*svc1)(nil)
+var _ kernel.IService = (*svc1)(nil)
+
+var _ kernel.IComponent = (*tool1)(nil)
+var _ kernel.IAlgTool = (*tool1)(nil)
 
 // --- factory function ---
 func New(t,n string) kernel.IComponent {
