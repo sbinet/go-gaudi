@@ -114,13 +114,13 @@ func (self *evtproc) seq_NextEvent(evtmax int) kernel.Error {
 }
 func (self *evtproc) mp_NextEvent(evtmax int) kernel.Error {
 
-	handle := func(evt *evtstate, out_queue chan *evtstate) {
+	handle := func(evt *evtstate, out_queue chan <- *evtstate) {
 		self.MsgInfo("nextEvent[%v]...\n", evt.idx)
 		evt.sc = self.ExecuteEvent(evt)
 		out_queue <- evt
 	}
 
-	serve_evts := func(in_evt_queue, out_evt_queue chan *evtstate, quit chan bool) {
+	serve_evts := func(in_evt_queue <- chan *evtstate, out_evt_queue chan <- *evtstate, quit <- chan bool) {
 		for {
 			select {
 			case ievt := <-in_evt_queue:
@@ -132,7 +132,7 @@ func (self *evtproc) mp_NextEvent(evtmax int) kernel.Error {
 		}
 	}
 
-	start_evt_server := func(nworkers int) (in_evt_queue, 
+	start_evt_server := func(nworkers int) (in_evt_queue,
 		                                    out_evt_queue chan *evtstate,
 		                                    quit chan bool) {
 		in_evt_queue = make(chan *evtstate, nworkers)
@@ -177,7 +177,7 @@ func (self *evtproc) StopRun() kernel.Error {
 // ---
 
 func (self *evtproc) test_0() {
-	handle := func(queue chan int) kernel.Error {
+	handle := func(queue <-chan int) kernel.Error {
 		sc := kernel.StatusCode(0)
 		for i := range queue {
 			ctx := new_evtstate(i)
@@ -188,7 +188,7 @@ func (self *evtproc) test_0() {
 	}
 
 	max_in_flight := 4
-	serve := func(queue chan int, quit chan bool) kernel.Error {
+	serve := func(queue <-chan int, quit <-chan bool) kernel.Error {
 		for i := 0; i < max_in_flight; i++ {
 			go handle(queue)
 		}
