@@ -191,11 +191,15 @@ func (self *json_outstream_handle) Write(data interface{}) kernel.Error {
 	}
 	 */
 	self.data <- data
-	err, ready := <- self.errs
-	if ready && err != nil {
-		msg := self.svc.(kernel.IMessager)
-		msg.MsgError("--> write got: %v\n", err)
-		return kernel.StatusCodeWithErr(1, err)
+	select {
+	case err := <-self.errs:
+		if err != nil {
+			msg := self.svc.(kernel.IMessager)
+			msg.MsgError("--> write got: %v\n", err)
+			return kernel.StatusCodeWithErr(1, err)
+		}
+	default:
+		return kernel.StatusCode(0)
 	}
 	return kernel.StatusCode(0)
 }
@@ -205,8 +209,10 @@ func (self *json_outstream_handle) Close() kernel.Error {
 		msg := self.svc.(kernel.IMessager)
 		msg.MsgDebug("--> closing json-handle [%v]\n", self.w.Name())
 
-		self.quit <- true
-		close(self.quit)
+		if !closed(self.quit) {
+			self.quit <- true
+			close(self.quit)
+		}
 		close(self.errs)
 		close(self.data)
 
