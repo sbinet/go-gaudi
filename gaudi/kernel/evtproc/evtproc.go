@@ -3,7 +3,7 @@ package evtproc
 import "time"
 //import "fmt"
 
-import "gaudi/kernel"
+import "bitbucket.org/binet/ng-go-gaudi/gaudi/kernel"
 
 // --- evt state ---
 type evtstate struct {

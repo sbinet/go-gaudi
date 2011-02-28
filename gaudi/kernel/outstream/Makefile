@@ -4,7 +4,7 @@
 
 include ${GOROOT}/src/Make.inc
 
-TARG=gaudi/kernel/outstream
+TARG=bitbucket.org/binet/ng-go-gaudi/gaudi/kernel/outstream
 GOFILES=\
 	outstream.go\
 

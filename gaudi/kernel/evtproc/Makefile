@@ -4,7 +4,7 @@
 
 include ${GOROOT}/src/Make.inc
 
-TARG=gaudi/kernel/evtproc
+TARG=bitbucket.org/binet/ng-go-gaudi/gaudi/kernel/evtproc
 GOFILES=\
 	evtproc.go
 
