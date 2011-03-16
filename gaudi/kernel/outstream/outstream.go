@@ -205,11 +205,14 @@ func (self *json_outstream_handle) Write(data interface{}) kernel.Error {
 }
 
 func (self *json_outstream_handle) Close() kernel.Error {
-	if !closed(self.quit) {
+
+	_, ok := <-self.quit
+	if ok {
 		msg := self.svc.(kernel.IMessager)
 		msg.MsgDebug("--> closing json-handle [%v]\n", self.w.Name())
 
-		if !closed(self.quit) {
+		_,ok = <-self.quit
+		if ok {
 			self.quit <- true
 			close(self.quit)
 		}
