@@ -201,28 +201,25 @@ func (self *json_outstream_handle) Close() kernel.Error {
 
 	self.quit <- true
 
-	_, ok := <-self.quit
-	if ok {
-		msg := self.svc.(kernel.IMessager)
-		msg.MsgDebug("--> closing json-handle [%v]\n", self.w.Name())
+	msg := self.svc.(kernel.IMessager)
+	msg.MsgDebug("--> closing json-handle [%v]\n", self.w.Name())
 
-		// _,ok = <-self.quit
-		// if ok {
-		// 	self.quit <- true
-		// }
-		close(self.quit)
-		close(self.errs)
-		close(self.data)
+	// _,ok = <-self.quit
+	// if ok {
+	// 	self.quit <- true
+	// }
+	close(self.quit)
+	close(self.errs)
+	close(self.data)
 
-		fd := self.w.Fd()
-		if fd >= 0 {
-			fname := self.w.Name()
-			err := self.w.Close()
-			if err != nil {
-				msg.MsgError("closing fd: [%v] name [%v]. err: %v\n", 
-					fd, fname, err)
-				return kernel.StatusCodeWithErr(1, err)
-			}
+	fd := self.w.Fd()
+	if fd >= 0 {
+		fname := self.w.Name()
+		err := self.w.Close()
+		if err != nil {
+			msg.MsgError("closing fd: [%v] name [%v]. err: %v\n", 
+				fd, fname, err)
+			return kernel.StatusCodeWithErr(1, err)
 		}
 	}
 	return kernel.StatusCode(0)
