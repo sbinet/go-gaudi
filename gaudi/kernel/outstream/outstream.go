@@ -96,7 +96,7 @@ func (self *gob_outstream) Execute(ctx kernel.IEvtCtx) kernel.Error {
 
 func (self *gob_outstream) Finalize() kernel.Error {
 	self.MsgDebug("== finalize ==\n")
-	self.w.Close()
+	//self.w.Close()
 
 	return kernel.StatusCode(0)
 }
@@ -164,11 +164,11 @@ func (self *json_outstream) Finalize() kernel.Error {
 	self.MsgDebug("== finalize ==\n")
 
 	// close out our data channels
-	sc := self.handle.Close()
-	if !sc.IsSuccess() {
-		self.MsgError("problem closing json outstream: %v", sc.Err())
-		return sc
-	}
+	// sc := self.handle.Close()
+	// if !sc.IsSuccess() {
+	// 	self.MsgError("problem closing json outstream: %v", sc.Err())
+	// 	return sc
+	// }
 
 	return kernel.StatusCode(0)
 }
@@ -206,16 +206,18 @@ func (self *json_outstream_handle) Write(data interface{}) kernel.Error {
 
 func (self *json_outstream_handle) Close() kernel.Error {
 
+	self.quit <- true
+
 	_, ok := <-self.quit
 	if ok {
 		msg := self.svc.(kernel.IMessager)
 		msg.MsgDebug("--> closing json-handle [%v]\n", self.w.Name())
 
-		_,ok = <-self.quit
-		if ok {
-			self.quit <- true
-			close(self.quit)
-		}
+		// _,ok = <-self.quit
+		// if ok {
+		// 	self.quit <- true
+		// }
+		close(self.quit)
 		close(self.errs)
 		close(self.data)
 
