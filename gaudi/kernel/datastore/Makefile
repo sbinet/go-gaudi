@@ -4,7 +4,7 @@
 
 include ${GOROOT}/src/Make.inc
 
-TARG=gaudi/kernel/datastore
+TARG=bitbucket.org/binet/ng-go-gaudi/gaudi/kernel/datastore
 GOFILES=\
 	datastore.go
 

@@ -6,7 +6,7 @@ import "os"
 import "gob"
 import "json"
 
-import "gaudi/kernel"
+import "bitbucket.org/binet/ng-go-gaudi/gaudi/kernel"
 
 var g_keys = []string{
 	"njets",

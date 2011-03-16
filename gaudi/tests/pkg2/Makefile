@@ -4,7 +4,7 @@
 
 include ${GOROOT}/src/Make.inc
 
-TARG=gaudi/tests/pkg2
+TARG=bitbucket.org/binet/ng-go-gaudi/gaudi/tests/pkg2
 GOFILES=\
 	pkg2.go\
 

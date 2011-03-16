@@ -7,7 +7,7 @@ import "container/vector"
 
 import "reflect"
 
-import "gaudi/kernel"
+import "bitbucket.org/binet/ng-go-gaudi/gaudi/kernel"
 
 var (
 	bin  = os.Getenv("GOBIN")

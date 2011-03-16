@@ -1,7 +1,7 @@
 // reference implementation of an IDataStore
 package datastore
 
-import "gaudi/kernel"
+import "bitbucket.org/binet/ng-go-gaudi/gaudi/kernel"
 
 // --- datastore helper ---
 

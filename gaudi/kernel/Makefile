@@ -4,7 +4,7 @@
 
 include ${GOROOT}/src/Make.inc
 
-TARG=gaudi/kernel
+TARG=bitbucket.org/binet/ng-go-gaudi/gaudi/kernel
 GOFILES=\
 	interfaces.go\
 	components.go\
