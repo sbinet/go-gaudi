@@ -163,13 +163,6 @@ func (self *json_outstream) Execute(ctx kernel.IEvtCtx) kernel.Error {
 func (self *json_outstream) Finalize() kernel.Error {
 	self.MsgDebug("== finalize ==\n")
 
-	// close out our data channels
-	// sc := self.handle.Close()
-	// if !sc.IsSuccess() {
-	// 	self.MsgError("problem closing json outstream: %v", sc.Err())
-	// 	return sc
-	// }
-
 	return kernel.StatusCode(0)
 }
 
