@@ -41,9 +41,7 @@ func (self *gob_outstream) Initialize() kernel.Error {
 	self.MsgInfo("output file: [%v]\n", fname)
 	self.MsgInfo("items: %v\n", self.item_names)
 
-	flag := os.O_WRONLY | os.O_CREATE | os.O_TRUNC
-	perm := uint32(0666)
-	w,err := os.Open(fname, flag, perm)
+	w,err := os.Create(fname)
 	if err != nil {
 		self.MsgError("problem while opening file [%v]: %v\n", fname, err)
 		return kernel.StatusCode(1)
@@ -317,9 +315,7 @@ func
 		return in, errs, quit
 	}
 
-	flags := os.O_WRONLY | os.O_CREATE | os.O_TRUNC
-	perms := uint32(0666)
-	w,err := os.Open(n, flags, perms)
+	w,err := os.Create(n)
 	if err != nil {
 		self.MsgError("problem opening stream [%v]: %v\n", n, err)
 		return nil
