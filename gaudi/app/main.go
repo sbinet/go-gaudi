@@ -1,13 +1,14 @@
 package main
 
-import "fmt"
-import "flag"
-import "os"
-import "container/vector"
+import (
+	"container/vector"
+	"flag"
+	"fmt"
+	"os"
+	//"reflect"
 
-import "reflect"
-
-import "bitbucket.org/binet/ng-go-gaudi/gaudi/kernel"
+	"bitbucket.org/binet/ng-go-gaudi/gaudi/kernel"
+)
 
 var (
 	bin  = os.Getenv("GOBIN")
@@ -44,16 +45,16 @@ func main() {
 		iapp.CompType(), 
 		iapp.CompName())
 
-	{
-		t := reflect.Typeof(iapp)
-		fmt.Printf("type of [%s]\n", t)
-		newt := reflect.NewValue(app)
-		fmt.Printf("type of    t: [%s] pkg: [%s] name: [%s]\n", 
-			reflect.Typeof(t),
-			t.PkgPath(),
-			t.Name())
-		fmt.Printf("type of newt: [%s]\n", reflect.Typeof(newt))
-	}
+	// {
+	// 	t := reflect.TypeOf(iapp)
+	// 	fmt.Printf("type of [%s]\n", t)
+	// 	newt := reflect.New(t)
+	// 	fmt.Printf("type of    t: [%s] pkg: [%s] name: [%s]\n", 
+	// 		reflect.TypeOf(t),
+	// 		t.PkgPath(),
+	// 		t.Name())
+	// 	fmt.Printf("type of newt: [%s]\n", reflect.TypeOf(newt))
+	// }
 	handle_icomponent(app)
 	fmt.Printf("%s\n", app)
 
