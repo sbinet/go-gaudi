@@ -1,7 +1,6 @@
 package main
 
 import (
-	"container/vector"
 	"flag"
 	"fmt"
 	"os"
@@ -20,9 +19,9 @@ var (
 )
 
 type jobOptions struct {
-	pkgs *vector.StringVector
-	defs *vector.StringVector
-	code *vector.Vector
+	pkgs *[]string
+	defs *[]string
+	code *[]interface{}
 	exec string
 }
 
