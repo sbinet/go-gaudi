@@ -1,7 +1,6 @@
 package kernel
 
 import "fmt"
-import "os"
 
 type comps_db map[string]IComponent
 
@@ -15,7 +14,7 @@ type Error interface {
 	/// return the error code (0 is success)
 	Code() int
 	/// the error reason, piggybacking on go's os.Error
-	Err() os.Error
+	Err() error
 	IsSuccess() bool
 	IsFailure() bool
 	IsRecoverable() bool
@@ -23,25 +22,25 @@ type Error interface {
 
 type statuscode struct {
 	code int
-	err  os.Error
+	err  error
 }
 // check statuscode implements kernel.Error
 var _ = Error(&statuscode{})
 //
 
 func StatusCode(code int) Error {
-	return &statuscode{code:code, err:nil}
+	return &statuscode{code: code, err: nil}
 }
 
-func StatusCodeWithErr(code int, err os.Error) Error {
-	return &statuscode{code:code, err:err}
+func StatusCodeWithErr(code int, err error) Error {
+	return &statuscode{code: code, err: err}
 }
 
 func (sc *statuscode) Code() int {
 	return sc.code
 }
 
-func (sc *statuscode) Err() os.Error {
+func (sc *statuscode) Err() error {
 	return sc.err
 }
 
@@ -88,7 +87,7 @@ func RegisterComp(c IComponent) bool {
 		}
 		// already existing component with that same name !
 		err := fmt.Sprintf("a component with name [%s] was already registered ! (old-type: %T, new-type: %T)",
-			n, oldcomp, c);
+			n, oldcomp, c)
 		panic(err)
 	}
 	//fmt.Printf("--> registering [%T/%s]...\n", c, n)
@@ -111,7 +110,7 @@ type IComponentMgr interface {
 }
 
 type Property struct {
-	Name string
+	Name  string
 	Value interface{}
 }
 type IProperty interface {
@@ -225,14 +224,14 @@ type IDataStoreMgr interface {
 }
 
 type IMessager interface {
-	Msg(lvl OutputLevel, format string, a ...interface{}) (int, os.Error)
-	MsgVerbose(format string, a ...interface{}) (int, os.Error)
-	MsgDebug(format string, a ...interface{}) (int, os.Error)
-	MsgInfo(format string, a ...interface{}) (int, os.Error)
-	MsgWarning(format string, a ...interface{}) (int, os.Error)
-	MsgError(format string, a ...interface{}) (int, os.Error)
-	MsgFatal(format string, a ...interface{}) (int, os.Error)
-	MsgAlways(format string, a ...interface{}) (int, os.Error)
+	Msg(lvl OutputLevel, format string, a ...interface{}) (int, error)
+	MsgVerbose(format string, a ...interface{}) (int, error)
+	MsgDebug(format string, a ...interface{}) (int, error)
+	MsgInfo(format string, a ...interface{}) (int, error)
+	MsgWarning(format string, a ...interface{}) (int, error)
+	MsgError(format string, a ...interface{}) (int, error)
+	MsgFatal(format string, a ...interface{}) (int, error)
+	MsgAlways(format string, a ...interface{}) (int, error)
 }
 
 /// handle to a concurrent output stream
@@ -253,7 +252,6 @@ type IOutputStreamSvc interface {
 
 	/// returns a new output stream
 	NewOutputStream(stream_name string) IOutputStream
-
 }
 
 /* EOF */

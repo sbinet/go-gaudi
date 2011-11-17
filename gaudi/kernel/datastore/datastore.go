@@ -24,14 +24,14 @@ func (self *datastore) Get(key string) interface{} {
 func (self *datastore) Has(key string) bool {
 	_, ok := (*self.store)[key]
 	if !ok {
-		(*self.store)[key] = nil, false
+		delete((*self.store), key)
 	}
 	return ok
 }
 
 func (self *datastore) ClearStore() kernel.Error {
-	for k,_ := range (*self.store) {
-		(*self.store)[k] = nil, false
+	for k, _ := range *self.store {
+		delete((*self.store), k)
 	}
 	return kernel.StatusCode(0)
 }
@@ -55,7 +55,7 @@ func (self *datastoresvc) FinalizeSvc() kernel.Error {
 func (self *datastoresvc) Store(ctx kernel.IEvtCtx) kernel.IDataStore {
 	store := ctx.Store()
 	n := self.CompName()
-	if _,ok := (*store)[n]; !ok {
+	if _, ok := (*store)[n]; !ok {
 		dstore := make(kernel.DataStore)
 		(*store)[n] = &dstore
 	}
@@ -75,7 +75,7 @@ var _ kernel.IService = (*datastoresvc)(nil)
 var _ kernel.IProperty = (*datastoresvc)(nil)
 
 // --- factory function ---
-func New(t,n string) kernel.IComponent {
+func New(t, n string) kernel.IComponent {
 	switch t {
 	case "datastoresvc":
 		self := &datastoresvc{}
@@ -84,7 +84,7 @@ func New(t,n string) kernel.IComponent {
 		kernel.RegisterComp(self)
 		return self
 	default:
-		err := "no such type ["+t+"]"
+		err := "no such type [" + t + "]"
 		panic(err)
 	}
 	return nil

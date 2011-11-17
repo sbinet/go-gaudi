@@ -11,7 +11,7 @@ type svcmgr struct {
 }
 
 func (self *svcmgr) GetComp(n string) IComponent {
-	c,ok := self.services[n]
+	c, ok := self.services[n]
 	if ok {
 		return c.(IComponent)
 	}
@@ -21,7 +21,7 @@ func (self *svcmgr) GetComp(n string) IComponent {
 func (self *svcmgr) GetComps() []IComponent {
 	comps := make([]IComponent, len(self.services))
 	i := 0
-	for _,v := range self.services {
+	for _, v := range self.services {
 		comps[i] = v.(IComponent)
 		i++
 	}
@@ -29,15 +29,15 @@ func (self *svcmgr) GetComps() []IComponent {
 }
 
 func (self *svcmgr) HasComp(n string) bool {
-	_,ok := self.services[n]
+	_, ok := self.services[n]
 	if !ok {
-		self.services[n] = nil, false
+		delete(self.services, n)
 	}
 	return ok
 }
 
 func (self *svcmgr) AddService(svc string) Error {
-	isvc,ok := g_compsdb[svc].(IService)
+	isvc, ok := g_compsdb[svc].(IService)
 	if !ok {
 		//fmt.Printf("** AddService(%s) FAILED !\n", svc)
 		return StatusCode(1)
@@ -48,7 +48,7 @@ func (self *svcmgr) AddService(svc string) Error {
 
 func (self *svcmgr) RemoveService(svc string) Error {
 	if self.HasService(svc).IsSuccess() {
-		self.services[svc] = nil, false
+		delete(self.services, svc)
 		return StatusCode(0)
 	}
 	return StatusCode(1)
@@ -75,7 +75,7 @@ func (self *svcmgr) GetService(svc string) IService {
 func (self *svcmgr) GetServices() []IService {
 	svcs := make([]IService, len(self.services))
 	i := 0
-	for _,v := range self.services {
+	for _, v := range self.services {
 		svcs[i] = v
 		i++
 	}
@@ -86,7 +86,6 @@ func (self *svcmgr) ExistsService(svc string) bool {
 	return self.HasService(svc).IsSuccess()
 }
 
-
 //////////////////////////////////////////////////////////////////////////////
 // alg-mgr
 
@@ -95,7 +94,7 @@ type algmgr struct {
 }
 
 func (self *algmgr) GetComp(n string) IComponent {
-	c,ok := self.algs[n]
+	c, ok := self.algs[n]
 	if ok {
 		return c.(IComponent)
 	}
@@ -105,7 +104,7 @@ func (self *algmgr) GetComp(n string) IComponent {
 func (self *algmgr) GetComps() []IComponent {
 	comps := make([]IComponent, len(self.algs))
 	i := 0
-	for _,v := range self.algs {
+	for _, v := range self.algs {
 		comps[i] = v.(IComponent)
 		i++
 	}
@@ -113,9 +112,9 @@ func (self *algmgr) GetComps() []IComponent {
 }
 
 func (self *algmgr) HasComp(n string) bool {
-	_,ok := self.algs[n]
+	_, ok := self.algs[n]
 	if !ok {
-		self.algs[n] = nil, false
+		delete(self.algs, n)
 	}
 	return ok
 }
@@ -130,7 +129,7 @@ func (self *algmgr) RemoveAlgorithm(alg IAlgorithm) Error {
 	if !self.HasComp(n) {
 		return StatusCode(1)
 	}
-	self.algs[n] = nil, false
+	delete(self.algs, n)
 	return StatusCode(0)
 }
 
@@ -149,11 +148,11 @@ type appmgr struct {
 
 	name string
 	jobo string
-	
+
 	evtproc IEvtProcessor
 	evtsel  IEvtSelector
 
-	mgrs    map[string]IComponentMgr
+	mgrs map[string]IComponentMgr
 }
 
 func (self *appmgr) CompType() string {
@@ -174,7 +173,7 @@ func (self *appmgr) GetComp(n string) IComponent {
 func (self *appmgr) GetComps() []IComponent {
 	comps := make([]IComponent, len(g_compsdb))
 	i := 0
-	for _,v := range g_compsdb {
+	for _, v := range g_compsdb {
 		comps[i] = v
 		i++
 	}
@@ -182,9 +181,9 @@ func (self *appmgr) GetComps() []IComponent {
 }
 
 func (self *appmgr) HasComp(n string) bool {
-	_,ok := g_compsdb[n]
+	_, ok := g_compsdb[n]
 	if !ok {
-		g_compsdb[n] = nil, false
+		delete(g_compsdb, n)
 	}
 	return ok
 }
@@ -208,10 +207,10 @@ func (self *appmgr) Initialize() Error {
 	svcs_prop, ok := self.GetProperty("Svcs").([]string)
 	if ok {
 		self.MsgInfo("svcs...\n")
-		for _,svc_name := range svcs_prop {
+		for _, svc_name := range svcs_prop {
 			isvc := self.GetService(svc_name)
 			if !isvc.InitializeSvc().IsSuccess() {
-				self.MsgError("pb initializing [%s] !\n",isvc.CompName())
+				self.MsgError("pb initializing [%s] !\n", isvc.CompName())
 				allgood = false
 			}
 		}
@@ -222,11 +221,11 @@ func (self *appmgr) Initialize() Error {
 	algs_prop, ok := self.GetProperty("Algs").([]string)
 	if ok {
 		self.MsgInfo("algs...\n")
-		for _,alg_name := range algs_prop {
-			ialg,isalg := self.GetComp(alg_name).(IAlgorithm)
+		for _, alg_name := range algs_prop {
+			ialg, isalg := self.GetComp(alg_name).(IAlgorithm)
 			if isalg {
 				if !ialg.Initialize().IsSuccess() {
-					self.MsgError("pb initializing [%s] !\n",ialg.CompName())
+					self.MsgError("pb initializing [%s] !\n", ialg.CompName())
 					allgood = false
 				} else {
 					self.MsgDebug("correctly initialized [%T/%s]\n",
@@ -295,12 +294,12 @@ func (self *appmgr) Finalize() Error {
 	algs_prop, ok := self.GetProperty("Algs").([]string)
 	if ok {
 		self.MsgInfo("algs...\n")
-		for _,alg_name := range algs_prop {
-			ialg,isalg := self.GetComp(alg_name).(IAlgorithm)
+		for _, alg_name := range algs_prop {
+			ialg, isalg := self.GetComp(alg_name).(IAlgorithm)
 			if isalg {
 				sc := ialg.Finalize()
 				if !sc.IsSuccess() {
-					self.MsgError("pb finalizing [%s] !\n",ialg.CompName())
+					self.MsgError("pb finalizing [%s] !\n", ialg.CompName())
 					allgood = false
 				} else {
 					self.MsgDebug("correctly finalized [%T/%s]\n",
@@ -314,11 +313,11 @@ func (self *appmgr) Finalize() Error {
 	svcs_prop, ok := self.GetProperty("Svcs").([]string)
 	if ok {
 		self.MsgInfo("svcs...\n")
-		for _,svc_name := range svcs_prop {
+		for _, svc_name := range svcs_prop {
 			isvc := self.GetService(svc_name)
 			sc := isvc.FinalizeSvc()
 			if !sc.IsSuccess() {
-				self.MsgError("pb finalizing [%s] !\n",isvc.CompName())
+				self.MsgError("pb finalizing [%s] !\n", isvc.CompName())
 				allgood = false
 			}
 		}
@@ -342,16 +341,15 @@ func NewAppMgr() IAppMgr {
 	self.properties.props = make(map[string]interface{})
 	self.name = "app-mgr"
 	self.jobo = "foo.py"
-	self.msgstream = msgstream{name:self.name, level:LVL_INFO}
+	self.msgstream = msgstream{name: self.name, level: LVL_INFO}
 
 	self.svcmgr.services = make(map[string]IService)
 	self.algmgr.algs = make(map[string]IAlgorithm)
 
-
 	self.mgrs = make(map[string]IComponentMgr)
 	self.mgrs["svcmgr"] = &self.svcmgr
 	self.mgrs["algmgr"] = &self.algmgr
-	
+
 	g_compsdb[self.name] = self
 
 	// completing bootstrap
@@ -368,7 +366,7 @@ var _ IComponentMgr = (*algmgr)(nil)
 var _ IComponentMgr = (*svcmgr)(nil)
 var _ ISvcMgr = (*svcmgr)(nil)
 var _ ISvcLocator = (*svcmgr)(nil)
-      
+
 var _ IComponent = (*appmgr)(nil)
 var _ IComponentMgr = (*appmgr)(nil)
 var _ IAlgMgr = (*appmgr)(nil)
@@ -376,6 +374,5 @@ var _ ISvcMgr = (*appmgr)(nil)
 var _ ISvcLocator = (*appmgr)(nil)
 var _ IAppMgr = (*appmgr)(nil)
 var _ IProperty = (*appmgr)(nil)
-
 
 /* EOF */

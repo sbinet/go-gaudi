@@ -1,7 +1,6 @@
 package main
 
 import (
-	"container/vector"
 	"flag"
 	"fmt"
 	"os"
@@ -20,13 +19,15 @@ var (
 )
 
 type jobOptions struct {
-	pkgs *vector.StringVector
-	defs *vector.StringVector
-	code *vector.Vector
+	pkgs []string
+	defs []string
+	code []interface{}
 	exec string
 }
 
-var jobOptName *string = flag.String("jobo", "jobOptions.igo",
+var jobOptName *string = flag.String(
+	"jobo", 
+	"jobOptions.igo",
 	"path to a jobOptions file")
 
 func handle_icomponent(c kernel.IComponent) {

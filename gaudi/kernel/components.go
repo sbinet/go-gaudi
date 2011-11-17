@@ -1,7 +1,6 @@
 package kernel
 
 import "fmt"
-import "os"
 
 type Component struct {
 	comp_name string
@@ -16,7 +15,7 @@ func (self *Component) CompType() string {
 	return self.comp_type
 }
 
-func NewComponent(t,n string) IComponent {
+func NewComponent(t, n string) IComponent {
 	self := &Component{comp_name: n, comp_type: t}
 	g_compsdb[n] = self
 	return self
@@ -35,7 +34,7 @@ func (self *properties) SetProperty(n string, v interface{}) Error {
 	return StatusCode(0)
 }
 func (self *properties) GetProperty(n string) interface{} {
-	v,ok := self.props[n]
+	v, ok := self.props[n]
 	if ok {
 		return v
 	}
@@ -44,8 +43,8 @@ func (self *properties) GetProperty(n string) interface{} {
 func (self *properties) GetProperties() []Property {
 	props := make([]Property, len(self.props))
 	i := 0
-	for k,v := range self.props {
-		props[i] = Property{Name:k, Value:v}
+	for k, v := range self.props {
+		props[i] = Property{Name: k, Value: v}
 		i++
 	}
 	return props
@@ -53,6 +52,7 @@ func (self *properties) GetProperties() []Property {
 
 // --- output level ---
 type OutputLevel int
+
 const (
 	LVL_VERBOSE OutputLevel = iota
 	LVL_DEBUG
@@ -61,18 +61,26 @@ const (
 	LVL_ERROR
 	LVL_FATAL
 	LVL_ALWAYS
-	)
+)
 
 func (self OutputLevel) String() string {
 	switch self {
-	case LVL_VERBOSE: return "VERBOSE"
-	case LVL_DEBUG:   return "DEBUG"
-	case LVL_INFO:    return "INFO"
-	case LVL_WARNING: return "WARNING"
-	case LVL_ERROR:   return "ERROR"
-	case LVL_FATAL:   return "FATAL"
-	case LVL_ALWAYS:  return "ALWAYS"
-	default:          return "???"
+	case LVL_VERBOSE:
+		return "VERBOSE"
+	case LVL_DEBUG:
+		return "DEBUG"
+	case LVL_INFO:
+		return "INFO"
+	case LVL_WARNING:
+		return "WARNING"
+	case LVL_ERROR:
+		return "ERROR"
+	case LVL_FATAL:
+		return "FATAL"
+	case LVL_ALWAYS:
+		return "ALWAYS"
+	default:
+		return "???"
 	}
 	return "???"
 }
@@ -83,14 +91,13 @@ type msgstream struct {
 	level OutputLevel
 }
 
-
 func (self *msgstream) SetOutputLevel(lvl OutputLevel) {
 	self.level = lvl
 }
 func (self *msgstream) OutputLevel() OutputLevel {
 	return self.level
 }
-func (self *msgstream) Msg(lvl OutputLevel, format string, a ...interface{}) (int, os.Error) {
+func (self *msgstream) Msg(lvl OutputLevel, format string, a ...interface{}) (int, error) {
 	//return 0, nil
 	if self.level <= lvl {
 		s := fmt.Sprintf(format, a...)
@@ -98,25 +105,25 @@ func (self *msgstream) Msg(lvl OutputLevel, format string, a ...interface{}) (in
 	}
 	return 0, nil
 }
-func (self *msgstream) MsgVerbose(format string, a ...interface{}) (int, os.Error) {
+func (self *msgstream) MsgVerbose(format string, a ...interface{}) (int, error) {
 	return self.Msg(LVL_VERBOSE, format, a...)
 }
-func (self *msgstream) MsgDebug(format string, a ...interface{}) (int, os.Error) {
+func (self *msgstream) MsgDebug(format string, a ...interface{}) (int, error) {
 	return self.Msg(LVL_DEBUG, format, a...)
 }
-func (self *msgstream) MsgInfo(format string, a ...interface{}) (int, os.Error) {
+func (self *msgstream) MsgInfo(format string, a ...interface{}) (int, error) {
 	return self.Msg(LVL_INFO, format, a...)
 }
-func (self *msgstream) MsgWarning(format string, a ...interface{}) (int, os.Error) {
+func (self *msgstream) MsgWarning(format string, a ...interface{}) (int, error) {
 	return self.Msg(LVL_WARNING, format, a...)
 }
-func (self *msgstream) MsgError(format string, a ...interface{}) (int, os.Error) {
+func (self *msgstream) MsgError(format string, a ...interface{}) (int, error) {
 	return self.Msg(LVL_ERROR, format, a...)
 }
-func (self *msgstream) MsgFatal(format string, a ...interface{}) (int, os.Error) {
+func (self *msgstream) MsgFatal(format string, a ...interface{}) (int, error) {
 	return self.Msg(LVL_FATAL, format, a...)
 }
-func (self *msgstream) MsgAlways(format string, a ...interface{}) (int, os.Error) {
+func (self *msgstream) MsgAlways(format string, a ...interface{}) (int, error) {
 	return self.Msg(LVL_ALWAYS, format, a...)
 }
 
@@ -170,7 +177,7 @@ func (self *Algorithm) Initialize() Error {
 
 func (self *Algorithm) Execute(ctx IEvtCtx) Error {
 	self.MsgDebug("execute... [%v]\n", ctx)
-	println("==>",self.CompName(),"execute [",ctx,"]")
+	println("==>", self.CompName(), "execute [", ctx, "]")
 	return StatusCode(0)
 }
 
@@ -190,7 +197,7 @@ func (self *Algorithm) Store(ctx IEvtCtx, n string) IDataStore {
 }
 */
 
-func NewAlg(comp IComponent, t,n string) IAlgorithm {
+func NewAlg(comp IComponent, t, n string) IAlgorithm {
 	self := comp.(*Algorithm)
 	self.Component.comp_name = n
 	self.Component.comp_type = t
@@ -233,7 +240,7 @@ func (self *Service) FinalizeSvc() Error {
 	return StatusCode(0)
 }
 
-func NewSvc(comp IComponent, t,n string) IService {
+func NewSvc(comp IComponent, t, n string) IService {
 	self := comp.(*Service)
 	self.Component.comp_name = n
 	self.Component.comp_type = t
@@ -280,7 +287,7 @@ func (self *AlgTool) FinalizeTool() Error {
 	return StatusCode(0)
 }
 
-func NewTool(comp IComponent, t,n string, parent IComponent) IAlgTool {
+func NewTool(comp IComponent, t, n string, parent IComponent) IAlgTool {
 	self := comp.(*AlgTool)
 	self.Component.comp_name = n
 	self.Component.comp_type = t
@@ -300,14 +307,14 @@ func init() {
 // checking implementations match interfaces
 var _ IAlgorithm = (*Algorithm)(nil)
 var _ IComponent = (*Algorithm)(nil)
-var _ IProperty  = (*Algorithm)(nil)
+var _ IProperty = (*Algorithm)(nil)
 
 var _ IAlgTool = (*AlgTool)(nil)
 var _ IComponent = (*AlgTool)(nil)
-var _ IProperty  = (*AlgTool)(nil)
+var _ IProperty = (*AlgTool)(nil)
 
 var _ IService = (*Service)(nil)
 var _ IComponent = (*Service)(nil)
-var _ IProperty  = (*Service)(nil)
+var _ IProperty = (*Service)(nil)
 
 /* EOF */
