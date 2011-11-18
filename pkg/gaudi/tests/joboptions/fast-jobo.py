@@ -1,8 +1,10 @@
 app.props.EvtMax = 10
 app.props.OutputLevel = 1
+#app.props.NbrProcs = 0
 #app.props.NbrProcs = 1
 
-nworkers = 1
+#nworkers = 0
+#nworkers = 1
 nworkers = 50
 
 app.svcs += Svc(
