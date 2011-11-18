@@ -6,7 +6,7 @@ import (
 	"os"
 	//"reflect"
 
-	"bitbucket.org/binet/ng-go-gaudi/gaudi/kernel"
+	"bitbucket.org/binet/ng-go-gaudi/pkg/gaudi/kernel"
 )
 
 var (

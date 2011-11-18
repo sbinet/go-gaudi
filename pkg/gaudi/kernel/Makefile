@@ -4,10 +4,11 @@
 
 include ${GOROOT}/src/Make.inc
 
-TARG=bitbucket.org/binet/ng-go-gaudi/gaudi/kernel/outstream
+TARG=bitbucket.org/binet/ng-go-gaudi/pkg/gaudi/kernel
 GOFILES=\
-	outstream.go\
-
+	interfaces.go\
+	components.go\
+	appmgr.go
 
 include ${GOROOT}/src/Make.pkg
 

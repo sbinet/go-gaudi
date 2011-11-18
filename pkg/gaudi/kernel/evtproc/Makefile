@@ -4,9 +4,9 @@
 
 include ${GOROOT}/src/Make.inc
 
-TARG=bitbucket.org/binet/ng-go-gaudi/gaudi/kernel/datastore
+TARG=bitbucket.org/binet/ng-go-gaudi/pkg/gaudi/kernel/evtproc
 GOFILES=\
-	datastore.go
+	evtproc.go
 
 include ${GOROOT}/src/Make.pkg
 

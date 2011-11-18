@@ -4,9 +4,9 @@
 
 include ${GOROOT}/src/Make.inc
 
-TARG=gaudi
+TARG=bitbucket.org/binet/ng-go-gaudi/pkg/gaudi/tests/pkg2
 GOFILES=\
-	main.go
+	pkg2.go\
 
-include ${GOROOT}/src/Make.cmd
+include ${GOROOT}/src/Make.pkg
 

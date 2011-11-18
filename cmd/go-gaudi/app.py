@@ -156,7 +156,7 @@ class AppMgr(object):
         fname = os.path.join(self._workdir, os.path.basename(fname))
         go_pkg = ["package gaudi_jobopt",
                   "",
-                  'import "bitbucket.org/binet/ng-go-gaudi/gaudi/kernel"',
+                  'import "bitbucket.org/binet/ng-go-gaudi/pkg/gaudi/kernel"',
                   ]
         # a symbol table for pkgs (we may need to mangle them...)
         gaudi_pkgs = {}
@@ -281,7 +281,7 @@ package main
 import "fmt"
 //import "os"
 
-import "bitbucket.org/binet/ng-go-gaudi/gaudi/kernel"
+import "bitbucket.org/binet/ng-go-gaudi/pkg/gaudi/kernel"
 import "./gaudi_jobopt"
 
 func main() {

@@ -7,13 +7,13 @@ include ${GOROOT}/src/Make.inc
 all: install
 
 DIRS=\
-	gaudi/kernel\
-	gaudi/kernel/datastore\
-	gaudi/kernel/evtproc\
-	gaudi/kernel/outstream\
-	gaudi/app\
-	gaudi/tests/pkg1\
-	gaudi/tests/pkg2\
+	pkg/gaudi/kernel\
+	pkg/gaudi/kernel/datastore\
+	pkg/gaudi/kernel/evtproc\
+	pkg/gaudi/kernel/outstream\
+	cmd/go-gaudi\
+	pkg/gaudi/tests/pkg1\
+	pkg/gaudi/tests/pkg2\
 
 
 clean.dirs: $(addsuffix .clean, $(DIRS))

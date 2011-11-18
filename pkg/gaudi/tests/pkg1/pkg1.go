@@ -1,7 +1,7 @@
 // test package 'pkg1'
 package pkg1
 
-import "bitbucket.org/binet/ng-go-gaudi/gaudi/kernel"
+import "bitbucket.org/binet/ng-go-gaudi/pkg/gaudi/kernel"
 
 // --- alg1 ---
 
