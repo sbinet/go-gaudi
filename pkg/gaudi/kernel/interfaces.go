@@ -11,6 +11,8 @@ var g_compsdb comps_db
 
 /// the interface to assess if everything went right and report why otherwise
 type Error interface {
+	/// embed 'error' builtin interface
+	error
 	/// return the error code (0 is success)
 	Code() int
 	/// the error reason, piggybacking on go's os.Error
@@ -44,7 +46,7 @@ func (sc *statuscode) Err() error {
 	return sc.err
 }
 
-func (sc *statuscode) String() string {
+func (sc *statuscode) Error() string {
 	return fmt.Sprintf("code:%v err:%v", sc.code, sc.err)
 }
 
@@ -156,7 +158,7 @@ type DataStore map[string]interface{}
 
 type IEvtCtx interface {
 	Idx() int
-	Store() *DataStore
+	Store() DataStore
 	//Id() int
 }
 

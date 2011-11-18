@@ -23,8 +23,8 @@ func new_evtstate(idx int) *evtstate {
 func (self *evtstate) Idx() int {
 	return self.idx
 }
-func (self *evtstate) Store() *kernel.DataStore {
-	return &self.data
+func (self *evtstate) Store() kernel.DataStore {
+	return self.data
 }
 
 // --- evt processor ---
@@ -82,7 +82,7 @@ func (self *evtproc) ExecuteEvent(ictx kernel.IEvtCtx) kernel.Error {
 			return kernel.StatusCode(1)
 		}
 	}
-	self.MsgDebug("data: %v\n",*ictx.Store())
+	self.MsgDebug("data: %v\n",ictx.Store())
 	return kernel.StatusCode(0)
 }
 

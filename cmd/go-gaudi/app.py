@@ -135,9 +135,9 @@ class AppMgr(object):
         orig_dir = os.getcwd()
         try:
             os.chdir(self._workdir)
-            print os.listdir('.')
+            #print os.listdir('.')
             cmd = ["./gaudi-main",]
-            #cmd = ["/usr/bin/time", "-o", "gaudi.profile.out", "./gaudi-main",]
+            #cmd = ["/usr/bin/time", "-o", "%s/gaudi.profile.out" % orig_dir, "./gaudi-main",]
             subprocess.check_call(cmd)
         except Exception:
             import traceback

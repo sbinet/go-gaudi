@@ -6,15 +6,15 @@ import "bitbucket.org/binet/ng-go-gaudi/pkg/gaudi/kernel"
 // --- datastore helper ---
 
 type datastore struct {
-	store *kernel.DataStore //map[string]interface{}
+	store kernel.DataStore //map[string]interface{}
 }
 
 func (self *datastore) Put(key string, value interface{}) {
-	(*self.store)[key] = value
+	self.store[key] = value
 }
 
 func (self *datastore) Get(key string) interface{} {
-	value, ok := (*self.store)[key]
+	value, ok := self.store[key]
 	if ok {
 		return value
 	}
@@ -22,16 +22,16 @@ func (self *datastore) Get(key string) interface{} {
 }
 
 func (self *datastore) Has(key string) bool {
-	_, ok := (*self.store)[key]
+	_, ok := self.store[key]
 	if !ok {
-		delete((*self.store), key)
+		delete(self.store, key)
 	}
 	return ok
 }
 
 func (self *datastore) ClearStore() kernel.Error {
-	for k, _ := range *self.store {
-		delete((*self.store), k)
+	for k, _ := range self.store {
+		delete(self.store, k)
 	}
 	return kernel.StatusCode(0)
 }
@@ -55,12 +55,12 @@ func (self *datastoresvc) FinalizeSvc() kernel.Error {
 func (self *datastoresvc) Store(ctx kernel.IEvtCtx) kernel.IDataStore {
 	store := ctx.Store()
 	n := self.CompName()
-	if _, ok := (*store)[n]; !ok {
+	if _, ok := store[n]; !ok {
 		dstore := make(kernel.DataStore)
-		(*store)[n] = &dstore
+		store[n] = dstore
 	}
 
-	dstore := (*store)[n].(*kernel.DataStore)
+	dstore := store[n].(kernel.DataStore)
 	if dstore != nil {
 		return &datastore{dstore}
 	}
