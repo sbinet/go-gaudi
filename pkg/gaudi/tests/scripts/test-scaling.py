@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 import os
 import tempfile
 if not tempfile.tempdir:
@@ -16,14 +16,15 @@ def _save_file(fname, src, show=False):
             print >> f, src
 
 
+_d = os.path.dirname
 TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
-GAUDIROOT = os.path.dirname(os.path.dirname(TESTS_DIR))
-GAUDI_APP = os.path.join(GAUDIROOT, 'app','app.py')
+GAUDIROOT = _d(_d(_d(_d(TESTS_DIR))))
+GAUDI_APP = os.path.join(GAUDIROOT, 'cmd', 'go-gaudi','app.py')
 
 print "TESTS_DIR:",TESTS_DIR
 print "GAUDI_APP:",GAUDI_APP
 
-JOBO_DIR = os.path.join(GAUDIROOT, 'tests', 'joboptions')
+JOBO_DIR = os.path.join(GAUDIROOT, 'pkg', 'gaudi', 'tests', 'joboptions')
 
 JOBO_NAME = os.path.join(JOBO_DIR, 'big-jobo.py')
 cmd = [ "/usr/bin/time", "-o", "gaudi.profile.out", GAUDI_APP, JOBO_NAME ]

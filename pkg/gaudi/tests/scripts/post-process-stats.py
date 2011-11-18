@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 """
 
 ::: nworkers: 0010 nprocs: 0048     WORK_DIR: /tmp/ng-gaudi-go-WF1x2A

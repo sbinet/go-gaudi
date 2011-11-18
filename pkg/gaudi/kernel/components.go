@@ -190,7 +190,7 @@ func (self *Algorithm) Finalize() Error {
 func (self *Algorithm) Store(ctx IEvtCtx, n string) IDataStore {
 	store, ok := self.stores[n]
 	if !ok {
-		self.stores[n] = nil, false
+        delete(self.stores, n)
 		return nil
 	}
 	return store.Store(ctx)

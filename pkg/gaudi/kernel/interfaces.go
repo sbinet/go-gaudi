@@ -15,7 +15,7 @@ type Error interface {
 	error
 	/// return the error code (0 is success)
 	Code() int
-	/// the error reason, piggybacking on go's os.Error
+	/// the error reason
 	Err() error
 	IsSuccess() bool
 	IsFailure() bool
