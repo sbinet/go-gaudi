@@ -14,6 +14,7 @@ DIRS=\
 	cmd/go-gaudi\
 	pkg/gaudi/tests/pkg1\
 	pkg/gaudi/tests/pkg2\
+	cmd/go-mini-gaudi\
 
 
 clean.dirs: $(addsuffix .clean, $(DIRS))
