@@ -61,14 +61,14 @@ func (a *alg) Execute(ctx int) error {
 	// simulate work...
 	var f func() int64
 	f = func() int64 {
-		vv := int64(0)
+		vv := time.Now()
 		for {
 			select {
-			case vv = <-time.After(int64(a.sleep * 1e9)):
-				return vv
+			case delta := <-time.After(time.Duration(a.sleep) * time.Second):
+				return int64(delta.Sub(vv))
 			}
 		}
-		return vv + int64(math.Sqrt(0))
+		return int64(time.Since(vv)) + int64(math.Sqrt(0))
 	}
 	// f = func() int64 {
 	// 	iv := int64(0)
