@@ -231,7 +231,7 @@ func (self *json_outstream_handle) Name() string {
 
 func (self *json_outstream_handle) Fd() int {
 	if self.w != nil {
-		return self.w.Fd()
+		return int(self.w.Fd())
 	}
 	return -1
 }
