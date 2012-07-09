@@ -3,7 +3,7 @@ package pkg2
 
 import "time"
 
-import "bitbucket.org/binet/ng-go-gaudi/pkg/gaudi/kernel"
+import "github.com/sbinet/go-gaudi/pkg/gaudi/kernel"
 
 // --- alg1 ---
 
