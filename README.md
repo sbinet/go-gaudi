@@ -10,7 +10,11 @@ Installation
 
 Is as easy as::
 
-   $ go get github.com/sbinet/go-gaudi/pkg/gaudi...
+```
+$ go get github.com/sbinet/go-gaudi/pkg/gaudi...
+```
+
+(yes, with the ellipsis at the end, to compile and install all subpackages)
 
 Documentation
 -------------
