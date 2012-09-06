@@ -1,0 +1,48 @@
+# -*- python -*-
+
+top = '.'
+out = '__build__'
+
+def options(ctx):
+    ctx.load('compiler_c')
+    ctx.load('compiler_cxx')
+    
+def configure(ctx):
+
+    ctx.load('compiler_c')
+    ctx.load('compiler_cxx')
+
+    # find gaudi
+    #ctx.find_library('GaudiKernel', uselib_store="GaudiKernel", mandatory=True)
+
+    import os
+    ctx.env["LD_LIBRARY_PATH"] = os.getenv("LD_LIBRARY_PATH","").split(":")
+    
+def build(ctx):
+
+    ctx.read_shlib('GaudiKernel', paths=ctx.env["LD_LIBRARY_PATH"])
+    
+    ctx(features='cxx cxxshlib',
+        name    = 'c-gaudi',
+        source  = 'src/gaudi.cxx',
+        target  = 'c-gaudi',
+        includes= [
+            'include',
+            "/afs/cern.ch/atlas/software/builds/nightlies/EXP/GAUDI/rel_2/InstallArea/include",
+            ],
+        export_includes = ['include'],
+        use = "GaudiKernel",
+        )
+
+    hdr_dir = ctx.path.find_dir('include')
+    hdrs = hdr_dir.ant_glob('**/*', dir=False)
+    
+    ctx.install_files(
+        '${PREFIX}/include',
+        hdrs,
+        cwd=hdr_dir,
+        relative_trick=True
+        )
+
+    #ctx.recurse('examples')
+    
