@@ -69,3 +69,5 @@ CGaudi_IService_sysFinalize(CGaudi_IService self);
 #ifdef __cplusplus
 } /* !extern "C" */
 #endif
+
+#endif /* !CGAUDI_ISERVICE_H */

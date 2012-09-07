@@ -48,7 +48,7 @@ def build(ctx):
     
     ctx(features='cxx cxxshlib',
         name    = 'c-gaudi',
-        source  = 'src/gaudi.cxx src/ialgorithm.cxx src/iservice.cxx',
+        source  = ctx.path.ant_glob('src/*.cxx'),
         target  = 'c-gaudi',
         includes= [
             'include',
