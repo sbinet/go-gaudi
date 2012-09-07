@@ -33,15 +33,43 @@ typedef void* CGaudi_IApplicationMgr;
 typedef void* CGaudi_IInterface;
 typedef void* CGaudi_INamedInterface;
 
-struct CGaudi_InterfaceID {
-  unsigned long id;
-  unsigned long major_ver;
-  unsigned long minor_ver;
+
+/* StatusCode */
+struct CGaudi_StatusCode {
+  unsigned long   code;      ///< The status code
 };
+
+/* InterfaceID */
+
+  struct CGaudi_InterfaceID {
+    unsigned long id;
+    unsigned long major_ver;
+    unsigned long minor_ver;                                                                                                                                                                                                                                                 
+  };
+
+CGAUDI_API
+int
+CGaudi_InterfaceID_versionMatch(CGaudi_InterfaceID self, CGaudi_InterfaceID other);
+
+CGAUDI_API
+int
+CGaudi_InterfaceID_fullMatch(CGaudi_InterfaceID self, CGaudi_InterfaceID other);
+
+/* IInterface */
 
 CGAUDI_API
 CGaudi_InterfaceID
 CGaudi_IInterface_InterfaceID(CGaudi_IInterface self);
+
+CGAUDI_API
+CGaudi_StatusCode
+CGaudi_IInterface_queryInterface(CGaudi_IInterface self, CGaudi_InterfaceID iid, void **p);
+
+/* INamedInterface */
+CGAUDI_API
+const char*
+CGaudi_INamedInterface_name(CGaudi_INamedInterface self);
+
 
 #ifdef __cplusplus
 } /* !extern "C" */
