@@ -16,12 +16,14 @@ typedef void* CGaudi_INamedInterface;
 typedef void* CGaudi_IAlgorithm;
 typedef void* CGaudi_IService;
 typedef void* CGaudi_IAlgTool;
+
+typedef void* CGaudi_ISvcLocator;
 typedef void* CGaudi_IApplicationMgr;
 
 struct CGaudi_InterfaceID {
   unsigned long id;
   unsigned long major_ver;
-  unsigned long minor_ver;                                                                                                                                                                                                                                                 
+  unsigned long minor_ver;
 };
 
 #ifdef __cplusplus

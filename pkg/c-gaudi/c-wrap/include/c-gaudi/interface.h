@@ -40,6 +40,11 @@ CGAUDI_API
 unsigned long
 CGaudi_IInterface_refCount(CGaudi_IInterface self);
 
+/* INamedInterface */
+CGAUDI_API
+const char*
+CGaudi_INamedInterface_name(CGaudi_INamedInterface self);
+
 #ifdef __cplusplus
 } /* !extern "C" */
 #endif

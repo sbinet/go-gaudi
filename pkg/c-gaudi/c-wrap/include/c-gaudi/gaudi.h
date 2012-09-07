@@ -6,10 +6,8 @@
 #include "c-gaudi/c-gaudi-fwd.h"
 
 #include "c-gaudi/interface.h"
-
-/* INamedInterface */
-CGAUDI_API
-const char*
-CGaudi_INamedInterface_name(CGaudi_INamedInterface self);
+#include "c-gaudi/ialgorithm.h"
+#include "c-gaudi/ialgtool.h"
+#include "c-gaudi/iservice.h"
 
 #endif /*!CGAUDI_GAUDI_H */
