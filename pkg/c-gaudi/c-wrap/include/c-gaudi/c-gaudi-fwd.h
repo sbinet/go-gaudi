@@ -18,7 +18,7 @@ typedef void* CGaudi_IService;
 typedef void* CGaudi_IAlgTool;
 
 typedef void* CGaudi_ISvcLocator;
-typedef void* CGaudi_IApplicationMgr;
+typedef void* CGaudi_IAppMgr;
 
 struct CGaudi_InterfaceID {
   unsigned long id;
