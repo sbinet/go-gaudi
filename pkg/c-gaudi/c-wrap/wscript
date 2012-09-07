@@ -6,11 +6,13 @@ out = '__build__'
 def options(ctx):
     ctx.load('compiler_c')
     ctx.load('compiler_cxx')
+    ctx.load('boost')
     
 def configure(ctx):
 
     ctx.load('compiler_c')
     ctx.load('compiler_cxx')
+    ctx.load('boost')
 
     # find gaudi
     #ctx.find_library('GaudiKernel', uselib_store="GaudiKernel", mandatory=True)
@@ -18,6 +20,28 @@ def configure(ctx):
     import os
     ctx.env["LD_LIBRARY_PATH"] = os.getenv("LD_LIBRARY_PATH","").split(":")
     
+    boost_libs = '''\
+    filesystem date_time graph iostreams
+    math_c99 math_c99f math_tr1 math_tr1f
+    prg_exec_monitor program_options
+    random regex serialization
+    signals system thread 
+    unit_test_framework wave wserialization
+    '''
+
+    common_cfg = {
+        'mt': False,
+        'static': False,
+        #'toolset': 'gcc',
+        #'use': 'python',
+        }
+    ctx.check_boost(boost_libs,
+                    uselib_store='boost',
+                    includes="/afs/cern.ch/sw/lcg/external/Boost/1.48.0p1_python2.6/x86_64-slc6-gcc46-opt/include/boost-1_48",
+                    libs="/afs/cern.ch/sw/lcg/external/Boost/1.48.0p1_python2.6/x86_64-slc6-gcc46-opt/lib",
+                    mandatory=True,
+                    **common_cfg)
+
 def build(ctx):
 
     ctx.read_shlib('GaudiKernel', paths=ctx.env["LD_LIBRARY_PATH"])
@@ -31,7 +55,7 @@ def build(ctx):
             "/afs/cern.ch/atlas/software/builds/nightlies/EXP/GAUDI/rel_2/InstallArea/include",
             ],
         export_includes = ['include'],
-        use = "GaudiKernel",
+        use = "GaudiKernel boost",
         )
 
     hdr_dir = ctx.path.find_dir('include')

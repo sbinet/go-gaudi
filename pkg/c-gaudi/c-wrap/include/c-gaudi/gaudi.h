@@ -26,17 +26,17 @@
 extern "C" {
 #endif
 
-void *CGaudi_IAlgorithm;
-void *CGaudi_IService;
-void *CGaudi_IAlgTool;
-void *CGaudi_IApplicationMgr;
-void *CGaudi_IInterface;
-void *CGaudi_INamedInterface;
+typedef void* CGaudi_IAlgorithm;
+typedef void* CGaudi_IService;
+typedef void* CGaudi_IAlgTool;
+typedef void* CGaudi_IApplicationMgr;
+typedef void* CGaudi_IInterface;
+typedef void* CGaudi_INamedInterface;
 
 struct CGaudi_InterfaceID {
-  unsigned long m_id;
-  unsigned long m_major_ver;
-  unsigned long m_minor_ver;
+  unsigned long id;
+  unsigned long major_ver;
+  unsigned long minor_ver;
 };
 
 CGAUDI_API
