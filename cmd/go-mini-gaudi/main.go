@@ -156,7 +156,7 @@ func main() {
 		}
 		//fmt.Printf("::deps: %v\n", alg_deps)
 	}
-	algs := []alg{}
+	algs := make([]alg, 0, len(alg_names))
 
 	depg := new_depgraph()
 	store := new_datastore()
